@@ -1,0 +1,37 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Moth In Purgatory"
+config/features=PackedStringArray("4.4", "GL Compatibility")
+config/icon="res://core/icons/game icon.svg"
+
+[file_customization]
+
+folder_colors={
+"res://audio/": "pink",
+"res://components/": "red",
+"res://effects/": "pink",
+"res://enemies/": "orange",
+"res://items/": "blue",
+"res://objects/": "blue",
+"res://player/": "green",
+"res://resources/": "gray",
+"res://sandbox/": "purple",
+"res://textures/": "teal",
+"res://ui/": "teal",
+"res://world/": "red"
+}
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
