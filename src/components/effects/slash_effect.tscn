@@ -1,0 +1,48 @@
+[gd_scene load_steps=8 format=3 uid="uid://devtar40rm461"]
+
+[ext_resource type="Texture2D" uid="uid://b30w6r60vqkhe" path="res://textures/atlas/full_atlas.png" id="1_4buy2"]
+[ext_resource type="Script" uid="uid://cmkq1nxhp4byn" path="res://components/effects/slash_effect.gd" id="2_o8v2l"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6lnpc"]
+atlas = ExtResource("1_4buy2")
+region = Rect2(1763, 2757, 137, 82)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4v45j"]
+atlas = ExtResource("1_4buy2")
+region = Rect2(1900, 1911, 206, 111)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iu6nx"]
+atlas = ExtResource("1_4buy2")
+region = Rect2(665, 2574, 180, 101)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xmv07"]
+atlas = ExtResource("1_4buy2")
+region = Rect2(1431, 3789, 159, 102)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7lbma"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6lnpc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4v45j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iu6nx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xmv07")
+}],
+"loop": false,
+"name": &"slash_b",
+"speed": 12.0
+}]
+
+[node name="SlashEffect" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_7lbma")
+animation = &"slash_b"
+speed_scale = 1.4
+script = ExtResource("2_o8v2l")
+
+[connection signal="animation_finished" from="." to="." method="_on_animation_finished"]
