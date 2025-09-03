@@ -80,11 +80,6 @@ func set_facing(dir: int) -> void:
 		if animator:
 			animator.flip_h = _facing > 0
 
-func damage(_amount: int) -> void:
-	if _invincible > 0.0:
-		return
-	_invincible = 0.60
-
 func refresh_landing() -> void:
 	_reset_jumps_on_ground(true)
 

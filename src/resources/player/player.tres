@@ -1,0 +1,37 @@
+[gd_resource type="Resource" script_class="PlayerStats" load_steps=2 format=3 uid="uid://ldoi13v2uvve"]
+
+[ext_resource type="Script" uid="uid://dtackg4evmhql" path="res://resources/player/player_stats.gd" id="1_hlgaa"]
+
+[resource]
+script = ExtResource("1_hlgaa")
+move_speed = 480.0
+accel_ground = 2600.0
+accel_air = 1800.0
+friction = 2000.0
+gravity_up = 1600.0
+gravity_down = 2300.0
+max_fall_speed = 1000.0
+jump_speed = 840.0
+coyote_time = 0.12
+jump_buffer_time = 0.12
+enable_double_jump = false
+second_jump_speed = 840.0
+allow_second_jump_from_ground = false
+jump_cut_multiplier = 0.5
+short_hop_multiplier = 0.3
+dash_speed = -1480.0
+dash_time = 0.28
+dash_cooldown = 1.3
+attack_windup = 0.08
+attack_active = 0.1
+attack_recovery = 0.12
+attack_cooldown = 0.18
+recoil_on_hit = 90.0
+hitstop_on_hit = 0.06
+cone_range = 100.0
+cone_half_angle_deg = 45.0
+cone_forward_offset = 16.0
+cone_vertical_offset = -6.0
+cone_damage = 1
+cone_mask = 64
+metadata/_custom_type_script = "uid://dtackg4evmhql"

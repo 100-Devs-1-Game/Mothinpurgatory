@@ -50,7 +50,6 @@ func update(delta) -> void:
 	if phase == Phase.WINDUP and timer <= 0.0:
 		phase = Phase.ACTIVE
 		timer = player.stats.attack_active
-		_cone_attack()
 	elif phase == Phase.ACTIVE and timer <= 0.0:
 		phase = Phase.RECOVERY
 		timer = player.stats.attack_recovery
@@ -72,46 +71,3 @@ func _spawn_slash():
 	slash.flip_h = (player._facing < 0)
 	slash.z_index = 10
 	slash.play("slash_b")
-
-func _cone_attack():
-	var space = player.get_world_2d().direct_space_state
-	var circle = CircleShape2D.new()
-	circle.radius = player.stats.cone_range
-	
-	var parameters = PhysicsShapeQueryParameters2D.new()
-	parameters.shape = circle
-	var origin = player.global_position + Vector2(player.stats.cone_forward_offset * float(player._facing), player.stats.cone_vertical_offset)
-	parameters.transform = Transform2D(0.0, origin)
-	parameters.collision_mask = player.stats.cone_mask
-	parameters.collide_with_areas = true
-	parameters.collide_with_bodies = true
-
-	var result = space.intersect_shape(parameters, 64)
-
-	var face_dir = Vector2.RIGHT * float(player._facing)
-	var half_radian = deg_to_rad(player.stats.cone_half_angle_deg)
-	var cosign_thresh = cos(half_radian)
-
-	for r in result:
-		var collider = r.get("collider")
-		if collider == null or !(collider is Node2D):
-			continue
-		var to_target = (collider as Node2D).global_position - origin
-		var distance = to_target.length()
-		if distance <= 0.0:
-			continue
-		var direction_vector = to_target / distance
-		if face_dir.dot(direction_vector) < cosign_thresh:
-			continue
-		_apply_damage(collider)
-
-	if result.size() > 0:
-		player.velocity.x = player.velocity.x - float(player._facing) * player.stats.recoil_on_hit
-		player._hitstop = player.stats.hitstop_on_hit
-
-func _apply_damage(hit: Node) -> void:
-	var carrier = hit.get_parent()
-	if carrier != null and carrier.has_method("damage"):
-		carrier.call("damage", player.stats.cone_damage)
-	elif hit is Area2D:
-		(hit as Area2D).set("damage", player.stats.cone_damage)
