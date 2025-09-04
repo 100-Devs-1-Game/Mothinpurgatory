@@ -12,18 +12,23 @@ func enter() -> void:
 		player.consume_jump_buffer()
 	
 	var did_jump := false
+	var consume_double := false
 	
 	if player.consume_ground_or_coyote_jump():
 		player.velocity.y = -player.stats.jump_speed
 		did_jump = true
 	elif player.can_double_jump():
 		player.consume_double_jump()
+		consume_double = true
 		player.velocity.y = -player.stats.second_jump_speed
 		did_jump = true
 
 	if did_jump and player.animator:
-		player.animator.frame = 0
-		player.animator.play("jump")
+		if !consume_double:
+			player.animator.frame = 0
+			player.animator.play("jump")
+		else:
+			player.animator.play("double jump")
 
 func update(delta: float) -> void:
 	if player.velocity.y < 0:

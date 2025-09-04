@@ -7,14 +7,12 @@ signal dash_ended()
 
 @export var stats: PlayerStats
 @export var animator_path: NodePath
-@export var hitbox_path: NodePath
-@export var hurtbox_path: NodePath
+@export var slash_effect: PackedScene
 
 @onready var animator: AnimatedSprite2D = get_node(animator_path)
-@onready var hitbox: Area2D = get_node(hitbox_path)
-@onready var hurtbox: Area2D = get_node(hurtbox_path)
 @onready var sm: Node = $StateMachine
 
+var interactable_faction = 0
 var _facing := 1
 var _invincible := 0.0
 var _coyote := 0.5
@@ -107,3 +105,13 @@ func _reset_jumps_on_ground(full: bool) -> void:
 		_jumps_left = _jumps_max
 	else:
 		_jumps_left = 0
+
+func _death(source: Node) -> void:
+	print("Player died")
+
+func apply_knockback(kb: Vector2, attack_data: AttackData, source: Node) -> void:
+	print("knocked back")
+	velocity += kb
+
+func get_faction() -> int:
+	return interactable_faction

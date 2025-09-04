@@ -1,0 +1,43 @@
+[gd_scene load_steps=9 format=3 uid="uid://c6bvs8ckbl8iq"]
+
+[ext_resource type="Script" uid="uid://bunhfte6bv8ee" path="res://sandbox/damage_dummy.gd" id="1_mdlbx"]
+[ext_resource type="Script" uid="uid://dwvivyga6h4rd" path="res://components/combat/health/health.gd" id="1_tadct"]
+[ext_resource type="PackedScene" uid="uid://bq1v87o3hxrb1" path="res://components/combat/health/Hurtbox.tscn" id="2_mdlbx"]
+
+[sub_resource type="Gradient" id="Gradient_y2qmy"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.396855, 0.305596, 0.144281, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ptjgj"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_tadct"]
+color_ramp = SubResource("Gradient_y2qmy")
+noise = SubResource("FastNoiseLite_ptjgj")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y2qmy"]
+size = Vector2(86, 165)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_0c5k6"]
+radius = 103.121
+
+[node name="Dummy" type="CharacterBody2D"]
+script = ExtResource("1_mdlbx")
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("1_tadct")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -84)
+scale = Vector2(0.179688, 0.328125)
+texture = SubResource("NoiseTexture2D_tadct")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -82.5)
+shape = SubResource("RectangleShape2D_y2qmy")
+
+[node name="Hurtbox" parent="." instance=ExtResource("2_mdlbx")]
+position = Vector2(0, -82)
+health_node_path = NodePath("../Health")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+shape = SubResource("CircleShape2D_0c5k6")

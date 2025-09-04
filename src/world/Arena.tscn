@@ -1,3 +1,165 @@
-[gd_scene format=3 uid="uid://die4xmtx2ypd8"]
+[gd_scene load_steps=17 format=3 uid="uid://die4xmtx2ypd8"]
+
+[ext_resource type="Script" uid="uid://b8bson1hycvvy" path="res://world/arena.gd" id="1_kgg8h"]
+[ext_resource type="PackedScene" uid="uid://du3uuiaokiexx" path="res://player/player.tscn" id="2_iibmw"]
+[ext_resource type="Texture2D" uid="uid://b4gqih662pkvs" path="res://textures/animated backgrounds/colosseum/000.png" id="2_l1yh3"]
+[ext_resource type="Texture2D" uid="uid://bnn6jk3undniw" path="res://textures/animated backgrounds/colosseum/001.png" id="3_kgg8h"]
+[ext_resource type="Texture2D" uid="uid://4g5xyx6mt4xp" path="res://textures/animated backgrounds/colosseum/002.png" id="4_cag1q"]
+[ext_resource type="Texture2D" uid="uid://bqedi8apfiouw" path="res://textures/animated backgrounds/colosseum/003.png" id="5_qvbsh"]
+[ext_resource type="Texture2D" uid="uid://upxwtp6igyet" path="res://textures/animated backgrounds/colosseum/004.png" id="6_1auv6"]
+[ext_resource type="Texture2D" uid="uid://crl10mhhvgntg" path="res://textures/animated backgrounds/colosseum/005.png" id="7_prmyl"]
+[ext_resource type="PackedScene" uid="uid://buhku7c6mmsmu" path="res://sandbox/jouster.tscn" id="9_l1yh3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_iibmw"]
+size = Vector2(3506, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kgg8h"]
+size = Vector2(561, 1054)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_p3ig4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_l1yh3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_kgg8h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_cag1q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_qvbsh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_1auv6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_prmyl")
+}],
+"loop": true,
+"name": &"default",
+"speed": 12.0
+}]
+
+[sub_resource type="Gradient" id="Gradient_hksqf"]
+offsets = PackedFloat32Array(0, 0.46, 0.66, 1)
+colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 0.505882, 0, 0, 0, 0.289777, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_l1yh3"]
+gradient = SubResource("Gradient_hksqf")
+
+[sub_resource type="Gradient" id="Gradient_l1yh3"]
+offsets = PackedFloat32Array(0, 0.293333, 0.873333, 1)
+colors = PackedColorArray(0, 0, 0, 0, 0.568627, 0, 0, 0.290196, 0.568627, 0, 0, 0.290196, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_kgg8h"]
+gradient = SubResource("Gradient_l1yh3")
 
 [node name="Arena" type="Node2D"]
+script = ExtResource("1_kgg8h")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(563, 641)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("RectangleShape2D_iibmw")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-1488, -517)
+shape = SubResource("RectangleShape2D_kgg8h")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(1383, -517)
+shape = SubResource("RectangleShape2D_kgg8h")
+
+[node name="ColorRect" type="ColorRect" parent="StaticBody2D"]
+offset_left = -1264.0
+offset_top = 35.0
+offset_right = 1156.0
+offset_bottom = 757.0
+color = Color(0.701961, 0.529412, 0.376471, 1)
+
+[node name="Background" type="AnimatedSprite2D" parent="."]
+z_index = -4
+position = Vector2(510, 139)
+sprite_frames = SubResource("SpriteFrames_p3ig4")
+frame_progress = 0.60153
+
+[node name="Player" parent="." instance=ExtResource("2_iibmw")]
+position = Vector2(384, 601)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="TextureRect2" type="TextureRect" parent="CanvasLayer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -142.0
+offset_top = 19.0
+offset_right = 142.0
+offset_bottom = 72.0
+grow_horizontal = 2
+texture = SubResource("GradientTexture2D_l1yh3")
+expand_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/TextureRect2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 19.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = -4
+alignment = 1
+
+[node name="timelbl" type="Label" parent="CanvasLayer/TextureRect2/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 19
+text = "Time: 00:00.0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="scorelbl" type="Label" parent="CanvasLayer/TextureRect2/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 19
+text = "Score: 000000"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect3" type="TextureRect" parent="CanvasLayer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -65.0
+offset_right = 359.0
+offset_bottom = -34.0
+grow_vertical = 0
+texture = SubResource("GradientTexture2D_kgg8h")
+expand_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/TextureRect3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 19.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label2" type="Label" parent="CanvasLayer/TextureRect3/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 19
+text = "HEALTH: 10/10"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Jouster" parent="." instance=ExtResource("9_l1yh3")]
+position = Vector2(847, 607)

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="AttackData" load_steps=2 format=3 uid="uid://gtxhqe6ivhbt"]
+
+[ext_resource type="Script" uid="uid://cqkedinwlljjx" path="res://components/combat/attack/attack.gd" id="1_aiojc"]
+
+[resource]
+script = ExtResource("1_aiojc")
+damage = 1
+knockback = Vector2(0, 0)
+hitstun = 0.0
+knockback_scale = 1.0
+damage_type = "physical"
+metadata/_custom_type_script = "uid://cqkedinwlljjx"

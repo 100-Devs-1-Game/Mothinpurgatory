@@ -1,0 +1,64 @@
+[gd_scene load_steps=11 format=3 uid="uid://buhku7c6mmsmu"]
+
+[ext_resource type="Script" uid="uid://b6lrtskoericv" path="res://sandbox/jouster.gd" id="1_mtnxs"]
+[ext_resource type="Resource" uid="uid://b0gebrvtkbrav" path="res://sandbox/EnemyData.tres" id="2_bgvty"]
+[ext_resource type="Script" uid="uid://dwvivyga6h4rd" path="res://components/combat/health/health.gd" id="2_xl3xl"]
+[ext_resource type="PackedScene" uid="uid://bq1v87o3hxrb1" path="res://components/combat/health/Hurtbox.tscn" id="3_40isp"]
+[ext_resource type="PackedScene" uid="uid://dt8t2rr81r7oa" path="res://components/combat/attack/Hitbox.tscn" id="4_40isp"]
+[ext_resource type="Script" uid="uid://cqkedinwlljjx" path="res://components/combat/attack/attack.gd" id="5_7qqu8"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_mtnxs"]
+size = Vector2(107, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rfbmd"]
+size = Vector2(108, 103)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7qqu8"]
+radius = 91.2688
+
+[sub_resource type="Resource" id="Resource_bgvty"]
+script = ExtResource("5_7qqu8")
+damage = 2
+knockback = Vector2(0, 0)
+hitstun = 0.0
+knockback_scale = 1.0
+damage_type = "physical"
+hitstop_duration = 0.006
+is_crit = true
+metadata/_custom_type_script = "uid://cqkedinwlljjx"
+
+[node name="Jouster" type="CharacterBody2D"]
+script = ExtResource("1_mtnxs")
+speed = 160.0
+enemy_data = ExtResource("2_bgvty")
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("2_xl3xl")
+max_health = 3
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -51.5)
+scale = Vector2(1, 103)
+texture = SubResource("PlaceholderTexture2D_mtnxs")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2(0, -51.5)
+shape = SubResource("RectangleShape2D_rfbmd")
+
+[node name="Hurtbox" parent="." instance=ExtResource("3_40isp")]
+position = Vector2(0, -51)
+health_node_path = NodePath("../Health")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+visible = false
+shape = SubResource("CircleShape2D_7qqu8")
+
+[node name="Hitbox" parent="." instance=ExtResource("4_40isp")]
+position = Vector2(0, -51)
+attack_data = SubResource("Resource_bgvty")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+visible = false
+shape = SubResource("CircleShape2D_7qqu8")
+debug_color = Color(0.990688, 0, 0.275205, 0.42)

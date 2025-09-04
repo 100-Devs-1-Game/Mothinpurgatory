@@ -9,7 +9,8 @@ func init(p_sm, p_player):
 
 func enter() -> void:
 	if player.animator:
-		player.animator.play("jump")
+		if player.velocity.y >= 0.0:
+			player.animator.play("jump")
 
 func update(delta: float) -> void:
 	var x_input = Input.get_action_strength("right") - Input.get_action_strength("left")
