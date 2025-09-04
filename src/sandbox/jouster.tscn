@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://buhku7c6mmsmu"]
+[gd_scene load_steps=12 format=3 uid="uid://buhku7c6mmsmu"]
 
 [ext_resource type="Script" uid="uid://b6lrtskoericv" path="res://sandbox/jouster.gd" id="1_mtnxs"]
 [ext_resource type="Resource" uid="uid://b0gebrvtkbrav" path="res://sandbox/EnemyData.tres" id="2_bgvty"]
@@ -26,6 +26,9 @@ damage_type = "physical"
 hitstop_duration = 0.006
 is_crit = true
 metadata/_custom_type_script = "uid://cqkedinwlljjx"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bgvty"]
+radius = 482.001
 
 [node name="Jouster" type="CharacterBody2D"]
 script = ExtResource("1_mtnxs")
@@ -62,3 +65,9 @@ attack_data = SubResource("Resource_bgvty")
 visible = false
 shape = SubResource("CircleShape2D_7qqu8")
 debug_color = Color(0.990688, 0, 0.275205, 0.42)
+
+[node name="Chargerange" type="Area2D" parent="."]
+position = Vector2(0, -51)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Chargerange"]
+shape = SubResource("CircleShape2D_bgvty")

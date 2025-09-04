@@ -22,11 +22,17 @@ var _hitstop_depth := 0 #Just putting hitstop stuff in game node until I get stu
 @onready var time_label: Label  = $CanvasLayer/TextureRect2/VBoxContainer/timelbl
 @onready var score_label: Label = $CanvasLayer/TextureRect2/VBoxContainer/scorelbl
 
+@export var player: CharacterBody2D
+
 func _ready() -> void:
 	add_to_group("game")
 	$Background.play("default")
 	reset_time()
 	start_time()
+	if !player:
+		player = get_tree().get_first_node_in_group("Player")
+	await get_tree().process_frame
+	player.connect("player_died", _game_over)
 
 func _process(delta: float) -> void:
 	if !running:
@@ -93,14 +99,14 @@ func on_enemy_killed(points: int = kill_score) -> void:
 	_update_score_label()
 
 func apply_hitstop(duration: float = 0.06, timescale: float = 0.0) -> void:
-	# Stackable hitstop: multiple calls extend the pause; we only restore when all are done.
 	_hitstop_depth += 1
 	Engine.time_scale = timescale
 
-	# Use a timer that ignores time scale and keeps running even if the tree is paused.
-	# Godot 4: create_timer(time_sec, process_in_physics:=false, ignore_time_scale:=true, process_always:=true)
 	await get_tree().create_timer(duration, false, true, true).timeout
 
 	_hitstop_depth = max(0, _hitstop_depth - 1)
 	if _hitstop_depth == 0:
 		Engine.time_scale = 1.0
+
+func _game_over():
+	print("Player died, game over.")

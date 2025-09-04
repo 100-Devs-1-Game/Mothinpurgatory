@@ -4,6 +4,7 @@ signal state_changed(new_state: String)
 signal dash_started(total_time: float)
 signal dash_updated(remaining_time: float, total_time: float)
 signal dash_ended()
+signal player_died
 
 @export var stats: PlayerStats
 @export var animator_path: NodePath
@@ -107,7 +108,7 @@ func _reset_jumps_on_ground(full: bool) -> void:
 		_jumps_left = 0
 
 func _death(source: Node) -> void:
-	print("Player died")
+	emit_signal("player_died")
 
 func apply_knockback(kb: Vector2, attack_data: AttackData, source: Node) -> void:
 	print("knocked back")
