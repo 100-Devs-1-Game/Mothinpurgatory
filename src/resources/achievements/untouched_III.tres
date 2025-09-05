@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="AchievementData" load_steps=3 format=3 uid="uid://cgli8d2058rod"]
+
+[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/icons/moth_icon.png" id="1_6n41i"]
+[ext_resource type="Script" uid="uid://qm1fbqpewbxm" path="res://core/achievements/achievement_data.gd" id="1_dy0vv"]
+
+[resource]
+script = ExtResource("1_dy0vv")
+id = ""
+title = ""
+description = ""
+unlocked = false
+icon = ExtResource("1_6n41i")
+metadata/_custom_type_script = "uid://qm1fbqpewbxm"

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="AchievementData" load_steps=3 format=3 uid="uid://ip03f225756p"]
+
+[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/icons/moth_icon.png" id="1_ptnje"]
+[ext_resource type="Script" uid="uid://qm1fbqpewbxm" path="res://core/achievements/achievement_data.gd" id="1_wgccc"]
+
+[resource]
+script = ExtResource("1_wgccc")
+id = "survivor_III"
+title = "Survivor III"
+description = "Survive the onslaught for 10 minutes."
+unlocked = false
+icon = ExtResource("1_ptnje")
+metadata/_custom_type_script = "uid://qm1fbqpewbxm"

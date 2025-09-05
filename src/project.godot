@@ -17,6 +17,12 @@ boot_splash/bg_color=Color(0.486849, 0.346711, 0, 1)
 boot_splash/image="uid://bucwdpkdkkxvt"
 config/icon="uid://bucwdpkdkkxvt"
 
+[autoload]
+
+AchievementManager="*res://core/autoloads/achievement_manager.gd"
+EventBus="*res://core/autoloads/event_bus.gd"
+SettingsManager="*res://core/autoloads/settings_manager.gd"
+
 [file_customization]
 
 folder_colors={

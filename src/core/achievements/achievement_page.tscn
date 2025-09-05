@@ -1,0 +1,146 @@
+[gd_scene load_steps=7 format=3 uid="uid://di84lauqbcq7d"]
+
+[ext_resource type="Script" uid="uid://wcjvmxhekp8b" path="res://core/achievements/achievement_page.gd" id="1_2aths"]
+[ext_resource type="PackedScene" uid="uid://1vcje6g6xlb4" path="res://core/achievements/achievement_card.tscn" id="2_a587l"]
+[ext_resource type="Shader" uid="uid://cbkwhpu8kf61w" path="res://shaders/blur.gdshader" id="3_lo5jw"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_eypsl"]
+shader = ExtResource("3_lo5jw")
+shader_parameter/blur_amount = 2.509
+shader_parameter/mix_amount = 0.0
+shader_parameter/color_over = Color(0, 0, 0, 0)
+shader_parameter/invert = false
+shader_parameter/fade_start = 0.0
+shader_parameter/fade_end = 1.0
+shader_parameter/falloff = 1.0
+
+[sub_resource type="Shader" id="Shader_lo5jw"]
+code = "shader_type canvas_item;
+
+uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
+
+uniform float blur_amount : hint_range(0.0, 10.0) = 2.0; // max blur at the edge
+uniform float mix_amount  : hint_range(0.0, 1.0) = 0.0;  // tint with color_over
+uniform vec4  color_over  : source_color = vec4(0.0);
+
+uniform bool  invert = false;     // false = fade downward (top strip), true = fade upward (bottom strip)
+uniform float fade_start = 0.0;   // where the fade begins within the rect (0..1 from the edge)
+uniform float fade_end   = 1.0;   // where blur is fully gone (0..1 at the inner edge)
+uniform float falloff    = 1.0;   // >1 = tighter near the edge, <1 = softer
+
+void fragment() {
+	// 0..1 along the strip from the chosen edge
+	float pos = UV.y;
+	if (invert) pos = 1.0 - pos;
+
+	// Mask is 1.0 at the edge, smoothly down to 0.0 by fade_end
+	float m = 1.0 - smoothstep(fade_start, fade_end, pos);
+	m = pow(m, max(falloff, 1e-5)); // shape the curve
+
+	// Blur strength also fades out so there’s no harsh boundary
+	float lod = clamp(blur_amount * m, 0.0, 10.0);
+	vec4 blurred = textureLod(SCREEN_TEXTURE, SCREEN_UV, lod);
+
+	// Optional tint
+	vec4 fin = mix(blurred, color_over, mix_amount);
+
+	// Alpha fades out with the blur, making the transition seamless
+	fin.a = m;
+	COLOR = fin;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tqewt"]
+shader = SubResource("Shader_lo5jw")
+shader_parameter/blur_amount = 2.509
+shader_parameter/mix_amount = 0.0
+shader_parameter/color_over = Color(0, 0, 0, 0)
+shader_parameter/invert = true
+shader_parameter/fade_start = 0.0
+shader_parameter/fade_end = 1.0
+shader_parameter/falloff = 0.915
+
+[node name="AchievementView" type="CanvasLayer" node_paths=PackedStringArray("btn_reset", "btn_back")]
+script = ExtResource("1_2aths")
+scroll_path = NodePath("ScrollContainer")
+vbox_path = NodePath("ScrollContainer/GridContainer")
+card_scene = ExtResource("2_a587l")
+min_row_height = 90
+btn_reset = NodePath("reset")
+btn_back = NodePath("back")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+z_index = -4
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0980392, 0.0980392, 0.14902, 1)
+
+[node name="reset" type="Button" parent="."]
+z_index = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 312.0
+offset_top = 235.0
+offset_right = 566.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 17
+text = "Reset achievement progress"
+
+[node name="back" type="Button" parent="."]
+z_index = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -564.0
+offset_top = 235.0
+offset_right = -310.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 17
+text = "Back to title"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 278.0
+offset_right = -278.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="GridContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BlurTop" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_eypsl")
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 125.0
+grow_horizontal = 2
+mouse_filter = 2
+
+[node name="BlurBotom" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_tqewt")
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 278.0
+offset_top = -105.0
+offset_right = -278.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2

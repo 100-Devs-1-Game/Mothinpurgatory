@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="AchievementData" load_steps=3 format=3 uid="uid://cpjkace27x6v5"]
+
+[ext_resource type="Script" uid="uid://qm1fbqpewbxm" path="res://core/achievements/achievement_data.gd" id="1_88e8c"]
+[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/icons/moth_icon.png" id="1_tasax"]
+
+[resource]
+script = ExtResource("1_88e8c")
+id = "untouched_II"
+title = "Untouchable II"
+description = "Go completely unharmed for 3 minutes."
+unlocked = false
+icon = ExtResource("1_tasax")
+metadata/_custom_type_script = "uid://qm1fbqpewbxm"

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cfwskxbd3ff4q" path="res://enemies/spitter/spitter.gd" id="1_wcbc3"]
 [ext_resource type="Resource" uid="uid://ccrwqs0soxxdg" path="res://enemies/spitter/spitter_data.tres" id="2_1b5a1"]
-[ext_resource type="PackedScene" uid="uid://lje6qhcr17el" path="res://sandbox/spit_projectile.tscn" id="3_hum7u"]
+[ext_resource type="PackedScene" uid="uid://lje6qhcr17el" path="res://enemies/spitter/spit_projectile.tscn" id="3_hum7u"]
 [ext_resource type="Script" uid="uid://dwvivyga6h4rd" path="res://components/combat/health/health.gd" id="4_gwbs0"]
 [ext_resource type="PackedScene" uid="uid://bq1v87o3hxrb1" path="res://components/combat/health/hurtbox.tscn" id="5_j7r8r"]
 

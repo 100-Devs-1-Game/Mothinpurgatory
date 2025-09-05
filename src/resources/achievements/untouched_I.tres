@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="AchievementData" load_steps=3 format=3 uid="uid://cnvgrpn51cw43"]
+
+[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/icons/moth_icon.png" id="1_04ml8"]
+[ext_resource type="Script" uid="uid://qm1fbqpewbxm" path="res://core/achievements/achievement_data.gd" id="1_t3qn7"]
+
+[resource]
+script = ExtResource("1_t3qn7")
+id = "untouched_I"
+title = "Untouchable I"
+description = "Go completely unharmed for 1 minute."
+unlocked = true
+icon = ExtResource("1_04ml8")
+metadata/_custom_type_script = "uid://qm1fbqpewbxm"

@@ -1,0 +1,57 @@
+[gd_scene load_steps=4 format=3 uid="uid://1vcje6g6xlb4"]
+
+[ext_resource type="Script" uid="uid://30k2bnb131ut" path="res://core/achievements/achievement_card.gd" id="1_wtljg"]
+[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/icons/moth_icon.png" id="2_bf1y1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wtljg"]
+bg_color = Color(0.0846899, 0.0846899, 0.0846899, 1)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+
+[node name="AchievementCard" type="Panel"]
+offset_right = 458.0
+offset_bottom = 100.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_wtljg")
+script = ExtResource("1_wtljg")
+icon_size = Vector2(64, 64)
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Row" type="HBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Icon" type="TextureRect" parent="Margin/Row"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("2_bf1y1")
+expand_mode = 1
+
+[node name="Text" type="VBoxContainer" parent="Margin/Row"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Title" type="Label" parent="Margin/Row/Text"]
+layout_mode = 2
+text = "[Achievement Title]"
+
+[node name="Desc" type="Label" parent="Margin/Row/Text"]
+custom_minimum_size = Vector2(342.08, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
+autowrap_mode = 1

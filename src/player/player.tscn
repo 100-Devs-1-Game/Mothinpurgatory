@@ -394,7 +394,7 @@ frame_progress = 1.0
 
 [node name="Health" type="Node" parent="."]
 script = ExtResource("2_qjkh3")
-max_health = 12
+max_health = 87
 tint_on_damage = true
 
 [node name="StateMachine" type="Node" parent="."]

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="AchievementData" load_steps=3 format=3 uid="uid://ddli4qjmaqhip"]
+
+[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/icons/moth_icon.png" id="1_atprm"]
+[ext_resource type="Script" uid="uid://qm1fbqpewbxm" path="res://core/achievements/achievement_data.gd" id="1_nl5y3"]
+
+[resource]
+script = ExtResource("1_nl5y3")
+id = "no_bugs"
+title = "Pest Killer"
+description = "Defeat 300 Gnats total."
+unlocked = true
+icon = ExtResource("1_atprm")
+metadata/_custom_type_script = "uid://qm1fbqpewbxm"

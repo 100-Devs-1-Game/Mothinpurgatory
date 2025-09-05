@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="AchievementData" load_steps=3 format=3 uid="uid://bt8mx1roj4jbe"]
+
+[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/icons/moth_icon.png" id="1_kkuc7"]
+[ext_resource type="Script" uid="uid://qm1fbqpewbxm" path="res://core/achievements/achievement_data.gd" id="1_yec2o"]
+
+[resource]
+script = ExtResource("1_yec2o")
+id = "first_game"
+title = "One of Many"
+description = "Play the game for the first time."
+unlocked = true
+icon = ExtResource("1_kkuc7")
+metadata/_custom_type_script = "uid://qm1fbqpewbxm"

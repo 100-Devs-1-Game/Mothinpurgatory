@@ -138,7 +138,7 @@ color = Color(0.701961, 0.529412, 0.376471, 1)
 z_index = -4
 position = Vector2(510, 139)
 sprite_frames = SubResource("SpriteFrames_p3ig4")
-frame_progress = 0.972287
+frame_progress = 0.0937507
 
 [node name="Player" parent="." instance=ExtResource("2_iibmw")]
 position = Vector2(384, 601)
