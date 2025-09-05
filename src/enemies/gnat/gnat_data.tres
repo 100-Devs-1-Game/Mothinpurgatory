@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://djtrf1rjpq5sd"]
+
+[ext_resource type="Script" uid="uid://dy6n5lakmkxvi" path="res://enemies/enemy_data.gd" id="1_ktpl8"]
+
+[resource]
+script = ExtResource("1_ktpl8")
+max_health = 1
+score_on_death = 10
+damage = 1
+speed = 220
+gravity = 800.0
+interactable_faction = 2
+metadata/_custom_type_script = "uid://dy6n5lakmkxvi"

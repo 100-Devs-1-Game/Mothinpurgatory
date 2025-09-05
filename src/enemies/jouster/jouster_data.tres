@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://bmo3gj50pme8"]
+
+[ext_resource type="Script" uid="uid://dy6n5lakmkxvi" path="res://enemies/enemy_data.gd" id="1_fy445"]
+
+[resource]
+script = ExtResource("1_fy445")
+max_health = 3
+score_on_death = 30
+damage = 2
+speed = 120
+gravity = 2200.0
+interactable_faction = 2
+metadata/_custom_type_script = "uid://dy6n5lakmkxvi"

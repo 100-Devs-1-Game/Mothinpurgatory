@@ -1,10 +1,10 @@
 [gd_scene load_steps=12 format=3 uid="uid://buhku7c6mmsmu"]
 
-[ext_resource type="Script" uid="uid://b6lrtskoericv" path="res://sandbox/jouster.gd" id="1_mtnxs"]
-[ext_resource type="Resource" uid="uid://b0gebrvtkbrav" path="res://sandbox/EnemyData.tres" id="2_bgvty"]
+[ext_resource type="Script" uid="uid://b6lrtskoericv" path="res://enemies/jouster/jouster.gd" id="1_mtnxs"]
+[ext_resource type="Resource" uid="uid://bmo3gj50pme8" path="res://enemies/jouster/jouster_data.tres" id="2_bgvty"]
 [ext_resource type="Script" uid="uid://dwvivyga6h4rd" path="res://components/combat/health/health.gd" id="2_xl3xl"]
-[ext_resource type="PackedScene" uid="uid://bq1v87o3hxrb1" path="res://components/combat/health/Hurtbox.tscn" id="3_40isp"]
-[ext_resource type="PackedScene" uid="uid://dt8t2rr81r7oa" path="res://components/combat/attack/Hitbox.tscn" id="4_40isp"]
+[ext_resource type="PackedScene" uid="uid://bq1v87o3hxrb1" path="res://components/combat/health/hurtbox.tscn" id="3_40isp"]
+[ext_resource type="PackedScene" uid="uid://dt8t2rr81r7oa" path="res://components/combat/attack/hitbox.tscn" id="4_40isp"]
 [ext_resource type="Script" uid="uid://cqkedinwlljjx" path="res://components/combat/attack/attack.gd" id="5_7qqu8"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_mtnxs"]
@@ -30,14 +30,15 @@ metadata/_custom_type_script = "uid://cqkedinwlljjx"
 [sub_resource type="CircleShape2D" id="CircleShape2D_bgvty"]
 radius = 482.001
 
-[node name="Jouster" type="CharacterBody2D"]
+[node name="Jouster" type="CharacterBody2D" node_paths=PackedStringArray("charge_area")]
+collision_mask = 4
 script = ExtResource("1_mtnxs")
-speed = 160.0
 enemy_data = ExtResource("2_bgvty")
+charge_area = NodePath("Chargerange")
 
 [node name="Health" type="Node" parent="."]
 script = ExtResource("2_xl3xl")
-max_health = 3
+overwrite_data = ExtResource("2_bgvty")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -51.5)
@@ -71,3 +72,14 @@ position = Vector2(0, -51)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Chargerange"]
 shape = SubResource("CircleShape2D_bgvty")
+
+[node name="status" type="Label" parent="."]
+offset_left = -116.0
+offset_top = -204.0
+offset_right = 128.0
+offset_bottom = -159.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_constants/outline_size = 19
+theme_override_font_sizes/font_size = 32
+text = "State: Following"
+horizontal_alignment = 1

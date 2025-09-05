@@ -20,7 +20,7 @@ func _ready() -> void:
 
 func _on_area_entered(area: Area2D) -> void:
 	if area.is_in_group("hurtbox") and area.has_method("apply_damage"):
-		var hurt_owner := area.get_parent()
+		var hurt_owner = area.get_parent()
 
 		if a_owner != null and hurt_owner == a_owner:
 			return

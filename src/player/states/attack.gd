@@ -161,7 +161,7 @@ func _spawn_hitbox():
 		hb.position = offset
 
 		var poly_n = _make_cone_polygon(CONE_ANGLE_DEG, CONE_RADIUS, CONE_SEGMENTS, 0.0)
-		var mirror := float(-player._facing)
+		var mirror = float(-player._facing)
 		for i in range(poly_n.size()):
 			poly_n[i].x *= mirror
 
@@ -178,12 +178,12 @@ func _make_cone_polygon(angle_deg: float, radius: float, segments: int, angle_of
 	var total = half * 2.0
 	for i in range(segments + 1):
 		var t = -half + (total * (float(i) / float(segments))) #this is hell
-		var dir = Vector2(cos(t + angle_offset), sin(t + angle_offset))
-		points.append(dir * radius)
+		var move_dir = Vector2(cos(t + angle_offset), sin(t + angle_offset))
+		points.append(move_dir * radius)
 	return points
 
 func _rotate_polygon(poly: PackedVector2Array, angle: float) -> PackedVector2Array:
-	var rotated := PackedVector2Array()
+	var rotated = PackedVector2Array()
 	for i in range(poly.size()):
 		var p = poly[i]
 		var rp = Vector2(

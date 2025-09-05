@@ -9,6 +9,7 @@ func init(p_sm, p_player):
 	player = p_player
 
 func enter() -> void:
+	player.set_hurtbox(true)
 	timer = player.stats.dash_time
 	sm.set_cooldown("dash", player.stats.dash_cooldown)
 	player.velocity = Vector2(player._facing * player.stats.dash_speed, 0.0)
@@ -21,6 +22,7 @@ func update(delta: float) -> void:
 	player.emit_signal("dash_updated", timer, player.stats.dash_time)
 	timer -= delta
 	if timer <= 0.0:
+		player.set_hurtbox(false)
 		if not player.is_on_floor():
 			sm.change_state("Air")
 		else:

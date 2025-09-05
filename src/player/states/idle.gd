@@ -23,7 +23,7 @@ func enter() -> void:
 		if player.animator:
 			player.animator.play("idle enter")
 
-func update(delta: float) -> void:
+func update(_delta: float) -> void:
 	var x_input = Input.get_action_strength("right") - Input.get_action_strength("left")
 
 	if player.has_jump_buffer() and player.can_coyote_jump():

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bunhfte6bv8ee" path="res://sandbox/damage_dummy.gd" id="1_mdlbx"]
 [ext_resource type="Script" uid="uid://dwvivyga6h4rd" path="res://components/combat/health/health.gd" id="1_tadct"]
-[ext_resource type="PackedScene" uid="uid://bq1v87o3hxrb1" path="res://components/combat/health/Hurtbox.tscn" id="2_mdlbx"]
+[ext_resource type="PackedScene" uid="uid://bq1v87o3hxrb1" path="res://components/combat/health/hurtbox.tscn" id="2_mdlbx"]
 
 [sub_resource type="Gradient" id="Gradient_y2qmy"]
 offsets = PackedFloat32Array(0)

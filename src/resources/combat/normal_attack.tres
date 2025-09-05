@@ -5,8 +5,10 @@
 [resource]
 script = ExtResource("1_aiojc")
 damage = 1
-knockback = Vector2(0, 0)
-hitstun = 0.0
+knockback = Vector2(900, 320)
+hitstun = 0.3
 knockback_scale = 1.0
 damage_type = "physical"
+hitstop_duration = 0.006
+is_crit = true
 metadata/_custom_type_script = "uid://cqkedinwlljjx"

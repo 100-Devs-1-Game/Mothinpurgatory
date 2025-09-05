@@ -1,14 +1,18 @@
-[gd_scene load_steps=17 format=3 uid="uid://die4xmtx2ypd8"]
+[gd_scene load_steps=26 format=3 uid="uid://die4xmtx2ypd8"]
 
 [ext_resource type="Script" uid="uid://b8bson1hycvvy" path="res://world/arena.gd" id="1_kgg8h"]
 [ext_resource type="PackedScene" uid="uid://du3uuiaokiexx" path="res://player/player.tscn" id="2_iibmw"]
+[ext_resource type="PackedScene" uid="uid://buhku7c6mmsmu" path="res://enemies/jouster/jouster.tscn" id="2_kgg8h"]
 [ext_resource type="Texture2D" uid="uid://b4gqih662pkvs" path="res://textures/animated backgrounds/colosseum/000.png" id="2_l1yh3"]
 [ext_resource type="Texture2D" uid="uid://bnn6jk3undniw" path="res://textures/animated backgrounds/colosseum/001.png" id="3_kgg8h"]
 [ext_resource type="Texture2D" uid="uid://4g5xyx6mt4xp" path="res://textures/animated backgrounds/colosseum/002.png" id="4_cag1q"]
 [ext_resource type="Texture2D" uid="uid://bqedi8apfiouw" path="res://textures/animated backgrounds/colosseum/003.png" id="5_qvbsh"]
 [ext_resource type="Texture2D" uid="uid://upxwtp6igyet" path="res://textures/animated backgrounds/colosseum/004.png" id="6_1auv6"]
 [ext_resource type="Texture2D" uid="uid://crl10mhhvgntg" path="res://textures/animated backgrounds/colosseum/005.png" id="7_prmyl"]
-[ext_resource type="PackedScene" uid="uid://buhku7c6mmsmu" path="res://sandbox/jouster.tscn" id="9_l1yh3"]
+[ext_resource type="PackedScene" uid="uid://2c2r0mjftm3i" path="res://enemies/spitter/spitter.tscn" id="10_kgg8h"]
+[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/icons/moth_icon.png" id="11_cag1q"]
+[ext_resource type="PackedScene" uid="uid://cta27xmsuq5g1" path="res://enemies/gnat/gnat.tscn" id="12_qvbsh"]
+[ext_resource type="Texture2D" uid="uid://b30w6r60vqkhe" path="res://textures/atlas/full_atlas.png" id="13_1auv6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_iibmw"]
 size = Vector2(3506, 20)
@@ -43,8 +47,8 @@ animations = [{
 }]
 
 [sub_resource type="Gradient" id="Gradient_hksqf"]
-offsets = PackedFloat32Array(0, 0.46, 0.66, 1)
-colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 0.505882, 0, 0, 0, 0.289777, 0, 0, 0, 0)
+offsets = PackedFloat32Array(0, 0.48731, 1)
+colors = PackedColorArray(0.678431, 0.482353, 0.32549, 0, 0.964706, 0.913725, 0.619608, 1, 0.678431, 0.482353, 0.32549, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_l1yh3"]
 gradient = SubResource("Gradient_hksqf")
@@ -56,11 +60,61 @@ colors = PackedColorArray(0, 0, 0, 0, 0.568627, 0, 0, 0.290196, 0.568627, 0, 0, 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_kgg8h"]
 gradient = SubResource("Gradient_l1yh3")
 
-[node name="Arena" type="Node2D"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l1yh3"]
+bg_color = Color(0, 0, 0, 0.388235)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kgg8h"]
+bg_color = Color(0, 0, 0, 0.337255)
+corner_radius_top_left = 80
+corner_radius_top_right = 80
+corner_radius_bottom_right = 80
+corner_radius_bottom_left = 80
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_prmyl"]
+atlas = ExtResource("13_1auv6")
+region = Rect2(979, 2134, 135, 71)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tr54y"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_prmyl")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_skj6l"]
+bg_color = Color(1, 1, 1, 0.741176)
+border_width_left = 36
+border_width_top = 36
+border_width_right = 36
+border_width_bottom = 36
+border_color = Color(1, 1, 1, 0)
+border_blend = true
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+
+[node name="Arena" type="Node2D" node_paths=PackedStringArray("time_label", "score_label", "player")]
 script = ExtResource("1_kgg8h")
+time_label = NodePath("GameUI/TextureRect2/VBoxContainer/timelbl")
+score_label = NodePath("GameUI/TextureRect2/VBoxContainer2/scorelbl")
+player = NodePath("Player")
+enemy_scene = ExtResource("2_kgg8h")
+gnat_scene = ExtResource("12_qvbsh")
+enemy_scenes = Array[PackedScene]([ExtResource("2_kgg8h"), ExtResource("10_kgg8h")])
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(563, 641)
+collision_layer = 4
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 shape = SubResource("RectangleShape2D_iibmw")
@@ -84,38 +138,40 @@ color = Color(0.701961, 0.529412, 0.376471, 1)
 z_index = -4
 position = Vector2(510, 139)
 sprite_frames = SubResource("SpriteFrames_p3ig4")
-frame_progress = 0.60153
+frame_progress = 0.972287
 
 [node name="Player" parent="." instance=ExtResource("2_iibmw")]
 position = Vector2(384, 601)
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="GameUI" type="CanvasLayer" parent="."]
 
-[node name="TextureRect2" type="TextureRect" parent="CanvasLayer"]
+[node name="TextureRect2" type="TextureRect" parent="GameUI"]
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -142.0
-offset_top = 19.0
-offset_right = 142.0
-offset_bottom = 72.0
+offset_left = -378.0
+offset_top = 46.0
+offset_right = 378.0
+offset_bottom = 99.0
 grow_horizontal = 2
 texture = SubResource("GradientTexture2D_l1yh3")
 expand_mode = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/TextureRect2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="GameUI/TextureRect2"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 19.0
-offset_bottom = -18.0
+offset_left = 108.0
+offset_top = 2.0
+offset_right = -411.0
+offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = -4
 alignment = 1
 
-[node name="timelbl" type="Label" parent="CanvasLayer/TextureRect2/VBoxContainer"]
+[node name="timelbl" type="Label" parent="GameUI/TextureRect2/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 19
@@ -123,7 +179,21 @@ text = "Time: 00:00.0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="scorelbl" type="Label" parent="CanvasLayer/TextureRect2/VBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="GameUI/TextureRect2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 413.0
+offset_top = 2.0
+offset_right = -96.0
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = -4
+alignment = 1
+
+[node name="scorelbl" type="Label" parent="GameUI/TextureRect2/VBoxContainer2"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 19
@@ -131,7 +201,7 @@ text = "Score: 000000"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TextureRect3" type="TextureRect" parent="CanvasLayer"]
+[node name="TextureRect3" type="TextureRect" parent="GameUI"]
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -142,7 +212,7 @@ grow_vertical = 0
 texture = SubResource("GradientTexture2D_kgg8h")
 expand_mode = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/TextureRect3"]
+[node name="VBoxContainer" type="VBoxContainer" parent="GameUI/TextureRect3"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -153,7 +223,7 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="Label2" type="Label" parent="CanvasLayer/TextureRect3/VBoxContainer"]
+[node name="Label2" type="Label" parent="GameUI/TextureRect3/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 19
@@ -161,5 +231,191 @@ text = "HEALTH: 10/10"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Jouster" parent="." instance=ExtResource("9_l1yh3")]
-position = Vector2(847, 607)
+[node name="TextureRect" type="TextureRect" parent="GameUI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -62.5
+offset_right = 62.5
+offset_bottom = 125.0
+grow_horizontal = 2
+texture = ExtResource("11_cag1q")
+expand_mode = 1
+
+[node name="LeftSpawn" type="Marker2D" parent="."]
+position = Vector2(-542, 516)
+
+[node name="RightSpawn" type="Marker2D" parent="."]
+position = Vector2(1592, 516)
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="Gameover" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="Gameover"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.333333)
+
+[node name="gameoverlbl" type="Label" parent="Gameover"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -182.5
+offset_top = -250.0
+offset_right = 182.5
+offset_bottom = -162.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0, 0.337255, 1)
+theme_override_constants/outline_size = 35
+theme_override_font_sizes/font_size = 64
+text = "Game Over!"
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Gameover"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -221.0
+offset_top = -137.0
+offset_right = 221.0
+offset_bottom = 137.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 19
+
+[node name="Panel" type="Panel" parent="Gameover/VBoxContainer"]
+custom_minimum_size = Vector2(0.185, 42.125)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_l1yh3")
+
+[node name="timeoverlbl" type="Label" parent="Gameover/VBoxContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 31
+text = "You survived for: 00:00.0"
+horizontal_alignment = 1
+
+[node name="Panel2" type="Panel" parent="Gameover/VBoxContainer"]
+custom_minimum_size = Vector2(0.185, 42.125)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_l1yh3")
+
+[node name="scoreoverlbl" type="Label" parent="Gameover/VBoxContainer/Panel2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 31
+text = "Your score: 000000"
+horizontal_alignment = 1
+
+[node name="Panel3" type="Panel" parent="Gameover/VBoxContainer"]
+custom_minimum_size = Vector2(0.185, 42.125)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_l1yh3")
+
+[node name="survivetimelbl" type="Label" parent="Gameover/VBoxContainer/Panel3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 31
+text = "Kills: 000000"
+horizontal_alignment = 1
+
+[node name="Retry" type="Button" parent="Gameover/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxFlat_kgg8h")
+text = "Retry"
+
+[node name="Exit" type="Button" parent="Gameover/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxFlat_kgg8h")
+text = "Exit to title"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0177324, 0.0177324, 0.0177324, 1)
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -242.5
+offset_top = 58.0
+offset_right = 242.5
+offset_bottom = 174.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.67451, 0, 0.270588, 1)
+theme_override_colors/font_outline_color = Color(0.654902, 0.0156863, 0.0509804, 1)
+theme_override_constants/outline_size = 22
+theme_override_font_sizes/font_size = 85
+text = "Game Over!"
+horizontal_alignment = 1
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="CanvasLayer"]
+z_index = 1
+position = Vector2(562, 451)
+sprite_frames = SubResource("SpriteFrames_tr54y")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -125.0
+offset_top = -80.0
+offset_right = 125.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 30
+
+[node name="Button" type="Button" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Retry"
+flat = true
+
+[node name="Button2" type="Button" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Quit to title"
+flat = true
+
+[node name="Panel" type="Panel" parent="CanvasLayer"]
+offset_left = 495.0
+offset_top = 438.0
+offset_right = 641.0
+offset_bottom = 493.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_skj6l")

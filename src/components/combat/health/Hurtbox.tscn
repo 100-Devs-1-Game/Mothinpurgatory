@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://bq1v87o3hxrb1"]
+[gd_scene load_steps=3 format=3 uid="uid://bq1v87o3hxrb1"]
 
-[ext_resource type="Script" uid="uid://gl1wuqy88s06" path="res://components/combat/health/hurtbox.gd" id="1_on57l"]
+[ext_resource type="Script" uid="uid://gl1wuqy88s06" path="res://components/combat/health/hurtbox.gd" id="1_3qdyf"]
+[ext_resource type="PackedScene" uid="uid://daa85nlpjmrmn" path="res://components/effects/hit/attack_effect.tscn" id="2_87mol"]
 
 [node name="Hurtbox" type="Area2D"]
-script = ExtResource("1_on57l")
+collision_layer = 16
+collision_mask = 8
+script = ExtResource("1_3qdyf")
+hit = ExtResource("2_87mol")

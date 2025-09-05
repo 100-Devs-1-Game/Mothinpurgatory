@@ -1,0 +1,53 @@
+[gd_scene load_steps=9 format=3 uid="uid://2c2r0mjftm3i"]
+
+[ext_resource type="Script" uid="uid://cfwskxbd3ff4q" path="res://enemies/spitter/spitter.gd" id="1_wcbc3"]
+[ext_resource type="Resource" uid="uid://ccrwqs0soxxdg" path="res://enemies/spitter/spitter_data.tres" id="2_1b5a1"]
+[ext_resource type="PackedScene" uid="uid://lje6qhcr17el" path="res://sandbox/spit_projectile.tscn" id="3_hum7u"]
+[ext_resource type="Script" uid="uid://dwvivyga6h4rd" path="res://components/combat/health/health.gd" id="4_gwbs0"]
+[ext_resource type="PackedScene" uid="uid://bq1v87o3hxrb1" path="res://components/combat/health/hurtbox.tscn" id="5_j7r8r"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_6o6bn"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wcbc3"]
+radius = 35.0143
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_efu7h"]
+radius = 67.3647
+
+[node name="Spitter" type="CharacterBody2D"]
+collision_mask = 4
+script = ExtResource("1_wcbc3")
+enemy_data = ExtResource("2_1b5a1")
+fire_range = 780.0
+burst_count = 1
+projectile_scene = ExtResource("3_hum7u")
+above_player_margin = 240.935
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("4_gwbs0")
+max_health = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(46, 46)
+texture = SubResource("PlaceholderTexture2D_6o6bn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_wcbc3")
+
+[node name="Status" type="Label" parent="."]
+offset_left = -116.0
+offset_top = -96.0
+offset_right = 128.0
+offset_bottom = -51.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_constants/outline_size = 19
+theme_override_font_sizes/font_size = 32
+text = "State: Following"
+horizontal_alignment = 1
+
+[node name="Hurtbox" parent="." instance=ExtResource("5_j7r8r")]
+health_node_path = NodePath("../Health")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+shape = SubResource("CircleShape2D_efu7h")
+debug_color = Color(0.985269, 0, 0.335448, 0.42)

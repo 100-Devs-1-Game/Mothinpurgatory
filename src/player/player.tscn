@@ -59,7 +59,7 @@
 [ext_resource type="Texture2D" uid="uid://dlg1wume44la7" path="res://textures/sprites/player/double jump/005.png" id="27_35wys"]
 [ext_resource type="Texture2D" uid="uid://b7u8g5njym6tu" path="res://textures/sprites/player/double jump/006.png" id="28_pjwc4"]
 [ext_resource type="Texture2D" uid="uid://dytkfgwchgdnb" path="res://textures/sprites/player/double jump/007.png" id="29_or4qq"]
-[ext_resource type="PackedScene" uid="uid://bq1v87o3hxrb1" path="res://components/combat/health/Hurtbox.tscn" id="51_w7j2h"]
+[ext_resource type="PackedScene" uid="uid://bq1v87o3hxrb1" path="res://components/combat/health/hurtbox.tscn" id="51_w7j2h"]
 [ext_resource type="PackedScene" uid="uid://iye001btjoga" path="res://player/Interface/hud.tscn" id="52_n0b8q"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a2xo5"]
@@ -376,11 +376,13 @@ height = 90.0
 radius = 26.0
 height = 102.0
 
-[node name="Player" type="CharacterBody2D" groups=["Player"]]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hurtbox_collision") groups=["Player"]]
+collision_mask = 4
 script = ExtResource("1_yw30f")
 stats = ExtResource("2_1so5t")
 animator_path = NodePath("Animator")
 slash_effect = ExtResource("3_jfgyi")
+hurtbox_collision = NodePath("Hurtbox/CollisionShape2D")
 
 [node name="Animator" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -63.75)
@@ -392,6 +394,8 @@ frame_progress = 1.0
 
 [node name="Health" type="Node" parent="."]
 script = ExtResource("2_qjkh3")
+max_health = 12
+tint_on_damage = true
 
 [node name="StateMachine" type="Node" parent="."]
 script = ExtResource("3_g6k8r")
@@ -419,7 +423,6 @@ position = Vector2(0, -45)
 health_node_path = NodePath("../Health")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
-visible = false
 shape = SubResource("CapsuleShape2D_n0b8q")
 
 [node name="Hud" parent="." instance=ExtResource("52_n0b8q")]

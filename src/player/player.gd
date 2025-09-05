@@ -1,14 +1,19 @@
 extends CharacterBody2D
 
+@warning_ignore("unused_signal")
 signal state_changed(new_state: String)
+@warning_ignore("unused_signal")
 signal dash_started(total_time: float)
+@warning_ignore("unused_signal")
 signal dash_updated(remaining_time: float, total_time: float)
+@warning_ignore("unused_signal")
 signal dash_ended()
 signal player_died
 
 @export var stats: PlayerStats
 @export var animator_path: NodePath
 @export var slash_effect: PackedScene
+@export var hurtbox_collision: CollisionShape2D
 
 @onready var animator: AnimatedSprite2D = get_node(animator_path)
 @onready var sm: Node = $StateMachine
@@ -73,11 +78,20 @@ func consume_double_jump() -> void:
 	if _jumps_left > 0:
 		_jumps_left -= 1
 
+func has_animator() -> bool:
+	if animator:
+		return true
+	else:
+		return false
+
 func set_facing(dir: int) -> void:
 	if dir != 0:
 		_facing = dir
 		if animator:
 			animator.flip_h = _facing > 0
+
+func set_hurtbox(state: bool) -> void:
+	hurtbox_collision.disabled = state
 
 func refresh_landing() -> void:
 	_reset_jumps_on_ground(true)
@@ -107,10 +121,10 @@ func _reset_jumps_on_ground(full: bool) -> void:
 	else:
 		_jumps_left = 0
 
-func _death(source: Node) -> void:
+func _death(_source: Node) -> void:
 	emit_signal("player_died")
 
-func apply_knockback(kb: Vector2, attack_data: AttackData, source: Node) -> void:
+func apply_knockback(kb: Vector2, _attack_data: AttackData, _source: Node) -> void:
 	print("knocked back")
 	velocity += kb
 
