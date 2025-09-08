@@ -1,0 +1,148 @@
+[gd_scene load_steps=24 format=3 uid="uid://beebo36cgpnor"]
+
+[ext_resource type="Script" uid="uid://xkeoqsm1c2k1" path="res://enemies/slasher/slasher.gd" id="1_gdm4i"]
+[ext_resource type="Script" uid="uid://dwvivyga6h4rd" path="res://components/combat/health/health.gd" id="1_m2ru2"]
+[ext_resource type="Texture2D" uid="uid://hjketfaxk4no" path="res://textures/sprites/enemies/slasher bug/slash/000.png" id="2_gdm4i"]
+[ext_resource type="Resource" uid="uid://1u0fefm1bbmo" path="res://enemies/slasher/slasher_data.tres" id="2_rhr8w"]
+[ext_resource type="Texture2D" uid="uid://begbitap6kc3i" path="res://textures/sprites/enemies/slasher bug/slash/001.png" id="3_go51d"]
+[ext_resource type="Texture2D" uid="uid://c2r0f1rwnatdf" path="res://textures/sprites/enemies/slasher bug/slash/002.png" id="4_rhr8w"]
+[ext_resource type="Texture2D" uid="uid://cxgxm8dyth57e" path="res://textures/sprites/enemies/slasher bug/slash/003.png" id="5_gqe16"]
+[ext_resource type="Texture2D" uid="uid://dfhj3qxl3xh7w" path="res://textures/sprites/enemies/slasher bug/slash/004.png" id="6_2n51q"]
+[ext_resource type="Texture2D" uid="uid://clwo82ynb8ym6" path="res://textures/sprites/enemies/slasher bug/walk/000.png" id="7_fqmpt"]
+[ext_resource type="Texture2D" uid="uid://dwirutglwvh1q" path="res://textures/sprites/enemies/slasher bug/walk/001.png" id="8_ohyqm"]
+[ext_resource type="Texture2D" uid="uid://b4oiu5txvr6hx" path="res://textures/sprites/enemies/slasher bug/walk/002.png" id="9_3fyup"]
+[ext_resource type="Texture2D" uid="uid://mqeqwlbf5cxk" path="res://textures/sprites/enemies/slasher bug/walk/003.png" id="10_264ry"]
+[ext_resource type="Texture2D" uid="uid://cj5tqy2os4sjj" path="res://textures/sprites/enemies/slasher bug/walk/004.png" id="11_efygr"]
+[ext_resource type="Texture2D" uid="uid://6jibgc8qewkh" path="res://textures/sprites/enemies/slasher bug/walk/005.png" id="12_qjw7o"]
+[ext_resource type="PackedScene" uid="uid://bq1v87o3hxrb1" path="res://components/combat/health/hurtbox.tscn" id="13_bfb6c"]
+[ext_resource type="PackedScene" uid="uid://dt8t2rr81r7oa" path="res://components/combat/attack/hitbox.tscn" id="16_gqe16"]
+[ext_resource type="Script" uid="uid://cqkedinwlljjx" path="res://components/combat/attack/attack.gd" id="17_gqe16"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0py4b"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_gdm4i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_go51d")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_rhr8w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_gqe16")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_2n51q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_gdm4i")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_fqmpt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_ohyqm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_3fyup")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_264ry")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_efygr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_qjw7o")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 12.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_r22u7"]
+size = Vector2(72, 166)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rhr8w"]
+size = Vector2(72, 164)
+
+[sub_resource type="Resource" id="Resource_2n51q"]
+script = ExtResource("17_gqe16")
+damage = 4
+knockback = Vector2(0, 0)
+hitstun = 0.0
+knockback_scale = 1.0
+damage_type = "physical"
+hitstop_duration = 0.006
+is_crit = false
+metadata/_custom_type_script = "uid://cqkedinwlljjx"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gqe16"]
+size = Vector2(124, 98)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2n51q"]
+size = Vector2(131, 106)
+
+[node name="Slasher" type="CharacterBody2D" node_paths=PackedStringArray("attack_area", "hurtbox", "hitbox")]
+collision_mask = 4
+script = ExtResource("1_gdm4i")
+enemy_data = ExtResource("2_rhr8w")
+attack_area = NodePath("Attackarea")
+windup_time = 0.34
+attack_cooldown = 1.0
+hurtbox = NodePath("Hurtbox")
+hitbox = NodePath("Hitbox")
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("1_m2ru2")
+max_health = 6
+metadata/_custom_type_script = "uid://dwvivyga6h4rd"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_0py4b")
+animation = &"attack"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 13)
+shape = SubResource("RectangleShape2D_r22u7")
+
+[node name="Hurtbox" parent="." instance=ExtResource("13_bfb6c")]
+health_node_path = NodePath("../Health")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, 14)
+shape = SubResource("RectangleShape2D_rhr8w")
+debug_color = Color(0.85106, 0.37207, 0, 0.42)
+
+[node name="Hitbox" parent="." instance=ExtResource("16_gqe16")]
+attack_data = SubResource("Resource_2n51q")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(-87, 0)
+shape = SubResource("RectangleShape2D_gqe16")
+disabled = true
+debug_color = Color(1, 0, 0, 0.419608)
+
+[node name="status" type="Label" parent="."]
+offset_left = -116.0
+offset_top = -148.0
+offset_right = 128.0
+offset_bottom = -103.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_constants/outline_size = 19
+theme_override_font_sizes/font_size = 32
+text = "State: Following"
+horizontal_alignment = 1
+
+[node name="Attackarea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Attackarea"]
+position = Vector2(-87.5, 0)
+shape = SubResource("RectangleShape2D_2n51q")

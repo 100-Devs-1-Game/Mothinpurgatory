@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bxfdbeel31ulj"]
+
+[ext_resource type="Script" uid="uid://yfqqk1xt2af5" path="res://enemies/sniper/sniper.gd" id="1_1hp8h"]
+
+[node name="Sniper" type="CharacterBody2D"]
+script = ExtResource("1_1hp8h")

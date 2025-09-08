@@ -22,10 +22,10 @@ radius = 11.4018
 script = ExtResource("1_brq3j")
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
-color = Color(0.237977, 0.433843, 0, 1)
+color = Color(0.694118, 0, 0.129412, 1)
 polygon = PackedVector2Array(0, -10, 3, -9, 5, -8, 7, -6, 9, -2, 9, 2, 8, 5, 6, 8, 2, 9, -2, 9, -5, 9, -8, 5, -9, 3, -9, -1, -8, -4, -6, -6, -4, -8, -2, -10)
 
-[node name="Hitbox" parent="." instance=ExtResource("2_k4b2k")]
+[node name="Hitbox" parent="." groups=["enemy_proj"] instance=ExtResource("2_k4b2k")]
 attack_data = SubResource("Resource_u1iv8")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]

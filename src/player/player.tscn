@@ -394,7 +394,7 @@ frame_progress = 1.0
 
 [node name="Health" type="Node" parent="."]
 script = ExtResource("2_qjkh3")
-max_health = 87
+max_health = 320
 tint_on_damage = true
 
 [node name="StateMachine" type="Node" parent="."]
@@ -421,6 +421,7 @@ drag_vertical_offset = -1.0
 [node name="Hurtbox" parent="." instance=ExtResource("51_w7j2h")]
 position = Vector2(0, -45)
 health_node_path = NodePath("../Health")
+is_player_box = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
 shape = SubResource("CapsuleShape2D_n0b8q")

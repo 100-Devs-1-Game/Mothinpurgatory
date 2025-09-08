@@ -2,6 +2,7 @@ extends Area2D
 
 @export var health_node_path: NodePath
 @export var hit: PackedScene
+@export var is_player_box: bool = false
 var health_component: Node
 
 func _ready() -> void:
@@ -9,10 +10,14 @@ func _ready() -> void:
 	health_component = get_node_or_null(health_node_path)
 
 func apply_damage(attack_data: AttackData, source: Node) -> void:
+	
 	if source == get_parent():
 		return
 
-	if health_component:
+	if !is_player_box and source.is_in_group("Player"):
+		if health_component:
+			health_component.take_damage(attack_data, source)
+	elif is_player_box:
 		health_component.take_damage(attack_data, source)
 
 	if attack_data and attack_data.damage > 0:

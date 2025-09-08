@@ -20,6 +20,7 @@ func update(delta: float) -> void:
 	player.velocity.x = player._facing * player.stats.dash_speed
 	player.velocity.y = 0.0
 	player.emit_signal("dash_updated", timer, player.stats.dash_time)
+
 	timer -= delta
 	if timer <= 0.0:
 		player.set_hurtbox(false)

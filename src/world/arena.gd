@@ -44,6 +44,8 @@ var _hitstop_depth := 0 #Just putting hitstop stuff in game node until I get stu
 @export var use_weighted_spawn: bool = false
 @export var spawn_weights: PackedFloat32Array = PackedFloat32Array() #when we add big boi
 
+@export var debug_testing := false
+var post_process_enabled := true
 
 func _ready() -> void:
 	add_to_group("game")
@@ -79,8 +81,9 @@ func _format_time(t: float) -> String:
 
 func start_time() -> void:
 	running = true
-	_spawn_loop()
-	_gnat_spawn_loop()
+	if !debug_testing:
+		_spawn_loop()
+		_gnat_spawn_loop()
 
 func stop_time() -> void:
 	running = false
@@ -246,6 +249,12 @@ func _count_gnats_alive() -> int:
 				total += 1
 	return total
 
+func _input(event: InputEvent) -> void:
+	if Input.is_action_just_pressed("toggle_post"):
+		post_process_enabled = !post_process_enabled
+		$Enviroment.visible = post_process_enabled
+		$Enviroment/CanvasLayer.visible = post_process_enabled
+
 func _spawn_one_gnat() -> void:
 	var which_side = randi() % 2
 	var spawn_point: Marker2D = left_spawn if which_side == 0 else right_spawn
@@ -253,8 +262,8 @@ func _spawn_one_gnat() -> void:
 	var gnat = gnat_scene.instantiate()
 	gnat.global_position = spawn_point.global_position
 
-	if gnat.has_node("Sprite2D"):
-		var spr: Sprite2D = gnat.get_node("Sprite2D")
+	if gnat.has_node("AnimatedSprite2D"):
+		var spr: Sprite2D = gnat.get_node("AnimatedSprite2D")
 		spr.flip_h = (which_side != 0)
 
 	if is_instance_valid(enemy_container):

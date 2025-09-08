@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://q4h2f6ia01ad"]
+
+[ext_resource type="Script" uid="uid://dlmbbose2k1sd" path="res://enemies/behemoth/behemoth.gd" id="1_gljd7"]
+
+[node name="Behemoth" type="CharacterBody2D"]
+script = ExtResource("1_gljd7")

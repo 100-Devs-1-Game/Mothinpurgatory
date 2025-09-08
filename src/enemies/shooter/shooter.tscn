@@ -1,0 +1,58 @@
+[gd_scene load_steps=9 format=3 uid="uid://cepy44g514e4w"]
+
+[ext_resource type="Script" uid="uid://2rjj0u1m0nxd" path="res://enemies/shooter/shooter.gd" id="1_kkjre"]
+[ext_resource type="Resource" uid="uid://0xxklcwp7vjm" path="res://enemies/shooter/shooter_data.tres" id="2_o2iqe"]
+[ext_resource type="PackedScene" uid="uid://bq1v87o3hxrb1" path="res://components/combat/health/hurtbox.tscn" id="2_rlg6k"]
+[ext_resource type="PackedScene" uid="uid://lje6qhcr17el" path="res://enemies/spitter/spit_projectile.tscn" id="3_vqkn0"]
+[ext_resource type="Script" uid="uid://dwvivyga6h4rd" path="res://components/combat/health/health.gd" id="4_vqwp7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rlg6k"]
+size = Vector2(48, 71)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_ysdx8"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_o2iqe"]
+radius = 28.0
+
+[node name="Shooter" type="CharacterBody2D"]
+collision_mask = 4
+script = ExtResource("1_kkjre")
+enemy_data = ExtResource("2_o2iqe")
+shoot_range = 720.0
+shoot_offset_y = -48.0
+projectile_scene = ExtResource("3_vqkn0")
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("4_vqwp7")
+max_health = 3
+metadata/_custom_type_script = "uid://dwvivyga6h4rd"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -35.5)
+shape = SubResource("RectangleShape2D_rlg6k")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -35.5)
+scale = Vector2(48, 71)
+texture = SubResource("PlaceholderTexture2D_ysdx8")
+
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(-37, -54)
+
+[node name="Hurtbox" parent="." instance=ExtResource("2_rlg6k")]
+health_node_path = NodePath("../Health")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -37)
+shape = SubResource("CircleShape2D_o2iqe")
+
+[node name="status" type="Label" parent="."]
+offset_left = -116.0
+offset_top = -148.0
+offset_right = 128.0
+offset_bottom = -103.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_constants/outline_size = 19
+theme_override_font_sizes/font_size = 32
+text = "State: Following"
+horizontal_alignment = 1

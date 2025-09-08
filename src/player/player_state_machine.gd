@@ -7,6 +7,7 @@ var current_state: Node = null
 var previous_state_name := ""
 
 func init(p_player: Node) -> void:
+	await get_tree().process_frame
 	player = p_player
 	states["Idle"] = preload("res://player/states/idle.gd").new()
 	states["Run"] = preload("res://player/states/run.gd").new()
@@ -16,7 +17,7 @@ func init(p_player: Node) -> void:
 	states["Jump"] = preload("res://player/states/jump.gd").new()
 	for s in states.values():
 		s.init(self, player)
-	change_state("Idle")
+		change_state("Idle")
 
 func update(delta: float) -> void:
 	for k in cooldowns.keys():
