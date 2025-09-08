@@ -1,50 +1,64 @@
 extends Button
 
-@export_range(0.0, 1.0) var underline_width_ratio := 0.6
-@export var underline_height := 2
+@export_range(0.0, 1.0) var line_width_ratio := 0.6
+@export var line_height := 2
 @export var grow_time := 0.15
 @export var shrink_time := 0.12
 @export var fade := true
 
 @onready var underline: ColorRect = $Underline
+@onready var overline: ColorRect = $Overline
 var _tween: Tween
 
 func _ready() -> void:
-	underline.size = Vector2(_target_width(), underline_height)
-	underline.position = Vector2((size.x - underline.size.x) * 0.5, size.y - underline_height)
+	underline.size = Vector2(_target_width(), line_height)
+	underline.position = Vector2((size.x - underline.size.x) * 0.5, size.y - line_height)
 	underline.pivot_offset = Vector2(underline.size.x * 0.5, 0)
 	underline.scale.x = 0.0
 	underline.modulate.a = 0.0 if fade else 1.0
 
-	resized.connect(_on_resized)
+	overline.size = Vector2(_target_width(), line_height)
+	overline.position = Vector2((size.x - overline.size.x) * 0.5, 0)
+	overline.pivot_offset = Vector2(overline.size.x * 0.5, 0)
+	overline.scale.x = 0.0
+	overline.modulate.a = 0.0 if fade else 1.0
 
+	resized.connect(_on_resized)
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
 
 func _on_resized() -> void:
-	underline.size = Vector2(_target_width(), underline_height)
-	underline.position = Vector2((size.x - underline.size.x) * 0.5, size.y - underline_height)
+	underline.size = Vector2(_target_width(), line_height)
+	underline.position = Vector2((size.x - underline.size.x) * 0.5, size.y - line_height)
 	underline.pivot_offset = Vector2(underline.size.x * 0.5, 0)
+
+	overline.size = Vector2(_target_width(), line_height)
+	overline.position = Vector2((size.x - overline.size.x) * 0.5, 0)
+	overline.pivot_offset = Vector2(overline.size.x * 0.5, 0)
 
 func _on_mouse_entered() -> void:
 	_kill_tween()
 	_tween = create_tween()
 	_tween.set_parallel(true)
-	_tween.tween_property(underline, "scale:x", 1.0, grow_time).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	if fade:
-		_tween.tween_property(underline, "modulate:a", 1.0, grow_time).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+
+	for line in [underline, overline]:
+		_tween.tween_property(line, "scale:x", 1.0, grow_time).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		if fade:
+			_tween.tween_property(line, "modulate:a", 1.0, grow_time).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 
 func _on_mouse_exited() -> void:
 	_kill_tween()
 	_tween = create_tween()
 	_tween.set_parallel(true)
-	_tween.tween_property(underline, "scale:x", 0.0, shrink_time).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
-	if fade:
-		_tween.tween_property(underline, "modulate:a", 0.0, shrink_time).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+
+	for line in [underline, overline]:
+		_tween.tween_property(line, "scale:x", 0.0, shrink_time).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+		if fade:
+			_tween.tween_property(line, "modulate:a", 0.0, shrink_time).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 
 func _kill_tween() -> void:
 	if _tween and _tween.is_running():
 		_tween.kill()
 
 func _target_width() -> float:
-	return max(1.0, size.x * underline_width_ratio)
+	return max(1.0, size.x * line_width_ratio)

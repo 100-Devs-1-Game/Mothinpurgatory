@@ -48,6 +48,7 @@ var _hitstop_depth := 0 #Just putting hitstop stuff in game node until I get stu
 var post_process_enabled := true
 
 func _ready() -> void:
+	SceneLoader.current_scene = self
 	add_to_group("game")
 	$Background.play("default")
 	reset_time()
@@ -71,6 +72,9 @@ func _process(delta: float) -> void:
 		score += minutes_gained * time_score_bonus
 		last_minute_checked = current_minute
 		_update_score_label()
+
+func show_ui(show: bool) -> void:
+	$GameUI.visible = show
 
 func _format_time(t: float) -> String:
 	@warning_ignore("integer_division")
@@ -151,7 +155,7 @@ func _spawn_loop() -> void:
 		if running:
 			_spawn_one()
 			var wait_time = _current_spawn_interval()
-			await get_tree().create_timer(wait_time).timeout
+			await get_tree().create_timer(wait_time, false).timeout
 		else:
 			await get_tree().process_frame
 
@@ -211,7 +215,7 @@ func _gnat_spawn_loop() -> void:
 		if running:
 			_spawn_gnat_burst()
 			var wait_time = _gnat_current_spawn_interval()
-			await get_tree().create_timer(wait_time).timeout
+			await get_tree().create_timer(wait_time, false).timeout
 		else:
 			await get_tree().process_frame
 

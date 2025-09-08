@@ -130,7 +130,7 @@ func _fire_sequence() -> void:
 	is_firing = false
 
 	_telegraph_begin()
-	await get_tree().create_timer(windup_time).timeout
+	await get_tree().create_timer(windup_time, false).timeout
 	_telegraph_end()
 
 	is_winding_up = false
@@ -139,7 +139,7 @@ func _fire_sequence() -> void:
 	for i in range(burst_count):
 		_spawn_spit()
 		if i < burst_count - 1:
-			await get_tree().create_timer(time_between_shots).timeout
+			await get_tree().create_timer(time_between_shots, false).timeout
 
 	is_firing = false
 
@@ -154,7 +154,7 @@ func _fire_sequence() -> void:
 		move_and_slide()
 		await get_tree().process_frame
 
-	await get_tree().create_timer(fire_cooldown).timeout
+	await get_tree().create_timer(fire_cooldown, false).timeout
 	in_cooldown = false
 	can_fire = true
 

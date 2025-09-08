@@ -6,7 +6,12 @@
 offset_right = 8.0
 offset_bottom = 8.0
 script = ExtResource("1_01762")
+line_height = 4
 
 [node name="Underline" type="ColorRect" parent="."]
+layout_mode = 0
+mouse_filter = 2
+
+[node name="Overline" type="ColorRect" parent="."]
 layout_mode = 0
 mouse_filter = 2

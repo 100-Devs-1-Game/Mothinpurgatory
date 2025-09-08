@@ -1,11 +1,17 @@
-[gd_scene load_steps=6 format=3 uid="uid://bi8u8vl7ara8y"]
+[gd_scene load_steps=14 format=3 uid="uid://bi8u8vl7ara8y"]
 
 [ext_resource type="PackedScene" uid="uid://3fs8sj37ylm5" path="res://sandbox/underline_anim_button.tscn" id="1_a2kbo"]
 [ext_resource type="Script" uid="uid://cbfu46wsviagn" path="res://sandbox/title.gd" id="1_etir8"]
 [ext_resource type="PackedScene" uid="uid://c3cx280f4i76s" path="res://components/discord_link/discord_button.tscn" id="3_etir8"]
+[ext_resource type="Script" uid="uid://dttbqysy2hasj" path="res://sandbox/title_parallax.gd" id="4_nadrw"]
+[ext_resource type="Texture2D" uid="uid://bcspekjdbhpoc" path="res://textures/parallax backgrounds/adjusted parallax/000.png" id="5_nadrw"]
+[ext_resource type="Texture2D" uid="uid://csy7dr0tud0x7" path="res://textures/parallax backgrounds/adjusted parallax/001.png" id="6_m1t0n"]
+[ext_resource type="Texture2D" uid="uid://c62y3dh8knntf" path="res://textures/parallax backgrounds/adjusted parallax/002.png" id="7_qhmwt"]
+[ext_resource type="Shader" uid="uid://ctc6vhwrdums4" path="res://shaders/rays.gdshader" id="8_qhmwt"]
+[ext_resource type="Shader" uid="uid://bxp85agnodslv" path="res://shaders/post_process.gdshader" id="9_x30a1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_etir8"]
-bg_color = Color(0, 0, 0, 1)
+bg_color = Color(0.129412, 0, 0, 1)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
@@ -18,6 +24,42 @@ corner_radius_bottom_right = 15
 corner_radius_bottom_left = 15
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mcnky"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qhmwt"]
+shader = ExtResource("8_qhmwt")
+shader_parameter/angle = -0.216
+shader_parameter/position = -0.2
+shader_parameter/spread = 0.425
+shader_parameter/cutoff = 0.0820001
+shader_parameter/falloff = 0.564
+shader_parameter/edge_fade = 0.159
+shader_parameter/speed = 1.43
+shader_parameter/ray1_density = 8.54
+shader_parameter/ray2_density = 31.97
+shader_parameter/ray2_intensity = 0.3
+shader_parameter/color = Color(1, 0.901961, 0.65098, 0.807843)
+shader_parameter/hdr = true
+shader_parameter/seed = 9.85
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_x30a1"]
+shader = ExtResource("9_x30a1")
+shader_parameter/shadow_strength = 0.132
+shader_parameter/shadow_threshold = 0.772
+shader_parameter/shadow_softness = 0.074
+shader_parameter/bloom_threshold = 0.721
+shader_parameter/bloom_intensity = 0.139
+shader_parameter/bloom_spread = 1.473
+shader_parameter/bloom_after_shadows = true
+shader_parameter/protect_enable = false
+shader_parameter/protect_strength = 0.0
+shader_parameter/protect_hue1 = 0.153
+shader_parameter/protect_hue_width1 = 0.145
+shader_parameter/protect_min_sat1 = 0.354
+shader_parameter/protect_min_val1 = 0.532
+shader_parameter/protect_hue2 = 0.462
+shader_parameter/protect_hue_width2 = 0.255
+shader_parameter/protect_min_sat2 = 0.328
+shader_parameter/protect_min_val2 = 0.027
 
 [node name="Title" type="Control" node_paths=PackedStringArray("play_button", "settings_button", "credits_button", "achievements_button", "quit_button")]
 layout_mode = 3
@@ -36,7 +78,7 @@ quit_button = NodePath("Main/VBoxContainer/quit")
 
 [node name="Main" type="CanvasLayer" parent="."]
 
-[node name="Panel" type="Panel" parent="Main"]
+[node name="DiscordButton" type="Panel" parent="Main"]
 z_index = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -51,7 +93,7 @@ grow_horizontal = 0
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_etir8")
 
-[node name="DiscordButton" parent="Main/Panel" instance=ExtResource("3_etir8")]
+[node name="DiscordButton" parent="Main/DiscordButton" instance=ExtResource("3_etir8")]
 layout_mode = 1
 anchors_preset = 15
 anchor_left = 0.0
@@ -65,15 +107,17 @@ offset_bottom = 0.0
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="ColorRect" type="ColorRect" parent="Main"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0.054902, 1)
+[node name="Desc" type="Label" parent="Main/DiscordButton"]
+layout_mode = 0
+offset_left = -37.0
+offset_top = -68.0
+offset_right = 119.0
+offset_bottom = -19.0
+text = "Join the official
+discord server here!"
+horizontal_alignment = 1
 
-[node name="Label" type="Label" parent="Main"]
+[node name="GameTitle" type="Label" parent="Main"]
 offset_left = 18.0
 offset_top = 29.0
 offset_right = 544.0
@@ -83,6 +127,21 @@ theme_override_constants/line_spacing = -36
 theme_override_font_sizes/font_size = 65
 text = "A Moth's Reprise"
 horizontal_alignment = 1
+
+[node name="GameTitle2" type="Label" parent="Main/GameTitle"]
+visible = false
+offset_left = 336.0
+offset_top = 55.0
+offset_right = 577.0
+offset_bottom = 109.0
+theme_override_colors/font_color = Color(1, 0.290196, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 0.290196, 0, 1)
+theme_override_constants/line_spacing = -36
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 22
+text = "JAM EDITION"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Main"]
 anchors_preset = 9
@@ -95,6 +154,7 @@ alignment = 1
 
 [node name="play" parent="Main/VBoxContainer" instance=ExtResource("1_a2kbo")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.423529, 0.541176, 0.541176, 1)
 theme_override_font_sizes/font_size = 42
 theme_override_styles/focus = SubResource("StyleBoxEmpty_mcnky")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_mcnky")
@@ -103,10 +163,11 @@ theme_override_styles/hover = SubResource("StyleBoxEmpty_mcnky")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_mcnky")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_mcnky")
 text = "Play"
-underline_width_ratio = 0.343
+line_width_ratio = 0.436
 
 [node name="settings" parent="Main/VBoxContainer" instance=ExtResource("1_a2kbo")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.423529, 0.541176, 0.541176, 1)
 theme_override_font_sizes/font_size = 42
 theme_override_styles/focus = SubResource("StyleBoxEmpty_mcnky")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_mcnky")
@@ -118,6 +179,7 @@ text = "Settings"
 
 [node name="credits" parent="Main/VBoxContainer" instance=ExtResource("1_a2kbo")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.423529, 0.541176, 0.541176, 1)
 theme_override_font_sizes/font_size = 42
 theme_override_styles/focus = SubResource("StyleBoxEmpty_mcnky")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_mcnky")
@@ -126,10 +188,11 @@ theme_override_styles/hover = SubResource("StyleBoxEmpty_mcnky")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_mcnky")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_mcnky")
 text = "Credits"
-underline_width_ratio = 0.45
+line_width_ratio = 0.534
 
 [node name="achievements" parent="Main/VBoxContainer" instance=ExtResource("1_a2kbo")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.423529, 0.541176, 0.541176, 1)
 theme_override_font_sizes/font_size = 42
 theme_override_styles/focus = SubResource("StyleBoxEmpty_mcnky")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_mcnky")
@@ -138,10 +201,11 @@ theme_override_styles/hover = SubResource("StyleBoxEmpty_mcnky")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_mcnky")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_mcnky")
 text = "Achievements"
-underline_width_ratio = 1.0
+line_width_ratio = 0.863
 
 [node name="quit" parent="Main/VBoxContainer" instance=ExtResource("1_a2kbo")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.423529, 0.541176, 0.541176, 1)
 theme_override_font_sizes/font_size = 42
 theme_override_styles/focus = SubResource("StyleBoxEmpty_mcnky")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_mcnky")
@@ -150,15 +214,67 @@ theme_override_styles/hover = SubResource("StyleBoxEmpty_mcnky")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_mcnky")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_mcnky")
 text = "Quit"
-underline_width_ratio = 0.291
+line_width_ratio = 0.363
 
-[node name="Label2" type="Label" parent="Main"]
-offset_left = 982.0
-offset_top = 456.0
-offset_right = 1138.0
-offset_bottom = 505.0
-text = "Join the official
-discord server here!"
-horizontal_alignment = 1
+[node name="ParallaxBackground" type="ParallaxBackground" parent="Main"]
+script = ExtResource("4_nadrw")
+strength = 0.1
 
-[node name="Credits" type="CanvasLayer" parent="."]
+[node name="ParallaxLayer" type="ParallaxLayer" parent="Main/ParallaxBackground"]
+position = Vector2(0, -49)
+motion_scale = Vector2(0.2, 0.2)
+
+[node name="000" type="TextureRect" parent="Main/ParallaxBackground/ParallaxLayer"]
+offset_left = -236.0
+offset_top = -84.0
+offset_right = 1461.0
+offset_bottom = 742.0
+texture = ExtResource("5_nadrw")
+expand_mode = 1
+
+[node name="Rays" type="ColorRect" parent="Main/ParallaxBackground/ParallaxLayer"]
+z_index = 7
+material = SubResource("ShaderMaterial_qhmwt")
+offset_left = -246.0
+offset_top = -102.0
+offset_right = 1841.0
+offset_bottom = 1010.0
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="Main/ParallaxBackground"]
+position = Vector2(0, -49)
+motion_scale = Vector2(0.3, 0.3)
+
+[node name="001" type="TextureRect" parent="Main/ParallaxBackground/ParallaxLayer2"]
+z_index = 1
+offset_left = -236.0
+offset_top = -84.0
+offset_right = 1461.0
+offset_bottom = 742.0
+texture = ExtResource("6_m1t0n")
+expand_mode = 1
+
+[node name="ParallaxLayer3" type="ParallaxLayer" parent="Main/ParallaxBackground"]
+position = Vector2(0, -49)
+motion_scale = Vector2(0.5, 0.5)
+
+[node name="002" type="TextureRect" parent="Main/ParallaxBackground/ParallaxLayer3"]
+z_index = 1
+offset_left = -236.0
+offset_top = -84.0
+offset_right = 1461.0
+offset_bottom = 742.0
+texture = ExtResource("7_qhmwt")
+expand_mode = 1
+
+[node name="Misc" type="ColorRect" parent="Main/ParallaxBackground"]
+z_index = 6
+material = SubResource("ShaderMaterial_x30a1")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2064.0
+offset_top = -456.0
+offset_right = 1496.0
+offset_bottom = 610.0
+grow_horizontal = 2
+grow_vertical = 2

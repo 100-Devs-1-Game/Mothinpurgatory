@@ -1,0 +1,288 @@
+[gd_scene load_steps=8 format=3 uid="uid://bi5sun5qmlrtm"]
+
+[ext_resource type="PackedScene" uid="uid://3fs8sj37ylm5" path="res://sandbox/underline_anim_button.tscn" id="1_1pygr"]
+[ext_resource type="Script" uid="uid://4sjlxui0msnd" path="res://sandbox/tab_handler.gd" id="1_ax23m"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ycvno"]
+bg_color = Color(0, 0, 0, 0.239216)
+border_width_right = 3
+border_color = Color(1, 1, 1, 1)
+expand_margin_right = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ax23m"]
+bg_color = Color(0, 0, 0, 1)
+border_width_right = 3
+border_color = Color(1, 1, 1, 1)
+expand_margin_right = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uhfal"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f2yme"]
+bg_color = Color(0, 0, 0, 0.239216)
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_810tk"]
+bg_color = Color(0.0980392, 0.0980392, 0.14902, 1)
+
+[node name="Settings" type="CanvasLayer" node_paths=PackedStringArray("tabs_hbox", "pages_root", "exit_buttton")]
+script = ExtResource("1_ax23m")
+tabs_hbox = NodePath("Main/Tabs")
+pages_root = NodePath("Main/Pages")
+exit_buttton = NodePath("Main/Exit")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+z_index = -4
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0980392, 0.0980392, 0.14902, 0.54902)
+
+[node name="Label" type="Label" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -104.5
+offset_top = 25.0
+offset_right = 104.5
+offset_bottom = 99.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 54
+text = "Settings"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Main" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Tabs" type="HBoxContainer" parent="Main"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -461.0
+offset_top = -211.0
+offset_right = 462.0
+offset_bottom = -155.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Video" parent="Main/Tabs" instance=ExtResource("1_1pygr")]
+custom_minimum_size = Vector2(228, 0)
+layout_mode = 2
+theme_override_colors/font_hover_pressed_color = Color(1, 0.196078, 0.188235, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.196078, 0.188235, 1)
+theme_override_font_sizes/font_size = 34
+theme_override_styles/focus = SubResource("StyleBoxFlat_ycvno")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_ax23m")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_ax23m")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ycvno")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ycvno")
+theme_override_styles/normal = SubResource("StyleBoxFlat_ax23m")
+text = "Video"
+line_width_ratio = 1.0
+
+[node name="Audio" parent="Main/Tabs" instance=ExtResource("1_1pygr")]
+custom_minimum_size = Vector2(228, 0)
+layout_mode = 2
+theme_override_colors/font_hover_pressed_color = Color(1, 0.196078, 0.188235, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.196078, 0.188235, 1)
+theme_override_font_sizes/font_size = 34
+theme_override_styles/focus = SubResource("StyleBoxFlat_ycvno")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_ax23m")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_ax23m")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ycvno")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ycvno")
+theme_override_styles/normal = SubResource("StyleBoxFlat_ax23m")
+text = "Audio"
+line_width_ratio = 1.0
+
+[node name="Controls" parent="Main/Tabs" instance=ExtResource("1_1pygr")]
+custom_minimum_size = Vector2(228, 0)
+layout_mode = 2
+theme_override_colors/font_hover_pressed_color = Color(1, 0.196078, 0.188235, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.196078, 0.188235, 1)
+theme_override_font_sizes/font_size = 34
+theme_override_styles/focus = SubResource("StyleBoxFlat_ycvno")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_ax23m")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_ax23m")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ycvno")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ycvno")
+theme_override_styles/normal = SubResource("StyleBoxFlat_ax23m")
+text = "Controls"
+line_width_ratio = 1.0
+
+[node name="Extras" parent="Main/Tabs" instance=ExtResource("1_1pygr")]
+custom_minimum_size = Vector2(228, 0)
+layout_mode = 2
+theme_override_colors/font_hover_pressed_color = Color(1, 0.196078, 0.188235, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.196078, 0.188235, 1)
+theme_override_font_sizes/font_size = 34
+theme_override_styles/focus = SubResource("StyleBoxFlat_uhfal")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_uhfal")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_uhfal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_uhfal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_uhfal")
+theme_override_styles/normal = SubResource("StyleBoxFlat_uhfal")
+text = "Extras"
+line_width_ratio = 1.0
+
+[node name="Pages" type="Control" parent="Main"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 113.0
+offset_top = 169.0
+offset_right = -113.0
+offset_bottom = -105.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Video" type="Panel" parent="Main/Pages"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_f2yme")
+
+[node name="Label" type="Label" parent="Main/Pages/Video"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 66
+text = "Video Settings"
+
+[node name="Audio" type="Panel" parent="Main/Pages"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_f2yme")
+
+[node name="Label" type="Label" parent="Main/Pages/Audio"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 66
+text = "Audio Settings"
+
+[node name="Controls" type="Panel" parent="Main/Pages"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_f2yme")
+
+[node name="Label" type="Label" parent="Main/Pages/Controls"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 66
+text = "Control Settings"
+
+[node name="Extras" type="Panel" parent="Main/Pages"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_f2yme")
+
+[node name="Label" type="Label" parent="Main/Pages/Extras"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 66
+text = "Extra Settings"
+
+[node name="Exit" parent="Main" instance=ExtResource("1_1pygr")]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -139.0
+offset_top = -82.0
+offset_right = 139.0
+offset_bottom = -19.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_hover_pressed_color = Color(1, 0.196078, 0.188235, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.196078, 0.188235, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_styles/focus = SubResource("StyleBoxFlat_810tk")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_810tk")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_810tk")
+theme_override_styles/hover = SubResource("StyleBoxFlat_810tk")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_810tk")
+theme_override_styles/normal = SubResource("StyleBoxFlat_810tk")
+text = "Return to title"
+line_width_ratio = 1.0

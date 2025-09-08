@@ -1,14 +1,17 @@
-[gd_scene load_steps=7 format=3 uid="uid://di84lauqbcq7d"]
+[gd_scene load_steps=12 format=3 uid="uid://di84lauqbcq7d"]
 
 [ext_resource type="Script" uid="uid://wcjvmxhekp8b" path="res://core/achievements/achievement_page.gd" id="1_2aths"]
 [ext_resource type="PackedScene" uid="uid://1vcje6g6xlb4" path="res://core/achievements/achievement_card.tscn" id="2_a587l"]
 [ext_resource type="Shader" uid="uid://cbkwhpu8kf61w" path="res://shaders/blur.gdshader" id="3_lo5jw"]
+[ext_resource type="PackedScene" uid="uid://3fs8sj37ylm5" path="res://sandbox/underline_anim_button.tscn" id="4_eypsl"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mcnky"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_eypsl"]
 shader = ExtResource("3_lo5jw")
-shader_parameter/blur_amount = 2.509
-shader_parameter/mix_amount = 0.0
-shader_parameter/color_over = Color(0, 0, 0, 0)
+shader_parameter/blur_amount = 5.23
+shader_parameter/mix_amount = 0.585
+shader_parameter/color_over = Color(0, 0, 0, 0.458824)
 shader_parameter/invert = false
 shader_parameter/fade_start = 0.0
 shader_parameter/fade_end = 1.0
@@ -52,22 +55,34 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tqewt"]
 shader = SubResource("Shader_lo5jw")
-shader_parameter/blur_amount = 2.509
-shader_parameter/mix_amount = 0.0
-shader_parameter/color_over = Color(0, 0, 0, 0)
+shader_parameter/blur_amount = 5.23
+shader_parameter/mix_amount = 1.0
+shader_parameter/color_over = Color(0, 0, 0, 0.458824)
 shader_parameter/invert = true
 shader_parameter/fade_start = 0.0
 shader_parameter/fade_end = 1.0
 shader_parameter/falloff = 0.915
 
-[node name="AchievementView" type="CanvasLayer" node_paths=PackedStringArray("btn_reset", "btn_back")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eypsl"]
+bg_color = Color(0.0392157, 0.0392157, 0.0784314, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tqewt"]
+bg_color = Color(0, 0, 0, 0.639216)
+border_width_top = 2
+border_width_bottom = 2
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_eypsl"]
+
+[node name="AchievementView" type="CanvasLayer" node_paths=PackedStringArray("btn_reset", "btn_back", "conf_reset", "cncl_reset")]
 script = ExtResource("1_2aths")
-scroll_path = NodePath("ScrollContainer")
-vbox_path = NodePath("ScrollContainer/GridContainer")
+scroll_path = NodePath("Main/ScrollContainer")
+vbox_path = NodePath("Main/ScrollContainer/GridContainer")
 card_scene = ExtResource("2_a587l")
 min_row_height = 90
-btn_reset = NodePath("reset")
-btn_back = NodePath("back")
+btn_reset = NodePath("Main/reset")
+btn_back = NodePath("Main/back")
+conf_reset = NodePath("Confirm/Panel/Panel/HBoxContainer/ConfirmReset")
+cncl_reset = NodePath("Confirm/Panel/Panel/HBoxContainer/CancelReset")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 z_index = -4
@@ -76,51 +91,70 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.0980392, 0.0980392, 0.14902, 1)
+color = Color(0.0980392, 0.0980392, 0.14902, 0.54902)
 
-[node name="reset" type="Button" parent="."]
-z_index = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 312.0
-offset_top = 235.0
-offset_right = 566.0
-offset_bottom = 300.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 17
-text = "Reset achievement progress"
-
-[node name="back" type="Button" parent="."]
-z_index = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -564.0
-offset_top = 235.0
-offset_right = -310.0
-offset_bottom = 300.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 17
-text = "Back to title"
-
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="Main" type="Control" parent="."]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 278.0
-offset_right = -278.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="reset" parent="Main" instance=ExtResource("4_eypsl")]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 937.0
+offset_top = -123.0
+offset_right = 1133.0
+offset_bottom = -72.0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 27
+theme_override_styles/focus = SubResource("StyleBoxEmpty_mcnky")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_mcnky")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_mcnky")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_mcnky")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_mcnky")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_mcnky")
+text = "Reset Progress"
+line_width_ratio = 1.0
+
+[node name="back" parent="Main" instance=ExtResource("4_eypsl")]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 19.0
+offset_top = -109.0
+offset_right = 105.0
+offset_bottom = -64.0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 27
+theme_override_styles/focus = SubResource("StyleBoxEmpty_mcnky")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_mcnky")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_mcnky")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_mcnky")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_mcnky")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_mcnky")
+text = "Exit"
+line_width_ratio = 0.699
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Main"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 264.0
+offset_top = 119.0
+offset_right = -264.0
+offset_bottom = -119.0
 grow_horizontal = 2
 grow_vertical = 2
 horizontal_scroll_mode = 0
 
-[node name="GridContainer" type="VBoxContainer" parent="ScrollContainer"]
+[node name="GridContainer" type="VBoxContainer" parent="Main/ScrollContainer"]
 layout_mode = 2
 theme_override_constants/separation = 12
 
@@ -128,7 +162,7 @@ theme_override_constants/separation = 12
 material = SubResource("ShaderMaterial_eypsl")
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 125.0
+offset_bottom = 123.0
 grow_horizontal = 2
 mouse_filter = 2
 
@@ -138,9 +172,113 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 278.0
-offset_top = -105.0
-offset_right = -278.0
+offset_left = -5.0
+offset_top = -63.0
+offset_right = 5.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
+
+[node name="Confirm" type="Control" parent="."]
+visible = false
+z_index = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="Confirm"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_eypsl")
+
+[node name="Panel" type="Panel" parent="Confirm/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 157.0
+offset_bottom = -157.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_tqewt")
+
+[node name="Label" type="Label" parent="Confirm/Panel/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -467.0
+offset_top = -130.0
+offset_right = 467.0
+offset_bottom = -91.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 50
+text = "Reset Achievement Progress?"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="Confirm/Panel/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -298.0
+offset_top = -66.0
+offset_right = 298.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 20
+text = "This action cannot be undone, you'll need to earn them again."
+horizontal_alignment = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Confirm/Panel/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -289.0
+offset_top = -10.0
+offset_right = 289.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 108
+alignment = 1
+
+[node name="ConfirmReset" parent="Confirm/Panel/Panel/HBoxContainer" instance=ExtResource("4_eypsl")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 49
+theme_override_styles/focus = SubResource("StyleBoxEmpty_eypsl")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_eypsl")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_eypsl")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_eypsl")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_eypsl")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_eypsl")
+text = "Reset"
+line_width_ratio = 1.0
+
+[node name="CancelReset" parent="Confirm/Panel/Panel/HBoxContainer" instance=ExtResource("4_eypsl")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 49
+theme_override_styles/focus = SubResource("StyleBoxEmpty_eypsl")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_eypsl")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_eypsl")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_eypsl")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_eypsl")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_eypsl")
+text = "Cancel"
+line_width_ratio = 1.0

@@ -149,7 +149,7 @@ func attack() -> void:
 	if lunge_dir == 0:
 		lunge_dir = 1
 
-	var windup_timer = get_tree().create_timer(windup_time)
+	var windup_timer = get_tree().create_timer(windup_time, false)
 	await windup_timer.timeout
 
 	is_winding_up = false
@@ -160,7 +160,7 @@ func attack() -> void:
 		hitbox.get_child(0).disabled = false
 		hitbox.get_child(0).disabled = false
 
-	var active_timer = get_tree().create_timer(attack_duration)
+	var active_timer = get_tree().create_timer(attack_duration, false)
 	await active_timer.timeout
 
 	is_attacking = false
@@ -171,7 +171,7 @@ func attack() -> void:
 		hitbox.get_child(0).disabled = true
 		hitbox.get_child(0).disabled = true
 	
-	var cd_timer = get_tree().create_timer(attack_cooldown)
+	var cd_timer = get_tree().create_timer(attack_cooldown, false)
 	await cd_timer.timeout
 
 	in_cooldown = false

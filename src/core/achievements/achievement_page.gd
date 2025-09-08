@@ -6,7 +6,9 @@ extends CanvasLayer
 @export var row_gap: int = 10
 @export var min_row_height: int = 56
 @export var btn_reset: Button
-@export var btn_back:  Button
+@export var btn_back: Button
+@export var conf_reset: Button
+@export var cncl_reset: Button
 
 var _scroll: ScrollContainer
 var _vbox: VBoxContainer
@@ -15,9 +17,12 @@ var _am: Node = null
 var _connected: bool = false
 
 func _ready() -> void:
-	_setupp()
-	$reset.pressed.connect(_reset_achievement_progress)
-	$back.pressed.connect(_exit_achievement_page)
+	_setup()
+	btn_reset.pressed.connect(_reset_request)
+	btn_back.pressed.connect(_exit_achievement_page)
+	conf_reset.pressed.connect(_reset_achievement_progress)
+	cncl_reset.pressed.connect(_reset_cancelled)
+	
 	_scroll = get_node_or_null(scroll_path)
 	_vbox = get_node_or_null(vbox_path)
 
@@ -38,7 +43,7 @@ func _ready() -> void:
 	else:
 		push_warning("AchievementsView: /root/AchievementManager not found. Nothing to show.")
 
-func _setupp():
+func _setup():
 	AchievementManager.unlock("first_game")
 	AchievementManager.unlock("no_bugs")
 	AchievementManager.unlock("death_I")
@@ -46,12 +51,23 @@ func _setupp():
 	AchievementManager.unlock("survivor_II")
 	AchievementManager.unlock("untouched_I")
 
+func _reset_request() -> void:
+	$Confirm.visible = true
+	$Main.visible = false
+
 func _reset_achievement_progress() -> void:
 	AchievementManager.reset_all()
 	rebuild()
+	$Confirm.visible = false
+	$Main.visible = true
 
 func _exit_achievement_page() -> void:
-	get_tree().quit() #TODO - Connect to title
+	EventBus.ui_closed.emit()
+	queue_free() #Achievement page will just be instantiated as a child of the main scene
+
+func _reset_cancelled() -> void:
+	$Confirm.visible = false
+	$Main.visible = true
 
 func _build_from_manager() -> void:
 	_clear_list()

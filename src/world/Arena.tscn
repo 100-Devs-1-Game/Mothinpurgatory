@@ -503,6 +503,3 @@ theme_override_font_sizes/font_size = 26
 text = "Post Processing Enabled"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="Shooter" parent="." instance=ExtResource("17_skj6l")]
-position = Vector2(759, 586)

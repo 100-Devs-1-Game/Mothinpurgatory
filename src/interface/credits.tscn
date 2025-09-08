@@ -1,0 +1,58 @@
+[gd_scene load_steps=4 format=3 uid="uid://codlt2eit4iea"]
+
+[ext_resource type="Script" uid="uid://brtm3frqurrbp" path="res://sandbox/credits.gd" id="1_0s0mm"]
+[ext_resource type="PackedScene" uid="uid://3fs8sj37ylm5" path="res://sandbox/underline_anim_button.tscn" id="1_8lxjy"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mcnky"]
+
+[node name="Credits" type="CanvasLayer" node_paths=PackedStringArray("exit_credits")]
+script = ExtResource("1_0s0mm")
+exit_credits = NodePath("Exit Credits")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+z_index = -4
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0980392, 0.0980392, 0.14902, 0.54902)
+
+[node name="Label" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -319.0
+offset_top = -113.0
+offset_right = 319.0
+offset_bottom = 113.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 23
+text = "Very credit yes :)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Exit Credits" parent="." instance=ExtResource("1_8lxjy")]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -64.5
+offset_top = -148.0
+offset_right = 64.5
+offset_bottom = -103.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 27
+theme_override_styles/focus = SubResource("StyleBoxEmpty_mcnky")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_mcnky")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_mcnky")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_mcnky")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_mcnky")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_mcnky")
+text = "Return to title"
+line_width_ratio = 1.0

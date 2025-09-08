@@ -27,6 +27,6 @@ func _physics_process(delta: float) -> void:
 	global_position += dir * speed * delta
 
 func despawn_later(seconds: float) -> void:
-	await get_tree().create_timer(seconds).timeout
+	await get_tree().create_timer(seconds, false).timeout
 	if is_instance_valid(self):
 		queue_free()

@@ -155,7 +155,7 @@ func attack() -> void:
 		else:
 			sprite.play("attack")
 
-	var windup_timer = get_tree().create_timer(windup_time)
+	var windup_timer = get_tree().create_timer(windup_time, false)
 	await windup_timer.timeout
 
 	is_winding_up = false
@@ -164,14 +164,14 @@ func attack() -> void:
 
 	_spawn_spit()
 
-	var active_timer = get_tree().create_timer(attack_duration)
+	var active_timer = get_tree().create_timer(attack_duration, false)
 	await active_timer.timeout
 
 	is_shooting = false
 	in_cooldown = true
 	_update_status("State: Cooldown")
 
-	var cd_timer = get_tree().create_timer(attack_cooldown)
+	var cd_timer = get_tree().create_timer(attack_cooldown, false)
 	await cd_timer.timeout
 
 	in_cooldown = false

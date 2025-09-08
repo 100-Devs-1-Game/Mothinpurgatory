@@ -34,7 +34,7 @@ func take_damage(damage_data: AttackData, source: Node) -> void:
 
 		if tint_on_damage and target and target.has_node("Animator"):
 			target.get_node("Animator").modulate = Color.RED
-			await get_tree().create_timer(0.3).timeout
+			await get_tree().create_timer(0.3, false).timeout
 			if is_instance_valid(target) and target.has_node("Animator"):
 				target.get_node("Animator").modulate = Color.WHITE
 

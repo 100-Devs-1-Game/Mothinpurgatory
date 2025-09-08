@@ -1,0 +1,153 @@
+[gd_scene load_steps=7 format=3 uid="uid://divp3lw472st3"]
+
+[ext_resource type="Script" uid="uid://ud1ixs1r6ynm" path="res://interface/paused.gd" id="1_grcgb"]
+[ext_resource type="PackedScene" uid="uid://3fs8sj37ylm5" path="res://sandbox/underline_anim_button.tscn" id="2_2vvte"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rgvv5"]
+bg_color = Color(0, 0, 0, 0.431373)
+border_width_top = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vf5i1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2vvte"]
+bg_color = Color(0, 0, 0, 0.431373)
+border_width_left = 41
+border_width_right = 41
+border_color = Color(0, 0, 0, 0)
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vf5i1"]
+bg_color = Color(0, 0, 0, 0)
+border_width_top = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+
+[node name="Paused" type="CanvasLayer"]
+process_mode = 3
+script = ExtResource("1_grcgb")
+
+[node name="controlpnl" type="Panel" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -192.0
+offset_top = -162.0
+offset_right = 192.0
+offset_bottom = 162.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rgvv5")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="controlpnl"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -191.0
+offset_top = -160.0
+offset_right = 192.0
+offset_bottom = 160.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Resume" parent="controlpnl/VBoxContainer" instance=ExtResource("2_2vvte")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+theme_override_styles/focus = SubResource("StyleBoxEmpty_vf5i1")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_vf5i1")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_vf5i1")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_vf5i1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_vf5i1")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_vf5i1")
+text = "Resume"
+line_width_ratio = 0.508
+
+[node name="Settings" parent="controlpnl/VBoxContainer" instance=ExtResource("2_2vvte")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+theme_override_styles/focus = SubResource("StyleBoxEmpty_vf5i1")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_vf5i1")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_vf5i1")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_vf5i1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_vf5i1")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_vf5i1")
+text = "Settings"
+line_width_ratio = 0.508
+
+[node name="Achievements" parent="controlpnl/VBoxContainer" instance=ExtResource("2_2vvte")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+theme_override_styles/focus = SubResource("StyleBoxEmpty_vf5i1")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_vf5i1")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_vf5i1")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_vf5i1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_vf5i1")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_vf5i1")
+text = "Achievements"
+line_width_ratio = 0.718
+
+[node name="Exit" parent="controlpnl/VBoxContainer" instance=ExtResource("2_2vvte")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+theme_override_styles/focus = SubResource("StyleBoxEmpty_vf5i1")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_vf5i1")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_vf5i1")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_vf5i1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_vf5i1")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_vf5i1")
+text = "Exit
+"
+line_width_ratio = 0.232
+
+[node name="pausepnl" type="Panel" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -209.0
+offset_top = -300.0
+offset_right = 209.0
+offset_bottom = -244.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_2vvte")
+
+[node name="pausepnl2" type="Panel" parent="pausepnl"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -209.0
+offset_top = -28.0
+offset_right = 209.0
+offset_bottom = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vf5i1")
+
+[node name="Label" type="Label" parent="pausepnl"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -19.0
+offset_top = -4.0
+offset_right = 19.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 46
+text = "GAME PAUSED"
+horizontal_alignment = 1
+vertical_alignment = 1

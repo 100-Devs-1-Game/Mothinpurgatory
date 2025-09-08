@@ -10,6 +10,7 @@ var ui_buttons := {}
 
 func _ready() -> void:
 	print("ready")
+	EventBus.connect("ui_closed", show_title_buttons.bind(true))
 	ui_buttons = {
 		play_button: "Play",
 		settings_button: "Settings",
@@ -25,16 +26,23 @@ func connect_buttons() -> void:
 		if not button.is_connected("pressed", _on_button_pressed):
 			button.pressed.connect(_on_button_pressed.bind(ui_buttons[button]))
 
+func show_title_buttons(show: bool):
+	$Main/VBoxContainer.visible = show
+	$Main/GameTitle.visible = show
+	$Main/DiscordButton.visible = show
+
 func _on_button_pressed(action: String) -> void:
 	match action:
 		"Play":
 			SceneLoader.goto_game()
 		"Settings":
-			print("Open settings")
+			SceneLoader.open_overlay(SceneLoader.SETTINGS, self, 0)
+			show_title_buttons(false)
 		"Credits":
-			print("Open credits")
+			SceneLoader.open_overlay(SceneLoader.CREDITS, self, 0)
+			show_title_buttons(false)
 		"Achievements":
-			print("Open achievements")
+			SceneLoader.open_overlay(SceneLoader.ACHIEVEMENTS, self, 0)
+			show_title_buttons(false)
 		"Quit":
-			print("Quit the game")
 			get_tree().quit()
