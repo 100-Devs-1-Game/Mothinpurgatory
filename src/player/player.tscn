@@ -1,4 +1,4 @@
-[gd_scene load_steps=75 format=3 uid="uid://du3uuiaokiexx"]
+[gd_scene load_steps=76 format=3 uid="uid://du3uuiaokiexx"]
 
 [ext_resource type="Script" uid="uid://ba6w8urqn6r4c" path="res://player/player.gd" id="1_yw30f"]
 [ext_resource type="Texture2D" uid="uid://bg54nqqrgtwab" path="res://textures/sprites/player/airborne/000.png" id="2_1s1yo"]
@@ -61,6 +61,8 @@
 [ext_resource type="Texture2D" uid="uid://dytkfgwchgdnb" path="res://textures/sprites/player/double jump/007.png" id="29_or4qq"]
 [ext_resource type="PackedScene" uid="uid://bq1v87o3hxrb1" path="res://components/combat/health/hurtbox.tscn" id="51_w7j2h"]
 [ext_resource type="PackedScene" uid="uid://iye001btjoga" path="res://player/Interface/hud.tscn" id="52_n0b8q"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_s3g0c"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a2xo5"]
 atlas = ExtResource("16_1so5t")
@@ -385,6 +387,7 @@ slash_effect = ExtResource("3_jfgyi")
 hurtbox_collision = NodePath("Hurtbox/CollisionShape2D")
 
 [node name="Animator" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_s3g0c")
 position = Vector2(0, -63.75)
 scale = Vector2(1, 1.02033)
 sprite_frames = SubResource("SpriteFrames_yw30f")
@@ -394,8 +397,9 @@ frame_progress = 1.0
 
 [node name="Health" type="Node" parent="."]
 script = ExtResource("2_qjkh3")
-max_health = 320
+max_health = 1000
 tint_on_damage = true
+is_players = true
 
 [node name="StateMachine" type="Node" parent="."]
 script = ExtResource("3_g6k8r")

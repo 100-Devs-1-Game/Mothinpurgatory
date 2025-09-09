@@ -131,6 +131,7 @@ disabled = true
 debug_color = Color(1, 0, 0, 0.419608)
 
 [node name="status" type="Label" parent="."]
+visible = false
 offset_left = -116.0
 offset_top = -148.0
 offset_right = 128.0

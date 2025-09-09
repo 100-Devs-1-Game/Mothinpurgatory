@@ -9,6 +9,6 @@ knockback = Vector2(900, 320)
 hitstun = 0.3
 knockback_scale = 1.0
 damage_type = "physical"
-hitstop_duration = 0.006
+hitstop_duration = 0.0
 is_crit = true
 metadata/_custom_type_script = "uid://cqkedinwlljjx"

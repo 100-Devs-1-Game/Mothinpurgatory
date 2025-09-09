@@ -1,10 +1,14 @@
-[gd_scene load_steps=7 format=3 uid="uid://b0cppji50u6kf"]
+[gd_scene load_steps=11 format=3 uid="uid://b0cppji50u6kf"]
 
 [ext_resource type="Script" uid="uid://bb0vngy53iw1e" path="res://components/effects/death/death_effect.gd" id="1_chb2v"]
 [ext_resource type="Texture2D" uid="uid://cm7lc2xo2slgm" path="res://textures/sprites/enemies/little fly/007.png" id="1_q404q"]
 [ext_resource type="Texture2D" uid="uid://hhmhxrgn45fa" path="res://textures/sprites/enemies/little fly/008.png" id="2_lws0g"]
 [ext_resource type="Texture2D" uid="uid://0ycrojf8082k" path="res://textures/sprites/enemies/little fly/009.png" id="3_4q1kt"]
 [ext_resource type="Texture2D" uid="uid://dmi3hsqgmkbih" path="res://textures/sprites/enemies/little fly/010.png" id="4_2j8ff"]
+[ext_resource type="Texture2D" uid="uid://cadrhyrex6cwt" path="res://textures/sprites/enemies/spitter/dead/000.png" id="5_fi77v"]
+[ext_resource type="Texture2D" uid="uid://jcqcnurn2r0n" path="res://textures/sprites/enemies/spitter/dead/001.png" id="6_ioogi"]
+[ext_resource type="Texture2D" uid="uid://c55qofotlq6ae" path="res://textures/sprites/enemies/spitter/dead/002.png" id="7_3huyp"]
+[ext_resource type="Texture2D" uid="uid://de5yins2dqhlk" path="res://textures/sprites/enemies/spitter/dead/003.png" id="8_bpbyv"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_hd7to"]
 animations = [{
@@ -24,13 +28,28 @@ animations = [{
 "loop": false,
 "name": &"fly",
 "speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_fi77v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_ioogi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_3huyp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_bpbyv")
+}],
+"loop": false,
+"name": &"spitter",
+"speed": 12.0
 }]
 
 [node name="death_effect" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_hd7to")
-animation = &"fly"
-frame = 3
-frame_progress = 1.0
+animation = &"spitter"
 script = ExtResource("1_chb2v")
 
 [connection signal="animation_finished" from="." to="." method="_on_animation_finished"]

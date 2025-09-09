@@ -10,4 +10,6 @@ title = "Survivor III"
 description = "Survive the onslaught for 10 minutes."
 unlocked = false
 icon = ExtResource("1_ptnje")
+progressive = true
+required_amount = 10
 metadata/_custom_type_script = "uid://qm1fbqpewbxm"

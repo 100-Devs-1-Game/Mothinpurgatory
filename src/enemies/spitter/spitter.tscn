@@ -1,12 +1,100 @@
-[gd_scene load_steps=9 format=3 uid="uid://2c2r0mjftm3i"]
+[gd_scene load_steps=25 format=3 uid="uid://2c2r0mjftm3i"]
 
 [ext_resource type="Script" uid="uid://cfwskxbd3ff4q" path="res://enemies/spitter/spitter.gd" id="1_wcbc3"]
 [ext_resource type="Resource" uid="uid://ccrwqs0soxxdg" path="res://enemies/spitter/spitter_data.tres" id="2_1b5a1"]
 [ext_resource type="PackedScene" uid="uid://lje6qhcr17el" path="res://enemies/spitter/spit_projectile.tscn" id="3_hum7u"]
+[ext_resource type="PackedScene" uid="uid://b0cppji50u6kf" path="res://components/effects/death/death_effect.tscn" id="4_14ocq"]
 [ext_resource type="Script" uid="uid://dwvivyga6h4rd" path="res://components/combat/health/health.gd" id="4_gwbs0"]
 [ext_resource type="PackedScene" uid="uid://bq1v87o3hxrb1" path="res://components/combat/health/hurtbox.tscn" id="5_j7r8r"]
+[ext_resource type="Texture2D" uid="uid://cadrhyrex6cwt" path="res://textures/sprites/enemies/spitter/dead/000.png" id="5_p131u"]
+[ext_resource type="Texture2D" uid="uid://jcqcnurn2r0n" path="res://textures/sprites/enemies/spitter/dead/001.png" id="6_14ocq"]
+[ext_resource type="Texture2D" uid="uid://c55qofotlq6ae" path="res://textures/sprites/enemies/spitter/dead/002.png" id="7_85uvi"]
+[ext_resource type="Texture2D" uid="uid://de5yins2dqhlk" path="res://textures/sprites/enemies/spitter/dead/003.png" id="8_fkp3m"]
+[ext_resource type="Texture2D" uid="uid://cye173s7rnmy8" path="res://textures/sprites/enemies/spitter/flying/000.png" id="9_treen"]
+[ext_resource type="Texture2D" uid="uid://d2upe6n1q31ge" path="res://textures/sprites/enemies/spitter/flying/001.png" id="10_0q8tf"]
+[ext_resource type="Texture2D" uid="uid://5nx0ednbl1eh" path="res://textures/sprites/enemies/spitter/flying/002.png" id="11_jbyd5"]
+[ext_resource type="Texture2D" uid="uid://bqjtis5mwcj0f" path="res://textures/sprites/enemies/spitter/flying/003.png" id="12_py7ue"]
+[ext_resource type="Texture2D" uid="uid://bn4i1ckdohq03" path="res://textures/sprites/enemies/spitter/flying/004.png" id="13_7tpye"]
+[ext_resource type="Texture2D" uid="uid://dxvtj45u8u6iv" path="res://textures/sprites/enemies/spitter/flying/005.png" id="14_tb7s2"]
+[ext_resource type="Texture2D" uid="uid://bay38ohwjkjui" path="res://textures/sprites/enemies/spitter/spit/000.png" id="15_7sfie"]
+[ext_resource type="Texture2D" uid="uid://clrms6clsym22" path="res://textures/sprites/enemies/spitter/spit/001.png" id="16_dy4lu"]
+[ext_resource type="Texture2D" uid="uid://1v3p6agr1x6o" path="res://textures/sprites/enemies/spitter/spit/002.png" id="17_q7lng"]
+[ext_resource type="Texture2D" uid="uid://dpsw884u37ksg" path="res://textures/sprites/enemies/spitter/spit/003.png" id="18_b10ss"]
+[ext_resource type="Texture2D" uid="uid://b0r8ugd4mpbi1" path="res://textures/sprites/enemies/spitter/spit/004.png" id="19_m8iml"]
 
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_6o6bn"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_mopeo"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("15_7sfie")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_dy4lu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_q7lng")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_q7lng")
+}],
+"loop": false,
+"name": &"charge",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_p131u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_14ocq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_85uvi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_fkp3m")
+}],
+"loop": false,
+"name": &"dead",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_treen")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_0q8tf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_jbyd5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_py7ue")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_7tpye")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_tb7s2")
+}],
+"loop": true,
+"name": &"flying",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("17_q7lng")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_b10ss")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_m8iml")
+}],
+"loop": false,
+"name": &"spit",
+"speed": 12.0
+}]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_wcbc3"]
 radius = 35.0143
@@ -21,20 +109,25 @@ enemy_data = ExtResource("2_1b5a1")
 fire_range = 780.0
 burst_count = 1
 projectile_scene = ExtResource("3_hum7u")
-above_player_margin = 240.935
+above_player_margin = 396.345
+death_effect = ExtResource("4_14ocq")
 
 [node name="Health" type="Node" parent="."]
 script = ExtResource("4_gwbs0")
 max_health = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(46, 46)
-texture = SubResource("PlaceholderTexture2D_6o6bn")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(1.37807, 1.37807)
+sprite_frames = SubResource("SpriteFrames_mopeo")
+animation = &"charge"
+frame = 3
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_wcbc3")
 
 [node name="Status" type="Label" parent="."]
+visible = false
 offset_left = -116.0
 offset_top = -96.0
 offset_right = 128.0

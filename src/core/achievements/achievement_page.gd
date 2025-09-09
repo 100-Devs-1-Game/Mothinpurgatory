@@ -22,19 +22,27 @@ func _ready() -> void:
 	btn_back.pressed.connect(_exit_achievement_page)
 	conf_reset.pressed.connect(_reset_achievement_progress)
 	cncl_reset.pressed.connect(_reset_cancelled)
-	
+
 	_scroll = get_node_or_null(scroll_path)
 	_vbox = get_node_or_null(vbox_path)
-
 	if _scroll == null or _vbox == null:
 		push_error("AchievementsView: assign scroll_path and vbox_path.")
 		return
 
 	_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_scroll.mouse_filter = Control.MOUSE_FILTER_STOP
+
+	var v = _scroll.get_v_scroll_bar()
+	if v != null:
+		v.self_modulate.a = 0.0
+		v.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	_vbox.add_theme_constant_override("separation", row_gap)
 	_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+
+	await get_tree().process_frame
 
 	if has_node("/root/AchievementManager"):
 		_am = get_node("/root/AchievementManager")
@@ -44,12 +52,7 @@ func _ready() -> void:
 		push_warning("AchievementsView: /root/AchievementManager not found. Nothing to show.")
 
 func _setup():
-	AchievementManager.unlock("first_game")
-	AchievementManager.unlock("no_bugs")
-	AchievementManager.unlock("death_I")
-	AchievementManager.unlock("survivor_I")
-	AchievementManager.unlock("survivor_II")
-	AchievementManager.unlock("untouched_I")
+	pass
 
 func _reset_request() -> void:
 	$Confirm.visible = true
@@ -81,7 +84,7 @@ func _add_card(data: AchievementData) -> void:
 	if card_scene == null:
 		push_error("AchievementsView: card_scene not set.")
 		return
-	var card := card_scene.instantiate() as AchievementCard
+	var card = card_scene.instantiate() as AchievementCard
 	if card == null:
 		push_error("AchievementsView: card_scene must be AchievementCard.tscn.")
 		return
@@ -93,21 +96,36 @@ func _add_card(data: AchievementData) -> void:
 	card.setup_from_data(data)
 	_cards_by_id[data.id] = card
 
+	if data.progressive and _am != null:
+		var cur = 0
+		if _am.has_method("get_progress"):
+			cur = int(_am.call("get_progress", data.id))
+		card.set_progress(cur, data.required_amount)
+
 func _clear_list() -> void:
 	for c in _vbox.get_children():
 		c.queue_free()
 	_cards_by_id.clear()
 
 func _connect_updates() -> void:
-	if _am != null and not _connected and _am.has_signal("achievement_unlocked"):
-		_am.achievement_unlocked.connect(_on_achievement_unlocked)
+	if _am != null and not _connected:
+		if _am.has_signal("achievement_unlocked"):
+			_am.achievement_unlocked.connect(_on_achievement_unlocked)
+		if _am.has_signal("achievement_progress"):
+			_am.achievement_progress.connect(_on_achievement_progress)
 		_connected = true
 
 func _on_achievement_unlocked(data: AchievementData) -> void:
 	if _cards_by_id.has(data.id):
-		var card := _cards_by_id[data.id] as AchievementCard
-		if card:
-			card.set_locked_state(true)
+		var card: AchievementCard = _cards_by_id[data.id]
+		if card != null:
+			card.set_locked_state(false)
+
+func _on_achievement_progress(data: AchievementData, current: int, required: int) -> void:
+	if _cards_by_id.has(data.id):
+		var card: AchievementCard = _cards_by_id[data.id]
+		if card != null:
+			card.set_progress(current, required)
 
 func rebuild() -> void:
 	_build_from_manager()

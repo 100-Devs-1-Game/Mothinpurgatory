@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://1vcje6g6xlb4"]
+[gd_scene load_steps=8 format=3 uid="uid://1vcje6g6xlb4"]
 
 [ext_resource type="Script" uid="uid://30k2bnb131ut" path="res://core/achievements/achievement_card.gd" id="1_wtljg"]
 [ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/icons/moth_icon.png" id="2_bf1y1"]
@@ -11,6 +11,20 @@ border_width_right = 10
 border_width_bottom = 10
 border_color = Color(0, 0, 0, 1)
 border_blend = true
+
+[sub_resource type="Gradient" id="Gradient_wtljg"]
+offsets = PackedFloat32Array(1)
+colors = PackedColorArray(0.144063, 0.144063, 0.144063, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_bf1y1"]
+gradient = SubResource("Gradient_wtljg")
+
+[sub_resource type="Gradient" id="Gradient_3oses"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.76662, 0.76662, 0.76662, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_p20sm"]
+gradient = SubResource("Gradient_3oses")
 
 [node name="AchievementCard" type="Panel"]
 offset_right = 458.0
@@ -55,3 +69,20 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 15
 text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore"
 autowrap_mode = 1
+
+[node name="progress" type="TextureProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -17.0
+offset_right = -20.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 0
+nine_patch_stretch = true
+texture_under = SubResource("GradientTexture2D_bf1y1")
+texture_progress = SubResource("GradientTexture2D_p20sm")
+tint_progress = Color(1, 0.498039, 0.0509804, 1)

@@ -125,6 +125,10 @@ func _death(_source: Node) -> void:
 	emit_signal("player_died")
 	EventBus.player_died.emit()
 
+func _notify_damage() -> void:
+	print("player sent hit signal")
+	EventBus.player_damaged.emit()
+
 func apply_knockback(kb: Vector2, _attack_data: AttackData, _source: Node) -> void:
 	print("knocked back")
 	velocity += kb

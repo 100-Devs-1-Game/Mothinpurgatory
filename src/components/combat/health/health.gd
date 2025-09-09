@@ -9,6 +9,8 @@ class_name Health
 @export var knockback_resistance: float = 0.0
 @export var only_knockback_if_alive: bool = true
 
+@export var is_players: bool = false
+
 var current_health: int
 var declared_dead: bool = false
 
@@ -25,18 +27,21 @@ func take_damage(damage_data: AttackData, source: Node) -> void:
 		if declared_dead:
 			return
 
-		var target := get_parent()
+		var target = get_parent()
 
 		current_health = clamp(current_health - damage_data.damage, 0, max_health)
 		health_changed.emit(current_health, max_health)
 		damaged.emit(damage_data, source)
-		print(name, " took ", damage_data.damage, " damage. HP: ", current_health, "/", max_health)
-
+		#print(name, " took ", damage_data.damage, " damage. HP: ", current_health, "/", max_health)
 		if tint_on_damage and target and target.has_node("Animator"):
 			target.get_node("Animator").modulate = Color.RED
 			await get_tree().create_timer(0.3, false).timeout
 			if is_instance_valid(target) and target.has_node("Animator"):
 				target.get_node("Animator").modulate = Color.WHITE
+
+		if is_players: #Temp fix, sketchy but works
+			if target.has_method("_notify_damage"):
+				target._notify_damage()
 
 		if apply_knockback_on_damage and target and target.has_method("apply_knockback"):
 			if current_health > 0 or not only_knockback_if_alive:

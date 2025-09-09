@@ -22,6 +22,10 @@ var _hitstop_depth := 0 #Just putting hitstop stuff in game node until I get stu
 @export var time_label: Label
 @export var score_label: Label
 
+var hitless_elapsed := 0.0
+var hitless_last_minute := 0
+var hitless_running := false
+
 @export var player: CharacterBody2D
 
 @export var enemy_scene: PackedScene
@@ -49,6 +53,7 @@ var post_process_enabled := true
 
 func _ready() -> void:
 	SceneLoader.current_scene = self
+	EventBus.first_game.emit()
 	add_to_group("game")
 	$Background.play("default")
 	reset_time()
@@ -57,6 +62,9 @@ func _ready() -> void:
 		player = get_tree().get_first_node_in_group("Player")
 	await get_tree().process_frame
 	player.connect("player_died", _game_over)
+
+	if EventBus.has_signal("player_damaged"):
+		EventBus.player_damaged.connect(_on_player_damaged)
 
 func _process(delta: float) -> void:
 	if !running:
@@ -69,9 +77,18 @@ func _process(delta: float) -> void:
 	var current_minute = int(elapsed) / 60
 	if current_minute > last_minute_checked:
 		var minutes_gained = current_minute - last_minute_checked
+		EventBus.minute_passed.emit(minutes_gained)
 		score += minutes_gained * time_score_bonus
 		last_minute_checked = current_minute
 		_update_score_label()
+
+	if hitless_running:
+		hitless_elapsed += delta
+		var hl_minute = int(hitless_elapsed) / 60
+		if hl_minute > hitless_last_minute:
+			var gained = hl_minute - hitless_last_minute
+			hitless_last_minute = hl_minute
+			EventBus.no_hit_minute_passed.emit(gained)
 
 func show_ui(show: bool) -> void:
 	$GameUI.visible = show
@@ -85,20 +102,28 @@ func _format_time(t: float) -> String:
 
 func start_time() -> void:
 	running = true
+	hitless_running = true
 	if !debug_testing:
 		_spawn_loop()
 		_gnat_spawn_loop()
 
 func stop_time() -> void:
 	running = false
+	hitless_running = false
 
 func reset_time() -> void:
 	elapsed = 0.0
 	last_minute_checked = 0
 	score = 0
 	total_kills = 0
+	hitless_elapsed = 0.0
+	hitless_last_minute = 0
 	time_label.text = _format_time(elapsed)
 	_update_score_label()
+
+func _on_player_damaged() -> void:
+	hitless_elapsed = 0.0
+	hitless_last_minute = 0
 
 func _update_score_label() -> void:
 	score_label.text = "Score: " + "%06d" % score
@@ -142,6 +167,7 @@ func apply_hitstop(duration: float = 0.06, timescale: float = 0.0) -> void:
 
 func _game_over():
 	print("Player died, game over.")
+	hitless_running = false
 	stop_time()
 	$GameUI.visible = false
 	$Gameover.visible = true
@@ -149,6 +175,8 @@ func _game_over():
 		$Enemies.get_child(i).queue_free()
 	$Gameover/VBoxContainer/Panel/timeoverlbl.text = "You survived for: " + time_label.text
 	$Gameover/VBoxContainer/Panel2/scoreoverlbl.text = "Score: " + "%06d" % score
+
+	EventBus.score_final.emit(score)
 
 func _spawn_loop() -> void:
 	while is_instance_valid(self):
@@ -274,3 +302,6 @@ func _spawn_one_gnat() -> void:
 		enemy_container.add_child(gnat)
 	else:
 		add_child(gnat)
+
+func _exit_tree() -> void:
+	EventBus.score_final.emit(score)

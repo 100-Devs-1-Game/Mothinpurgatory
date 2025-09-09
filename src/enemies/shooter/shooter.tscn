@@ -47,6 +47,7 @@ position = Vector2(0, -37)
 shape = SubResource("CircleShape2D_o2iqe")
 
 [node name="status" type="Label" parent="."]
+visible = false
 offset_left = -116.0
 offset_top = -148.0
 offset_right = 128.0

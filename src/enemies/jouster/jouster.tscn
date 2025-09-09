@@ -74,6 +74,7 @@ position = Vector2(0, -51)
 shape = SubResource("CircleShape2D_bgvty")
 
 [node name="status" type="Label" parent="."]
+visible = false
 offset_left = -116.0
 offset_top = -204.0
 offset_right = 128.0

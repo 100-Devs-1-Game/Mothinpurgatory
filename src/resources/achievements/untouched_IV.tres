@@ -10,4 +10,6 @@ title = "Untouchable IV"
 description = "Go completely unharmed for 10 minutes."
 unlocked = false
 icon = ExtResource("1_n4ltn")
+progressive = true
+required_amount = 10
 metadata/_custom_type_script = "uid://qm1fbqpewbxm"

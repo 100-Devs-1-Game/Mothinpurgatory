@@ -30,6 +30,8 @@ extends CharacterBody2D
 @export var altitude_smoothing: float = 6.0
 @export var altitude_max_correction_speed: float = 160.0
 
+@export var death_effect: PackedScene
+
 var player: Node2D
 var can_fire := true
 var is_winding_up := false
@@ -42,6 +44,8 @@ var desired_vel: Vector2 = Vector2.ZERO
 func _ready() -> void:
 	await get_tree().process_frame
 	player = get_tree().get_first_node_in_group("Player")
+	if find_child("AnimatedSprite2D"):
+		$AnimatedSprite2D.play("flying")
 	if has_node("Status"):
 		$Status.text = "State: Patrolling"
 	velocity = Vector2.ZERO
@@ -92,6 +96,7 @@ func _physics_process(delta: float) -> void:
 	if has_node("Status"):
 		if is_winding_up:
 			$Status.text = "State: About to spit"
+			$AnimatedSprite2D.play("charge")
 		elif is_firing:
 			$Status.text = "State: Spitting"
 		elif in_cooldown:
@@ -107,12 +112,12 @@ func _physics_process(delta: float) -> void:
 		if velocity.y > 0.0:
 			velocity.y = 0.0
 
-	if has_node("Sprite2D"):
+	if has_node("AnimatedSprite2D"):
 		var face_x = sign(player.global_position.x - global_position.x)
 		if face_x == 0:
 			face_x = sign(velocity.x)
 		if face_x != 0:
-			$Sprite2D.flip_h = face_x < 0
+			$AnimatedSprite2D.flip_h = face_x > 0
 
 func _try_begin_fire(dist: float) -> void:
 	if not can_fire:
@@ -131,6 +136,7 @@ func _fire_sequence() -> void:
 
 	_telegraph_begin()
 	await get_tree().create_timer(windup_time, false).timeout
+	$AnimatedSprite2D.play("spit")
 	_telegraph_end()
 
 	is_winding_up = false
@@ -163,6 +169,7 @@ func _spawn_spit() -> void:
 		return
 
 	var p: Node = projectile_scene.instantiate()
+	p.position = Vector2(40.0, 0.0)
 	var from = global_position
 	var offset = Vector2(0.0, -25.0)
 	var to = player.global_position + offset
@@ -175,17 +182,31 @@ func _spawn_spit() -> void:
 	get_tree().current_scene.add_child(p)
 	p.global_position = from
 
+	$AnimatedSprite2D.play("flying")
+
 func _telegraph_begin() -> void:
-	if has_node("Sprite2D"):
-		$Sprite2D.modulate = Color(1, 0.85, 0.85)
+	if has_node("AnimatedSprite2D"):
+		#$AnimatedSprite2D.modulate = Color(1, 0.85, 0.85)
+		pass
 
 func _telegraph_end() -> void:
-	if has_node("Sprite2D"):
-		$Sprite2D.modulate = Color(1, 1, 1)
+	if has_node("AnimatedSprite2D"):
+		#$AnimatedSprite2D.modulate = Color(1, 1, 1)
+		pass
 
 func get_faction() -> int:
 	return enemy_data.interactable_faction
 
+func create_effect() -> void:
+	if death_effect:
+		var de = death_effect.instantiate()
+		get_tree().get_first_node_in_group("game").add_child(de)
+		de.play("fly")
+		de.global_position = global_position
+	else:
+		push_warning("There is no set death effect, add one in the export.")
+
 func _death(_source: Node) -> void:
+	create_effect()
 	get_tree().call_group("game", "on_enemy_killed", enemy_data.score_on_death)
 	queue_free()

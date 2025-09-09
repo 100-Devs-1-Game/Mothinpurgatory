@@ -48,7 +48,7 @@ func update(delta: float) -> void:
 	if Input.is_action_just_pressed("attack") and sm.is_ready("attack"):
 		sm.change_state("Attack")
 		return
-	if Input.is_action_just_pressed("dash") and sm.is_ready("dash"):
+	if Input.is_action_just_pressed("dash") and sm.is_ready("Dash"):
 		sm.change_state("Dash")
 		return
 

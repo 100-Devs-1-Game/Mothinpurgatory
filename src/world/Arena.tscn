@@ -214,7 +214,7 @@ alignment = 1
 [node name="timelbl" type="Label" parent="GameUI/TextureRect2/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 36
 text = "Time: 00:00.0"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -236,7 +236,7 @@ alignment = 1
 [node name="scorelbl" type="Label" parent="GameUI/TextureRect2/VBoxContainer2"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 36
 text = "Score: 000000"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -503,3 +503,6 @@ theme_override_font_sizes/font_size = 26
 text = "Post Processing Enabled"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Spitter" parent="." instance=ExtResource("10_kgg8h")]
+position = Vector2(754, 429)

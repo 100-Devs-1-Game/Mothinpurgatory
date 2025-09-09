@@ -36,4 +36,5 @@ func create_effect() -> void:
 func _death(source: Node) -> void:
 	create_effect()
 	get_tree().call_group("game", "on_enemy_killed", enemy_data.score_on_death)
+	EventBus.emit_signal("bug_killed")
 	queue_free()

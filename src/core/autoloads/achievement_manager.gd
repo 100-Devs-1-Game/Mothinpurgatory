@@ -1,16 +1,35 @@
 extends Node
 
 signal achievement_unlocked(data: AchievementData)
+signal achievement_progress(data: AchievementData, current: int, required: int)
 
 const ACHIEVEMENTS_DIR := "res://resources/achievements/"
 const SAVE_PATH := "user://achievements.cfg"
 const SAVE_SECTION := "achievements"
+const SAVE_SECTION_PROGRESS := "achievement_progress"
 
 var _achievements_by_id: Dictionary = {}
-var _unlocked_ids: = {}
+var _unlocked_ids := {}
+var _progress_by_id: Dictionary = {}
+
+var _run_survival_minutes := 0
+var _run_hitless_minutes := 0
+var _run_score := 0
+
+var _bus_connected := false
+
+const SURVIVAL_IDS := [
+	"survivor_I", "survivor_II", "survivor_III"
+]
+
+const UNTOUCHABLE_IDS := [
+	"untouched_I", "untouched_II", "untouched_III", "untouched_IV",
+]
+
+var _no_hit_streak := true
 
 func _ready() -> void:
-	EventBus.player_died.connect(_on_player_died)
+	_connect_default_listeners(EventBus)
 	_load_definitions()
 	_load_progress()
 	_apply_loaded_progress()
@@ -83,14 +102,20 @@ func _load_definitions() -> void:
 
 func _load_progress() -> void:
 	_unlocked_ids.clear()
+	_progress_by_id.clear()
 	var cfg = ConfigFile.new()
 	var err = cfg.load(SAVE_PATH)
 	if err != OK:
 		return
+
 	if cfg.has_section(SAVE_SECTION):
 		for id in cfg.get_section_keys(SAVE_SECTION):
 			if cfg.get_value(SAVE_SECTION, id, false):
 				_unlocked_ids[id] = true
+
+	if cfg.has_section(SAVE_SECTION_PROGRESS):
+		for id in cfg.get_section_keys(SAVE_SECTION_PROGRESS):
+			_progress_by_id[id] = int(cfg.get_value(SAVE_SECTION_PROGRESS, id, 0))
 
 func _save_progress() -> void:
 	var cfg := ConfigFile.new()
@@ -98,30 +123,154 @@ func _save_progress() -> void:
 	if err != OK and err != ERR_FILE_NOT_FOUND:
 		push_warning("Couldn't load existing %s (code %d); writing fresh." % [SAVE_PATH, err])
 		cfg = ConfigFile.new()
+
 	if cfg.has_section(SAVE_SECTION):
 		cfg.erase_section(SAVE_SECTION)
+	if cfg.has_section(SAVE_SECTION_PROGRESS):
+		cfg.erase_section(SAVE_SECTION_PROGRESS)
+
 	for id in _achievements_by_id.keys():
 		cfg.set_value(SAVE_SECTION, id, _unlocked_ids.has(id))
+		var data: AchievementData = _achievements_by_id[id]
+		if data.progressive:
+			var cur: int = int(_progress_by_id.get(id, data.current_amount))
+			cfg.set_value(SAVE_SECTION_PROGRESS, id, cur)
+
 	err = cfg.save(SAVE_PATH)
 	if err != OK:
 		push_warning("Failed to save achievements at %s (code %d)" % [SAVE_PATH, err])
 
 func reset_all() -> void:
 	_unlocked_ids.clear()
+	_progress_by_id.clear()
 	for id in _achievements_by_id.keys():
 		var data: AchievementData = _achievements_by_id[id]
+		if data.progressive:
+			data.current_amount = 0
 		data.unlocked = false
 	_save_progress()
+
+func _reset_run_scoped() -> void:
+	_run_survival_minutes = 0
+	_run_hitless_minutes = 0
+	_run_score = 0
+	_no_hit_streak = true
 
 func _apply_loaded_progress() -> void:
 	for id in _achievements_by_id.keys():
 		var data: AchievementData = _achievements_by_id[id]
 		data.unlocked = _unlocked_ids.has(id)
+		data.current_amount = int(_progress_by_id.get(id, 0))
 
 func _connect_default_listeners(bus: Object) -> void:
-	if bus.has_signal("player_died"):
-		bus.connect("player_died", Callable(self, "_on_player_died"))
+	if _bus_connected:
+		return
+
+	if bus.has_signal("player_died") and not bus.player_died.is_connected(_on_player_died):
+		bus.player_died.connect(_on_player_died)
+
+	if bus.has_signal("player_damaged") and not bus.player_damaged.is_connected(_on_player_damaged):
+		bus.player_damaged.connect(_on_player_damaged)
+
+	if bus.has_signal("bug_killed") and not bus.bug_killed.is_connected(_on_bug_killed):
+		bus.bug_killed.connect(_on_bug_killed)
+
+	if bus.has_signal("first_boss") and not bus.first_boss.is_connected(_first_boss_killed):
+		bus.first_boss.connect(_first_boss_killed)
+
+	if bus.has_signal("first_game") and not bus.first_game.is_connected(_first_game_played):
+		bus.first_game.connect(_first_game_played)
+
+	if bus.has_signal("minute_passed") and not bus.minute_passed.is_connected(_minute_passed):
+		bus.minute_passed.connect(_minute_passed)
+
+	if bus.has_signal("no_hit_minute_passed") and not bus.no_hit_minute_passed.is_connected(_no_hit_minute):
+		bus.no_hit_minute_passed.connect(_no_hit_minute)
+
+	if bus.has_signal("score_final") and not bus.score_final.is_connected(_on_score_final):
+		bus.score_final.connect(_on_score_final)
+
+	_bus_connected = true
+
+func add_progress(id: String, delta: int) -> void:
+	if not _achievements_by_id.has(id):
+		return
+	var data: AchievementData = _achievements_by_id[id]
+	if not data.progressive:
+		return
+
+	var cur = int(_progress_by_id.get(id, data.current_amount))
+	cur += delta
+	if cur < 0:
+		cur = 0
+	if data.required_amount > 0:
+		cur = min(cur, data.required_amount)
+
+	_progress_by_id[id] = cur
+	data.current_amount = cur
+
+	emit_signal("achievement_progress", data, cur, data.required_amount)
+	try_unlock_on_threshold(id, cur, data.required_amount)
+	_save_progress()
+
+func set_progress(id: String, value: int) -> void:
+	add_progress(id, value - int(_progress_by_id.get(id, 0)))
+
+func get_progress(id: String) -> int:
+	return int(_progress_by_id.get(id, 0))
 
 func _on_player_died() -> void:
 	try_unlock_on_predicate("death_I", func() -> bool: return true)
-	print("player died!")
+	_no_hit_streak = false
+	_run_survival_minutes = 0
+	_run_hitless_minutes = 0
+	_run_score = 0
+
+func _on_player_damaged() -> void:
+	_no_hit_streak = false
+	_run_hitless_minutes = 0
+
+func _on_bug_killed() -> void:
+	add_progress("no_bugs", 1)
+
+func _first_boss_killed() -> void:
+	try_unlock_on_predicate("first_boss", func() -> bool: return true)
+	print("achievement unlocked: First boss")
+
+func _first_game_played() -> void:
+	try_unlock_on_predicate("first_game", func() -> bool: return true)
+	_reset_run_scoped()
+
+func _no_hit_minute(minutes: int) -> void:
+	_run_hitless_minutes += minutes
+	for id in UNTOUCHABLE_IDS:
+		if not _achievements_by_id.has(id):
+			continue
+		var req = _achievements_by_id[id].required_amount
+		try_unlock_on_threshold(id, _run_hitless_minutes, req)
+		var best = get_progress(id)
+		if _run_hitless_minutes > best:
+			set_progress(id, _run_hitless_minutes)
+
+func _minute_passed(minutes: int = 1) -> void:
+	_run_survival_minutes += minutes
+	for id in SURVIVAL_IDS:
+		if not _achievements_by_id.has(id):
+			continue
+		var req = _achievements_by_id[id].required_amount
+		try_unlock_on_threshold(id, _run_survival_minutes, req)
+
+		var best = get_progress(id)
+		if _run_survival_minutes > best:
+			set_progress(id, _run_survival_minutes)
+
+func _on_score_final(final_score: int) -> void:
+	_run_score = final_score
+	_commit_run_best()
+
+func _commit_run_best() -> void:
+	var BEST_ID := "high_score"
+	if _achievements_by_id.has(BEST_ID):
+		var best := get_progress(BEST_ID)
+		if _run_score > best:
+			set_progress(BEST_ID, _run_score)

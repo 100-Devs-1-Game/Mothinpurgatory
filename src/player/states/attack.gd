@@ -41,30 +41,35 @@ func enter() -> void:
 	sm.set_cooldown("attack", player.stats.attack_cooldown)
 	phase = Phase.WINDUP
 	timer = player.stats.attack_windup
-
 	dir = Dir.NEUTRAL
 
-	var jump_held = Input.is_action_pressed("jump")
-	var down_held = Input.is_action_pressed("down")
-	var left_held = Input.is_action_pressed("left")
-	var right_held = Input.is_action_pressed("right")
-	var moving_horizontally = false
-	if left_held or right_held:
-		moving_horizontally = true
-
-	if jump_held:
-		if down_held and not player.is_on_floor():
-			dir = Dir.DOWN
-		else:
-			if moving_horizontally:
-				dir = Dir.NEUTRAL
-			else:
-				dir = Dir.UP
+	var forced_up = bool(player.get_meta("force_attack_up", false))
+	if forced_up:
+		dir = Dir.UP
+		player.set_meta("force_attack_up", false)
 	else:
-		if down_held and not player.is_on_floor():
-			dir = Dir.DOWN
+
+		var jump_held = Input.is_action_pressed("jump")
+		var down_held = Input.is_action_pressed("down")
+		var left_held = Input.is_action_pressed("left")
+		var right_held = Input.is_action_pressed("right")
+		var moving_horizontally = false
+		if left_held or right_held:
+			moving_horizontally = true
+
+		if jump_held:
+			if down_held and not player.is_on_floor():
+				dir = Dir.DOWN
+			else:
+				if moving_horizontally:
+					dir = Dir.NEUTRAL
+				else:
+					dir = Dir.UP
 		else:
-			dir = Dir.NEUTRAL
+			if down_held and not player.is_on_floor():
+				dir = Dir.DOWN
+			else:
+				dir = Dir.NEUTRAL
 
 	if dir == Dir.DOWN:
 		player.get_node("Animator").play("attack down")
@@ -91,6 +96,11 @@ func update(delta) -> void:
 			else:
 				player.velocity.y += player.stats.gravity_down * air_gravity_scale * delta
 
+	var dash_just = Input.is_action_just_pressed("dash")
+	var dash_ready = sm.is_ready("Dash")
+	if phase == Phase.RECOVERY and dash_ready and dash_just:
+		timer = min(timer, 0.06)
+
 	timer -= delta
 	if phase == Phase.WINDUP and timer <= 0.0:
 		phase = Phase.ACTIVE
@@ -99,7 +109,9 @@ func update(delta) -> void:
 		phase = Phase.RECOVERY
 		timer = player.stats.attack_recovery
 	elif phase == Phase.RECOVERY and timer <= 0.0:
-		if player.is_on_floor():
+		if dash_ready and (dash_just or Input.is_action_pressed("dash")):
+			sm.change_state("Dash")
+		elif player.is_on_floor():
 			sm.change_state("Idle")
 		else:
 			sm.change_state("Air")
