@@ -1,7 +1,7 @@
 extends Area2D
 class_name Hitbox
 
-@export var attack_data: AttackData
+@export var attack_data: Resource
 @export var lifetime: float = 0.2
 @export var enable_lifetime: bool = false
 var a_owner: Node

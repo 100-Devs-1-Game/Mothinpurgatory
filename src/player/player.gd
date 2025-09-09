@@ -14,9 +14,14 @@ signal player_died
 @export var animator_path: NodePath
 @export var slash_effect: PackedScene
 @export var hurtbox_collision: CollisionShape2D
+@export var camera: Camera2D
 
 @onready var animator: AnimatedSprite2D = get_node(animator_path)
 @onready var sm: Node = $StateMachine
+
+var _knockback: Vector2 = Vector2.ZERO
+var _knockback_time_left: float = 0.0
+var _knockback_decay: float = 14.0
 
 var interactable_faction = 0
 var _facing := 1
@@ -28,20 +33,56 @@ var _jumps_left := 1
 var was_on_floor := false
 var air_stall_used := false
 
+var getting_up: bool = true
+var is_dead: bool = false
+var adjust_cam: bool = false
+
 func _ready() -> void:
+	if getting_up:
+		await get_tree().create_timer(2.0).timeout
+		adjust_cam = true
+		await get_tree().create_timer(2.0).timeout
+		animator.animation_finished.connect(_wake_player)
+		animator.play("wake_up")
+	while getting_up:
+		await get_tree().create_timer(0.1).timeout
 	_recompute_jump_caps()
 	_reset_jumps_on_ground(true)
 	sm.init(self)
 	if animator:
 		animator.play("idle")
 
+func adjust_camera(delta) -> void:
+	if adjust_cam and getting_up:
+		camera.position = lerp(camera.position, Vector2.ZERO, 0.04)
+	elif is_dead:
+		camera.offset = lerp(camera.offset, Vector2(15.0, 0.0), 0.04)
+		camera.position = lerp(camera.position, Vector2.ZERO, 0.04)
+		camera.zoom = lerp(camera.zoom, Vector2(0.912, 0.912), 0.04)
+
 func _physics_process(delta: float) -> void:
-	_update_common_timers(delta)
-	if Input.is_action_just_pressed("jump"):
-		if _jumps_left > 0:
-			buffer_jump()
-	sm.update(delta)
+	if !is_dead:
+		adjust_camera(delta)
+		_update_common_timers(delta)
+		if Input.is_action_just_pressed("jump"):
+			if _jumps_left > 0:
+				buffer_jump()
+		sm.update(delta)
+
+		if _knockback_time_left > 0.0:
+			_knockback_time_left = max(_knockback_time_left - delta, 0.0)
+			_knockback = _knockback.move_toward(Vector2.ZERO, _knockback_decay * delta)
+			velocity.x = _knockback.x
+			if _knockback.y != 0.0:
+				if _knockback.y < velocity.y:
+					velocity.y = _knockback.y
+	else:
+		adjust_camera(delta)
+		velocity.x = 0.0
+		velocity.y = 150.0
+
 	move_and_slide()
+
 
 func has_jump_buffer() -> bool:
 	return _jump_buffer > 0.0
@@ -123,15 +164,34 @@ func _reset_jumps_on_ground(full: bool) -> void:
 
 func _death(_source: Node) -> void:
 	emit_signal("player_died")
+	set_facing(-1)
+	camera.limit_left = -10000000
+	camera.limit_right = 10000000
+	camera.limit_bottom = 820
 	EventBus.player_died.emit()
+	is_dead = true
+	animator.z_index = 30
+	if animator:
+		animator.play("dead")
 
-func _notify_damage() -> void:
-	print("player sent hit signal")
+func _wake_player():
+	if getting_up:
+		await get_tree().create_timer(2.0).timeout
+		EventBus.player_woke.emit()
+		getting_up = false
+
+func _notify_damage() -> void: #Temporary, I'll improve it later
 	EventBus.player_damaged.emit()
+	print("Player taking damage")
 
-func apply_knockback(kb: Vector2, _attack_data: AttackData, _source: Node) -> void:
-	print("knocked back")
-	velocity += kb
+func has_knockback_control() -> bool:
+	return _knockback_time_left > 0.0
+
+func apply_knockback(source: Node, kb: Vector2) -> void:
+	_knockback = kb
+	_knockback_time_left = 0.2
+	if animator:
+		animator.play("stun")
 
 func get_faction() -> int:
 	return interactable_faction

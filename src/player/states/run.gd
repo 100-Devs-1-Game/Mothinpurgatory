@@ -23,7 +23,8 @@ func enter() -> void:
 
 func update(_delta: float) -> void:
 	var x_input = Input.get_action_strength("right") - Input.get_action_strength("left")
-	player.velocity.x = x_input * player.stats.move_speed
+	if not player.has_knockback_control():
+		player.velocity.x = x_input * player.stats.move_speed
 
 	if x_input > 0:
 		player.set_facing(-1)

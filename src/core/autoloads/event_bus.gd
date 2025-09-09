@@ -10,3 +10,4 @@ signal no_hit_minute_passed
 
 signal ui_closed
 signal player_damaged
+signal player_woke

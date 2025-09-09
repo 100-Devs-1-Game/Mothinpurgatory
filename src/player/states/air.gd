@@ -14,7 +14,8 @@ func enter() -> void:
 
 func update(delta: float) -> void:
 	var x_input = Input.get_action_strength("right") - Input.get_action_strength("left")
-	player.velocity.x = x_input * player.stats.move_speed
+	if not player.has_knockback_control():
+		player.velocity.x = x_input * player.stats.move_speed
 
 	if x_input > 0:
 		player.set_facing(-1)
@@ -45,7 +46,7 @@ func update(delta: float) -> void:
 		sm.change_state("Jump")
 		return
 
-	if Input.is_action_just_pressed("attack") and sm.is_ready("attack"):
+	if Input.is_action_just_pressed("attack") and sm.is_ready("Attack"):
 		sm.change_state("Attack")
 		return
 	if Input.is_action_just_pressed("dash") and sm.is_ready("Dash"):

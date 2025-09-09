@@ -17,21 +17,11 @@ const FLASH_DOWN_TIME := 0.15
 const FLASH_COLOR := Color(1, 1, 0)
 const NORMAL_COLOR := Color(1, 1, 1)
 
-var _hitstop_depth := 0 #Just putting hitstop stuff in game node until I get stuff sorted
 
 @export var time_label: Label
 @export var score_label: Label
-
-var hitless_elapsed := 0.0
-var hitless_last_minute := 0
-var hitless_running := false
-
 @export var player: CharacterBody2D
-
 @export var enemy_scene: PackedScene
-@export var base_spawn_interval: float = 12.0
-@export var min_spawn_interval: float = 0.8
-@export var ramp_per_minute: float = 0.85
 
 @export var gnat_scene: PackedScene
 @export var gnat_base_spawn_interval: float = 3.0
@@ -41,40 +31,66 @@ var hitless_running := false
 @export var gnat_burst_min: int = 1
 @export var gnat_burst_max: int = 3
 
+@export var retry_button: Button
+@export var quit_button: Button
+
+@export var base_spawn_interval: float = 12.0
+@export var min_spawn_interval: float = 0.8
+@export var ramp_per_minute: float = 1.7
+
+@export var enemy_scenes: Array[PackedScene] = []
+@export var use_weighted_spawn: bool = false
+@export var spawn_weights: PackedFloat32Array = PackedFloat32Array()
+@export var debug_testing := false
+
 @onready var left_spawn: Marker2D  = $LeftSpawn
 @onready var right_spawn: Marker2D = $RightSpawn
 @onready var enemy_container: Node = $Enemies
-@export var enemy_scenes: Array[PackedScene] = []
-@export var use_weighted_spawn: bool = false
-@export var spawn_weights: PackedFloat32Array = PackedFloat32Array() #when we add big boi
 
-@export var debug_testing := false
 var post_process_enabled := true
+var _hitstop_depth := 0
+var hitless_elapsed := 0.0
+var hitless_last_minute := 0
+var hitless_running := false
 
 func _ready() -> void:
 	SceneLoader.current_scene = self
 	EventBus.first_game.emit()
 	add_to_group("game")
 	$Background.play("default")
-	reset_time()
-	start_time()
-	if !player:
+	retry_button.pressed.connect(retry)
+	quit_button.pressed.connect(end_game)
+	
+	if not player:
 		player = get_tree().get_first_node_in_group("Player")
 	await get_tree().process_frame
-	player.connect("player_died", _game_over)
+	if player:
+		player.connect("player_died", _game_over)
+
+	if EventBus.has_signal("player_woke"):
+		EventBus.player_woke.connect(_begin_game)
 
 	if EventBus.has_signal("player_damaged"):
 		EventBus.player_damaged.connect(_on_player_damaged)
 
+func _begin_game():
+	$GameUI.visible = true
+	reset_time()
+	start_time()
+	await get_tree().create_timer(2.0).timeout
+	$GameUI/surv.visible = true
+	await get_tree().create_timer(2.0).timeout
+	$GameUI/surv.queue_free()
+
 func _process(delta: float) -> void:
-	if !running:
+	if not running:
 		return
 
 	elapsed += delta
-	time_label.text = _format_time(elapsed)
+	if time_label:
+		time_label.text = _format_time(elapsed)
 
-	@warning_ignore("integer_division")
-	var current_minute = int(elapsed) / 60
+	var current_minute = _whole_minutes(elapsed)
 	if current_minute > last_minute_checked:
 		var minutes_gained = current_minute - last_minute_checked
 		EventBus.minute_passed.emit(minutes_gained)
@@ -84,7 +100,7 @@ func _process(delta: float) -> void:
 
 	if hitless_running:
 		hitless_elapsed += delta
-		var hl_minute = int(hitless_elapsed) / 60
+		var hl_minute = _whole_minutes(hitless_elapsed)
 		if hl_minute > hitless_last_minute:
 			var gained = hl_minute - hitless_last_minute
 			hitless_last_minute = hl_minute
@@ -92,6 +108,10 @@ func _process(delta: float) -> void:
 
 func show_ui(show: bool) -> void:
 	$GameUI.visible = show
+
+func _whole_minutes(t: float) -> int:
+	@warning_ignore("integer_division")
+	return int(t) / 60
 
 func _format_time(t: float) -> String:
 	@warning_ignore("integer_division")
@@ -103,7 +123,7 @@ func _format_time(t: float) -> String:
 func start_time() -> void:
 	running = true
 	hitless_running = true
-	if !debug_testing:
+	if not debug_testing:
 		_spawn_loop()
 		_gnat_spawn_loop()
 
@@ -118,7 +138,8 @@ func reset_time() -> void:
 	total_kills = 0
 	hitless_elapsed = 0.0
 	hitless_last_minute = 0
-	time_label.text = _format_time(elapsed)
+	if time_label:
+		time_label.text = _format_time(elapsed)
 	_update_score_label()
 
 func _on_player_damaged() -> void:
@@ -126,10 +147,14 @@ func _on_player_damaged() -> void:
 	hitless_last_minute = 0
 
 func _update_score_label() -> void:
-	score_label.text = "Score: " + "%06d" % score
-	_flash_score()
+	if score_label:
+		score_label.text = "Score: " + "%06d" % score
+		_flash_score()
 
 func _flash_score() -> void:
+	if not score_label:
+		return
+
 	if _score_tween and _score_tween.is_running():
 		_score_tween.kill()
 
@@ -149,7 +174,6 @@ func _flash_score() -> void:
 	_score_tween.tween_property(score_label, "modulate", NORMAL_COLOR, FLASH_DOWN_TIME)\
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
 
-
 func on_enemy_killed(points: int = kill_score) -> void:
 	total_kills += 1
 	score += points
@@ -158,23 +182,33 @@ func on_enemy_killed(points: int = kill_score) -> void:
 func apply_hitstop(duration: float = 0.06, timescale: float = 0.0) -> void:
 	_hitstop_depth += 1
 	Engine.time_scale = timescale
-
 	await get_tree().create_timer(duration, false, true, true).timeout
-
 	_hitstop_depth = max(0, _hitstop_depth - 1)
 	if _hitstop_depth == 0:
 		Engine.time_scale = 1.0
 
 func _game_over():
+	stop_time()
+	reset_time()
 	print("Player died, game over.")
 	hitless_running = false
-	stop_time()
+	await get_tree().create_timer(5.0).timeout
 	$GameUI.visible = false
-	$Gameover.visible = true
-	for i in $Enemies.get_child_count():
-		$Enemies.get_child(i).queue_free()
-	$Gameover/VBoxContainer/Panel/timeoverlbl.text = "You survived for: " + time_label.text
-	$Gameover/VBoxContainer/Panel2/scoreoverlbl.text = "Score: " + "%06d" % score
+	$NewOver.visible = true
+	$NewOver/GameoverAnim.play("fade")
+	await $NewOver/GameoverAnim.animation_finished
+	$NewOver/GameoverAnim.play("loop")
+
+	var enemies = $Enemies
+	if enemies:
+		for i in range(enemies.get_child_count()):
+			var child = enemies.get_child(i)
+			if is_instance_valid(child):
+				child.queue_free()
+
+	$NewOver/Panel2/VBoxContainer/Panel/timelbl.text = "You survived for: " + (time_label.text if time_label else _format_time(elapsed))
+	$NewOver/Panel2/VBoxContainer/Panel2/scorelbl.text = "Score: " + "%06d" % score
+	$NewOver/Panel2/VBoxContainer/Panel3/killslbl.text = "Total Kills: " + "%06d" % total_kills
 
 	EventBus.score_final.emit(score)
 
@@ -182,16 +216,25 @@ func _spawn_loop() -> void:
 	while is_instance_valid(self):
 		if running:
 			_spawn_one()
-			var wait_time = _current_spawn_interval()
+			var wait_time = _ramped_interval(base_spawn_interval, ramp_per_minute, min_spawn_interval)
 			await get_tree().create_timer(wait_time, false).timeout
 		else:
 			await get_tree().process_frame
 
-func _current_spawn_interval() -> float:
-	var minutes_alive = int(elapsed) / 60
-	var interval = base_spawn_interval * pow(ramp_per_minute, minutes_alive)
-	if interval < min_spawn_interval:
-		interval = min_spawn_interval
+func _gnat_spawn_loop() -> void:
+	while is_instance_valid(self):
+		if running:
+			_spawn_gnat_burst()
+			var wait_time = _ramped_interval(gnat_base_spawn_interval, gnat_ramp_per_minute, gnat_min_spawn_interval)
+			await get_tree().create_timer(wait_time, false).timeout
+		else:
+			await get_tree().process_frame
+
+func _ramped_interval(base_time: float, ramp: float, min_time: float) -> float:
+	var minutes_alive = _whole_minutes(elapsed)
+	var interval = base_time * pow(ramp, minutes_alive)
+	if interval < min_time:
+		interval = min_time
 	return interval
 
 func _pick_enemy_scene() -> PackedScene:
@@ -218,59 +261,43 @@ func _weighted_pick(weights: PackedFloat32Array) -> int:
 			return i
 	return weights.size() - 1
 
+func _choose_spawn_point() -> Marker2D:
+	var which_side = randi() % 2
+	if which_side == 0:
+		return left_spawn
+	return right_spawn
+
+func _flip_any_sprite(node: Node, flip_h: bool) -> void:
+	if node.has_node("Sprite2D"):
+		var s2d = node.get_node("Sprite2D")
+		s2d.flip_h = flip_h
+	elif node.has_node("AnimatedSprite2D"):
+		var as2d = node.get_node("AnimatedSprite2D")
+		as2d.flip_h = flip_h
+
+func _spawn_into_container(node: Node) -> void:
+	if is_instance_valid(enemy_container):
+		enemy_container.add_child(node)
+	else:
+		add_child(node)
+
 func _spawn_one() -> void:
 	var scene_to_spawn = _pick_enemy_scene()
 	if scene_to_spawn == null:
 		return
 
-	var which_side = randi() % 2
-	var spawn_point: Marker2D = left_spawn if which_side == 0 else right_spawn
+	var spawn_point = _choose_spawn_point()
+	var flip = false
+	if spawn_point == right_spawn:
+		flip = true
 
 	var enemy = scene_to_spawn.instantiate()
 	enemy.global_position = spawn_point.global_position
+	_flip_any_sprite(enemy, flip)
+	_spawn_into_container(enemy)
 
-	if enemy.has_node("Sprite2D"):
-		var spr: Sprite2D = enemy.get_node("Sprite2D")
-		spr.flip_h = (which_side != 0)
-
-	if is_instance_valid(enemy_container):
-		enemy_container.add_child(enemy)
-	else:
-		add_child(enemy)
-
-func _gnat_spawn_loop() -> void:
-	while is_instance_valid(self):
-		if running:
-			_spawn_gnat_burst()
-			var wait_time = _gnat_current_spawn_interval()
-			await get_tree().create_timer(wait_time, false).timeout
-		else:
-			await get_tree().process_frame
-
-func _gnat_current_spawn_interval() -> float:
-	var minutes_alive = int(elapsed) / 60
-	var interval = gnat_base_spawn_interval * pow(gnat_ramp_per_minute, minutes_alive)
-	if interval < gnat_min_spawn_interval:
-		interval = gnat_min_spawn_interval
-	return interval
-
-func _spawn_gnat_burst() -> void:
-	if gnat_scene == null:
-		return
-
-	if gnat_max_alive > 0:
-		var alive = _count_gnats_alive()
-		if alive >= gnat_max_alive:
-			return
-
-	var count = randi_range(gnat_burst_min, gnat_burst_max)
-	for i in count:
-		if gnat_max_alive > 0 and _count_gnats_alive() >= gnat_max_alive:
-			break
-		_spawn_one_gnat()
-
-func _count_gnats_alive() -> int:
-	var total := 0
+func _gnat_current_alive() -> int:
+	var total = 0
 	if is_instance_valid(enemy_container):
 		for child in enemy_container.get_children():
 			if child.is_in_group("Gnat"):
@@ -281,27 +308,48 @@ func _count_gnats_alive() -> int:
 				total += 1
 	return total
 
-func _input(event: InputEvent) -> void:
-	if Input.is_action_just_pressed("toggle_post"):
-		post_process_enabled = !post_process_enabled
-		$Enviroment.visible = post_process_enabled
-		$Enviroment/CanvasLayer.visible = post_process_enabled
-
 func _spawn_one_gnat() -> void:
-	var which_side = randi() % 2
-	var spawn_point: Marker2D = left_spawn if which_side == 0 else right_spawn
+	if gnat_scene == null:
+		return
+
+	var spawn_point = _choose_spawn_point()
+	var flip = false
+	if spawn_point == right_spawn:
+		flip = true
 
 	var gnat = gnat_scene.instantiate()
 	gnat.global_position = spawn_point.global_position
+	_flip_any_sprite(gnat, flip)
+	_spawn_into_container(gnat)
 
-	if gnat.has_node("AnimatedSprite2D"):
-		var spr: Sprite2D = gnat.get_node("AnimatedSprite2D")
-		spr.flip_h = (which_side != 0)
+func _spawn_gnat_burst() -> void:
+	if gnat_scene == null:
+		return
 
-	if is_instance_valid(enemy_container):
-		enemy_container.add_child(gnat)
-	else:
-		add_child(gnat)
+	if gnat_max_alive > 0:
+		var alive = _gnat_current_alive()
+		if alive >= gnat_max_alive:
+			return
+
+	var count = randi_range(gnat_burst_min, gnat_burst_max)
+	for i in count:
+		if gnat_max_alive > 0 and _gnat_current_alive() >= gnat_max_alive:
+			break
+		_spawn_one_gnat()
+
+func _input(event: InputEvent) -> void:
+	if Input.is_action_just_pressed("toggle_post"):
+		post_process_enabled = not post_process_enabled
+		$Enviroment.visible = post_process_enabled
+		$Enviroment/CanvasLayer.visible = post_process_enabled
+
+func end_game():
+	EventBus.score_final.emit(score)
+	SceneLoader.goto_title()
+
+func retry():
+	EventBus.score_final
+	SceneLoader.goto_title()
 
 func _exit_tree() -> void:
 	EventBus.score_final.emit(score)

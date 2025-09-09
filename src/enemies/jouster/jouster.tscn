@@ -14,12 +14,12 @@ size = Vector2(107, 1)
 size = Vector2(108, 103)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_7qqu8"]
-radius = 91.2688
+radius = 51.3517
 
 [sub_resource type="Resource" id="Resource_bgvty"]
 script = ExtResource("5_7qqu8")
 damage = 2
-knockback = Vector2(0, 0)
+knockback = Vector2(294.335, 294.335)
 hitstun = 0.0
 knockback_scale = 1.0
 damage_type = "physical"
@@ -63,7 +63,6 @@ position = Vector2(0, -51)
 attack_data = SubResource("Resource_bgvty")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
-visible = false
 shape = SubResource("CircleShape2D_7qqu8")
 debug_color = Color(0.990688, 0, 0.275205, 0.42)
 

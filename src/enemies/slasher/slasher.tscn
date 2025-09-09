@@ -76,7 +76,7 @@ size = Vector2(72, 164)
 [sub_resource type="Resource" id="Resource_2n51q"]
 script = ExtResource("17_gqe16")
 damage = 4
-knockback = Vector2(0, 0)
+knockback = Vector2(700, 200)
 hitstun = 0.0
 knockback_scale = 1.0
 damage_type = "physical"

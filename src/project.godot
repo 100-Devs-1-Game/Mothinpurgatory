@@ -23,6 +23,7 @@ AchievementManager="*res://core/autoloads/achievement_manager.gd"
 EventBus="*res://core/autoloads/event_bus.gd"
 SettingsManager="*res://core/autoloads/settings_manager.gd"
 SceneLoader="*res://core/autoloads/scene_loader.gd"
+AchievementDisplayQueue="*res://core/autoloads/achievement_display_queue.gd"
 
 [display]
 

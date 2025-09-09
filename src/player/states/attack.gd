@@ -85,11 +85,13 @@ func update(delta) -> void:
 	stall_lock = max(stall_lock - delta, 0.0)
 
 	if player.is_on_floor():
-		player.velocity.x = move_toward(player.velocity.x, 0.0, ground_brake * delta)
+		if not player.has_knockback_control():
+			player.velocity.x = move_toward(player.velocity.x, 0.0, ground_brake * delta)
 	else:
 		if air_stall_timer > 0.0:
 			air_stall_timer -= delta
-			player.velocity.y = 0.0
+			if not player.has_knockback_control():
+				player.velocity.y = 0.0
 		else:
 			if player.velocity.y < 0.0 and Input.is_action_pressed("jump"):
 				player.velocity.y += player.stats.gravity_up * air_gravity_scale * delta

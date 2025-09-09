@@ -22,49 +22,61 @@ func _ready() -> void:
 		max_health = overwrite_data.max_health
 	current_health = max_health
 
-func take_damage(damage_data: AttackData, source: Node) -> void:
-	if damage_data != null:
-		if declared_dead:
-			return
+func take_damage(damage_data: Resource, source: Node) -> void:
+	if damage_data == null:
+		push_warning("Received damage_data is null on ", source)
+		return
 
-		var target = get_parent()
+	if declared_dead:
+		return
 
-		current_health = clamp(current_health - damage_data.damage, 0, max_health)
-		health_changed.emit(current_health, max_health)
-		damaged.emit(damage_data, source)
-		#print(name, " took ", damage_data.damage, " damage. HP: ", current_health, "/", max_health)
-		if tint_on_damage and target and target.has_node("Animator"):
-			target.get_node("Animator").modulate = Color.RED
-			await get_tree().create_timer(0.3, false).timeout
-			if is_instance_valid(target) and target.has_node("Animator"):
-				target.get_node("Animator").modulate = Color.WHITE
+	var target = get_parent()
 
-		if is_players: #Temp fix, sketchy but works
-			if target.has_method("_notify_damage"):
-				target._notify_damage()
+	var dmg := 0
+	if "damage" in damage_data:
+		dmg = int(damage_data.damage)
 
-		if apply_knockback_on_damage and target and target.has_method("apply_knockback"):
-			if current_health > 0 or not only_knockback_if_alive:
-				var kb_mag = _extract_knockback(damage_data)
-				if kb_mag != Vector2.ZERO:
-					var attacker = _resolve_attacker_node2d(source)
-					var tgt2d = target as Node2D
-					var dir_x = 1.0
-					if attacker and tgt2d:
-						dir_x = _compute_dir_x(attacker, tgt2d)
-					var final_kb = Vector2(dir_x * kb_mag.x, -kb_mag.y)
-					var resist = 1.0 - clamp(knockback_resistance, 0.0, 1.0)
-					target.apply_knockback(attacker if attacker else source, final_kb * resist)
+	current_health = clamp(current_health - dmg, 0, max_health)
+	health_changed.emit(current_health, max_health)
+	damaged.emit(damage_data, source)
 
-		if target and target.has_method("enter_hitstun") and "hitstun" in damage_data and damage_data.hitstun > 0.0:
+	if is_players:
+		if target and target.has_method("_notify_damage"):
+			if target.animator:
+				target.animator.play("stun")
+			target._notify_damage()
+
+	var can_apply_kb = false
+	if apply_knockback_on_damage and target:
+		if target.has_method("apply_knockback"):
+			can_apply_kb = true
+
+	if can_apply_kb:
+		if current_health > 0 or not only_knockback_if_alive:
+			var kb_mag = _extract_knockback(damage_data)
+			if kb_mag != Vector2.ZERO:
+				var attacker = _resolve_attacker_node2d(source)
+				var tgt2d = target as Node2D
+				var dir_x = 1.0
+				if attacker and tgt2d:
+					dir_x = _compute_dir_x(attacker, tgt2d)
+				var final_kb = Vector2(dir_x * kb_mag.x, -kb_mag.y)
+				var resist = 1.0 - clamp(knockback_resistance, 0.0, 1.0)
+
+				var eff_source: Node = source
+				if attacker != null:
+					eff_source = attacker
+
+				target.apply_knockback(eff_source, final_kb * resist)
+
+	if target and target.has_method("enter_hitstun"):
+		if "hitstun" in damage_data and float(damage_data.hitstun) > 0.0:
 			target.enter_hitstun(damage_data.hitstun)
 
-		if current_health == 0 and source:
-			_notify_death(source)
-	else:
-		push_warning("Recieved damage_data is null on ", source)
+	if current_health == 0 and source:
+		_notify_death(source)
 
-func _extract_knockback(damage_data: AttackData) -> Vector2:
+func _extract_knockback(damage_data: Resource) -> Vector2:
 	var horiz = 0.0
 	var up = 0.0
 	if "knockback" in damage_data:
@@ -85,7 +97,9 @@ func _compute_dir_x(attacker: Node2D, target: Node2D) -> float:
 	if dx < 0.0:
 		return -1.0
 	var facing_x = sign(attacker.global_transform.x.x)
-	return facing_x if facing_x != 0.0 else 1.0
+	if facing_x != 0.0:
+		return facing_x
+	return 1.0
 
 func _resolve_attacker_node2d(src: Node) -> Node2D:
 	var n = src

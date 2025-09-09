@@ -34,6 +34,9 @@ func _ready() -> void:
 	_load_progress()
 	_apply_loaded_progress()
 
+	if not is_connected("achievement_unlocked", Callable(self, "_on_achievement_unlocked")):
+		connect("achievement_unlocked", Callable(self, "_on_achievement_unlocked"))
+
 func all() -> Array:
 	var list = _achievements_by_id.values()
 	list.sort_custom(func(a, b): return a.title.naturalnocasecmp_to(b.title) < 0)
@@ -55,7 +58,13 @@ func unlock(id: String) -> void:
 	_unlocked_ids[id] = true
 	data.unlocked = true
 	_save_progress()
-	emit_signal("achievement_unlocked", data)
+	emit_signal("achievement_unlocked", data.id, data)
+
+func _on_achievement_unlocked(id: StringName, data: AchievementData) -> void:
+	var title := data.title
+	var desc := data.description
+	var icon: Texture2D = data.icon if data.icon else null
+	AchievementDisplayQueue.queue_unlock(id, title, desc, icon)
 
 func try_unlock_on_predicate(id: String, predicate: Callable) -> void:
 	if is_unlocked(id):

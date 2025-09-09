@@ -12,7 +12,9 @@ func init(p_sm, p_player):
 func enter() -> void:
 	playing_enter = false
 	landing = false
-	player.velocity.x = 0.0
+
+	if not player.has_knockback_control():
+		player.velocity.x = 0.0
 
 	if sm.previous_state_name in ["Air", "Jump"]:
 		landing = true

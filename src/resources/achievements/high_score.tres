@@ -7,9 +7,9 @@
 script = ExtResource("1_2au0r")
 id = "high_score"
 title = "Highroller"
-description = "Reach over 999999 score."
+description = "Reach 20000 score."
 unlocked = false
 icon = ExtResource("1_nb7kn")
 progressive = true
-required_amount = 999999
+required_amount = 20000
 metadata/_custom_type_script = "uid://qm1fbqpewbxm"

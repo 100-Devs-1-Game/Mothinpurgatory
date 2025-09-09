@@ -7,9 +7,9 @@
 [sub_resource type="Resource" id="Resource_u1iv8"]
 script = ExtResource("3_oe335")
 damage = 1
-knockback = Vector2(0, 0)
+knockback = Vector2(41.57, 0)
 hitstun = 0.0
-knockback_scale = 1.0
+knockback_scale = 2.92
 damage_type = "physical"
 hitstop_duration = 0.006
 is_crit = true

@@ -1,0 +1,60 @@
+[gd_scene load_steps=4 format=3 uid="uid://u4f41sa50j4e"]
+
+[ext_resource type="Script" uid="uid://br7s10uua2y1d" path="res://core/achievements/achievement_displayer.gd" id="1_inka0"]
+[ext_resource type="Texture2D" uid="uid://cy2ww4pgorbrc" path="res://components/discord_link/Logo red trans.png" id="2_1r0dn"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0pda8"]
+bg_color = Color(0, 0, 0, 0.22)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.649176, 0.403834, 0.413255, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="AchievementDisplayer" type="CanvasLayer" node_paths=PackedStringArray("root", "card", "achievement_icon", "achievement_title", "achievement_desc")]
+script = ExtResource("1_inka0")
+root = NodePath("Root")
+card = NodePath("Root/Card")
+achievement_icon = NodePath("Root/Card/HBoxContainer/Icon")
+achievement_title = NodePath("Root/Card/HBoxContainer/VBoxContainer/Title")
+achievement_desc = NodePath("Root/Card/HBoxContainer/VBoxContainer/Desc")
+
+[node name="Root" type="MarginContainer" parent="."]
+offset_left = 30.0
+offset_top = 35.0
+offset_right = 390.0
+offset_bottom = 131.0
+
+[node name="Card" type="PanelContainer" parent="Root"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_0pda8")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Root/Card"]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="Root/Card/HBoxContainer"]
+custom_minimum_size = Vector2(104.401, 0)
+layout_mode = 2
+texture = ExtResource("2_1r0dn")
+expand_mode = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Root/Card/HBoxContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Root/Card/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/font_size = 16
+text = "ACHIEVEMENT"
+
+[node name="Desc" type="Label" parent="Root/Card/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(241.145, 67.155)
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 16
+text = "This is an achievement display good job"
+autowrap_mode = 3
