@@ -52,6 +52,7 @@ var _hitstop_depth := 0
 var hitless_elapsed := 0.0
 var hitless_last_minute := 0
 var hitless_running := false
+var game_over := false
 
 func _ready() -> void:
 	SceneLoader.current_scene = self
@@ -188,11 +189,14 @@ func apply_hitstop(duration: float = 0.06, timescale: float = 0.0) -> void:
 		Engine.time_scale = 1.0
 
 func _game_over():
+	game_over = true
 	stop_time()
-	reset_time()
 	print("Player died, game over.")
 	hitless_running = false
 	await get_tree().create_timer(5.0).timeout
+	$NewOver/Panel2/VBoxContainer/Panel/timelbl.text = "You survived for: " + (time_label.text if time_label else _format_time(elapsed))
+	$NewOver/Panel2/VBoxContainer/Panel2/scorelbl.text = "Score: " + "%06d" % score
+	$NewOver/Panel2/VBoxContainer/Panel3/killslbl.text = "Total Kills: " + "%06d" % total_kills
 	$GameUI.visible = false
 	$NewOver.visible = true
 	$NewOver/GameoverAnim.play("fade")
@@ -206,14 +210,11 @@ func _game_over():
 			if is_instance_valid(child):
 				child.queue_free()
 
-	$NewOver/Panel2/VBoxContainer/Panel/timelbl.text = "You survived for: " + (time_label.text if time_label else _format_time(elapsed))
-	$NewOver/Panel2/VBoxContainer/Panel2/scorelbl.text = "Score: " + "%06d" % score
-	$NewOver/Panel2/VBoxContainer/Panel3/killslbl.text = "Total Kills: " + "%06d" % total_kills
 
 	EventBus.score_final.emit(score)
 
 func _spawn_loop() -> void:
-	while is_instance_valid(self):
+	while is_instance_valid(self) and !game_over:
 		if running:
 			_spawn_one()
 			var wait_time = _ramped_interval(base_spawn_interval, ramp_per_minute, min_spawn_interval)
@@ -222,7 +223,7 @@ func _spawn_loop() -> void:
 			await get_tree().process_frame
 
 func _gnat_spawn_loop() -> void:
-	while is_instance_valid(self):
+	while is_instance_valid(self) and !game_over:
 		if running:
 			_spawn_gnat_burst()
 			var wait_time = _ramped_interval(gnat_base_spawn_interval, gnat_ramp_per_minute, gnat_min_spawn_interval)
@@ -349,7 +350,7 @@ func end_game():
 
 func retry():
 	EventBus.score_final
-	SceneLoader.goto_title()
+	SceneLoader.goto_game()
 
 func _exit_tree() -> void:
 	EventBus.score_final.emit(score)

@@ -1,30 +1,85 @@
-[gd_scene load_steps=8 format=3 uid="uid://bi5sun5qmlrtm"]
+[gd_scene load_steps=14 format=3 uid="uid://bi5sun5qmlrtm"]
 
 [ext_resource type="PackedScene" uid="uid://3fs8sj37ylm5" path="res://sandbox/underline_anim_button.tscn" id="1_1pygr"]
 [ext_resource type="Script" uid="uid://4sjlxui0msnd" path="res://sandbox/tab_handler.gd" id="1_ax23m"]
+[ext_resource type="Script" uid="uid://c6kpi07uvdi60" path="res://core/systems/settings_sender.gd" id="2_810tk"]
+[ext_resource type="Shader" uid="uid://cbkwhpu8kf61w" path="res://shaders/blur.gdshader" id="3_uhfal"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ycvno"]
-bg_color = Color(0, 0, 0, 0.239216)
-border_width_right = 3
-border_color = Color(1, 1, 1, 1)
-expand_margin_right = 3.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ax23m"]
-bg_color = Color(0, 0, 0, 1)
-border_width_right = 3
-border_color = Color(1, 1, 1, 1)
-expand_margin_right = 3.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uhfal"]
-bg_color = Color(0, 0, 0, 1)
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_f2yme"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f2yme"]
-bg_color = Color(0, 0, 0, 0.239216)
-border_width_bottom = 4
-border_color = Color(1, 1, 1, 1)
+bg_color = Color(0, 0, 0, 0.639216)
+border_width_top = 2
+border_width_bottom = 2
+
+[sub_resource type="Gradient" id="Gradient_ycvno"]
+offsets = PackedFloat32Array(0.808824, 0.819853, 1)
+colors = PackedColorArray(0, 0, 0, 0.372549, 0.533037, 0.533037, 0.533037, 0.372549, 0.533037, 0.533037, 0.533037, 0.372549)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ikm24"]
+gradient = SubResource("Gradient_ycvno")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_i77tp"]
+texture = SubResource("GradientTexture1D_ikm24")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_810tk"]
 bg_color = Color(0.0980392, 0.0980392, 0.14902, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ycvno"]
+shader = ExtResource("3_uhfal")
+shader_parameter/blur_amount = 5.23
+shader_parameter/mix_amount = 0.585
+shader_parameter/color_over = Color(0, 0, 0, 0.458824)
+shader_parameter/invert = false
+shader_parameter/fade_start = 0.0
+shader_parameter/fade_end = 1.0
+shader_parameter/falloff = 1.0
+
+[sub_resource type="Shader" id="Shader_lo5jw"]
+code = "shader_type canvas_item;
+
+uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
+
+uniform float blur_amount : hint_range(0.0, 10.0) = 2.0; // max blur at the edge
+uniform float mix_amount  : hint_range(0.0, 1.0) = 0.0;  // tint with color_over
+uniform vec4  color_over  : source_color = vec4(0.0);
+
+uniform bool  invert = false;     // false = fade downward (top strip), true = fade upward (bottom strip)
+uniform float fade_start = 0.0;   // where the fade begins within the rect (0..1 from the edge)
+uniform float fade_end   = 1.0;   // where blur is fully gone (0..1 at the inner edge)
+uniform float falloff    = 1.0;   // >1 = tighter near the edge, <1 = softer
+
+void fragment() {
+	// 0..1 along the strip from the chosen edge
+	float pos = UV.y;
+	if (invert) pos = 1.0 - pos;
+
+	// Mask is 1.0 at the edge, smoothly down to 0.0 by fade_end
+	float m = 1.0 - smoothstep(fade_start, fade_end, pos);
+	m = pow(m, max(falloff, 1e-5)); // shape the curve
+
+	// Blur strength also fades out so there’s no harsh boundary
+	float lod = clamp(blur_amount * m, 0.0, 10.0);
+	vec4 blurred = textureLod(SCREEN_TEXTURE, SCREEN_UV, lod);
+
+	// Optional tint
+	vec4 fin = mix(blurred, color_over, mix_amount);
+
+	// Alpha fades out with the blur, making the transition seamless
+	fin.a = m;
+	COLOR = fin;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ikm24"]
+shader = SubResource("Shader_lo5jw")
+shader_parameter/blur_amount = 5.23
+shader_parameter/mix_amount = 1.0
+shader_parameter/color_over = Color(0, 0, 0, 0.458824)
+shader_parameter/invert = true
+shader_parameter/fade_start = 0.0
+shader_parameter/fade_end = 1.0
+shader_parameter/falloff = 0.915
 
 [node name="Settings" type="CanvasLayer" node_paths=PackedStringArray("tabs_hbox", "pages_root", "exit_buttton")]
 script = ExtResource("1_ax23m")
@@ -46,221 +101,339 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -104.5
-offset_top = 25.0
+offset_top = 18.0
 offset_right = 104.5
-offset_bottom = 99.0
+offset_bottom = 92.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 54
 text = "Settings"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Main" type="Control" parent="."]
+[node name="Main" type="Control" parent="." node_paths=PackedStringArray("window_mode", "checkbox_vsync", "checkbox_postfx", "spinbox_framecap")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("2_810tk")
+window_mode = NodePath("Pages/Video/VBoxContainer/HBoxContainer/WindowMode")
+checkbox_vsync = NodePath("Pages/Video/VBoxContainer/HBoxContainer2/CheckBox")
+checkbox_postfx = NodePath("Pages/Video/VBoxContainer/HBoxContainer3/CheckBox")
+spinbox_framecap = NodePath("Pages/Video/VBoxContainer/HBoxContainer4/SpinBox")
 
 [node name="Tabs" type="HBoxContainer" parent="Main"]
+z_index = 5
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -461.0
-offset_top = -211.0
-offset_right = 462.0
-offset_bottom = -155.0
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 285.0
+offset_top = 133.0
+offset_right = -285.0
+offset_bottom = 185.0
 grow_horizontal = 2
-grow_vertical = 2
+theme_override_constants/separation = -2
 alignment = 1
 
 [node name="Video" parent="Main/Tabs" instance=ExtResource("1_1pygr")]
-custom_minimum_size = Vector2(228, 0)
+custom_minimum_size = Vector2(147.012, 0)
 layout_mode = 2
-theme_override_colors/font_hover_pressed_color = Color(1, 0.196078, 0.188235, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.196078, 0.188235, 1)
-theme_override_font_sizes/font_size = 34
-theme_override_styles/focus = SubResource("StyleBoxFlat_ycvno")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_ax23m")
-theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_ax23m")
-theme_override_styles/hover = SubResource("StyleBoxFlat_ycvno")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_ycvno")
-theme_override_styles/normal = SubResource("StyleBoxFlat_ax23m")
+theme_override_font_sizes/font_size = 31
+theme_override_styles/focus = SubResource("StyleBoxEmpty_f2yme")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_f2yme")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_f2yme")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_f2yme")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_f2yme")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_f2yme")
 text = "Video"
+flat = true
 line_width_ratio = 1.0
 
 [node name="Audio" parent="Main/Tabs" instance=ExtResource("1_1pygr")]
-custom_minimum_size = Vector2(228, 0)
+custom_minimum_size = Vector2(147.012, 0)
 layout_mode = 2
-theme_override_colors/font_hover_pressed_color = Color(1, 0.196078, 0.188235, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.196078, 0.188235, 1)
-theme_override_font_sizes/font_size = 34
-theme_override_styles/focus = SubResource("StyleBoxFlat_ycvno")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_ax23m")
-theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_ax23m")
-theme_override_styles/hover = SubResource("StyleBoxFlat_ycvno")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_ycvno")
-theme_override_styles/normal = SubResource("StyleBoxFlat_ax23m")
+theme_override_font_sizes/font_size = 31
+theme_override_styles/focus = SubResource("StyleBoxEmpty_f2yme")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_f2yme")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_f2yme")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_f2yme")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_f2yme")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_f2yme")
 text = "Audio"
+flat = true
 line_width_ratio = 1.0
 
 [node name="Controls" parent="Main/Tabs" instance=ExtResource("1_1pygr")]
-custom_minimum_size = Vector2(228, 0)
+custom_minimum_size = Vector2(147.012, 0)
 layout_mode = 2
-theme_override_colors/font_hover_pressed_color = Color(1, 0.196078, 0.188235, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.196078, 0.188235, 1)
-theme_override_font_sizes/font_size = 34
-theme_override_styles/focus = SubResource("StyleBoxFlat_ycvno")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_ax23m")
-theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_ax23m")
-theme_override_styles/hover = SubResource("StyleBoxFlat_ycvno")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_ycvno")
-theme_override_styles/normal = SubResource("StyleBoxFlat_ax23m")
+theme_override_font_sizes/font_size = 31
+theme_override_styles/focus = SubResource("StyleBoxEmpty_f2yme")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_f2yme")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_f2yme")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_f2yme")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_f2yme")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_f2yme")
 text = "Controls"
+flat = true
 line_width_ratio = 1.0
 
 [node name="Extras" parent="Main/Tabs" instance=ExtResource("1_1pygr")]
-custom_minimum_size = Vector2(228, 0)
+custom_minimum_size = Vector2(147.012, 0)
 layout_mode = 2
-theme_override_colors/font_hover_pressed_color = Color(1, 0.196078, 0.188235, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.196078, 0.188235, 1)
-theme_override_font_sizes/font_size = 34
-theme_override_styles/focus = SubResource("StyleBoxFlat_uhfal")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_uhfal")
-theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_uhfal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_uhfal")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_uhfal")
-theme_override_styles/normal = SubResource("StyleBoxFlat_uhfal")
+theme_override_font_sizes/font_size = 31
+theme_override_styles/focus = SubResource("StyleBoxEmpty_f2yme")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_f2yme")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_f2yme")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_f2yme")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_f2yme")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_f2yme")
 text = "Extras"
+flat = true
 line_width_ratio = 1.0
 
 [node name="Pages" type="Control" parent="Main"]
+z_index = -4
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 113.0
-offset_top = 169.0
-offset_right = -113.0
-offset_bottom = -105.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="Video" type="Panel" parent="Main/Pages"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 2.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_f2yme")
-
-[node name="Label" type="Label" parent="Main/Pages/Video"]
-z_index = 1
-layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -11.5
-offset_right = 20.0
-offset_bottom = 11.5
+offset_left = -291.0
+offset_top = -195.0
+offset_right = 291.0
+offset_bottom = 195.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 66
-text = "Video Settings"
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_f2yme")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Main/Pages/Video"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 95.0
+offset_top = 63.0
+offset_right = -95.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Main/Pages/Video/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="window" type="Label" parent="Main/Pages/Video/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Window Mode:"
+vertical_alignment = 1
+
+[node name="WindowMode" type="OptionButton" parent="Main/Pages/Video/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxTexture_i77tp")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_i77tp")
+theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_i77tp")
+theme_override_styles/hover = SubResource("StyleBoxTexture_i77tp")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_i77tp")
+theme_override_styles/normal = SubResource("StyleBoxTexture_i77tp")
+alignment = 1
+item_count = 3
+popup/item_0/text = "Windowed"
+popup/item_0/id = 0
+popup/item_1/text = "Fullscreen"
+popup/item_1/id = 1
+popup/item_2/text = "Borderless"
+popup/item_2/id = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Main/Pages/Video/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="vsync" type="Label" parent="Main/Pages/Video/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Enable VSync:"
+vertical_alignment = 1
+
+[node name="CheckBox" type="CheckBox" parent="Main/Pages/Video/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Main/Pages/Video/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="process" type="Label" parent="Main/Pages/Video/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Post Processing:"
+vertical_alignment = 1
+
+[node name="CheckBox" type="CheckBox" parent="Main/Pages/Video/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+button_pressed = true
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Main/Pages/Video/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="framerate" type="Label" parent="Main/Pages/Video/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Max Framerate:"
+vertical_alignment = 1
+
+[node name="SpinBox" type="SpinBox" parent="Main/Pages/Video/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+alignment = 1
+suffix = "FPS"
+custom_arrow_step = 1.0
 
 [node name="Audio" type="Panel" parent="Main/Pages"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 2.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_f2yme")
-
-[node name="Label" type="Label" parent="Main/Pages/Audio"]
-z_index = 1
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -11.5
-offset_right = 20.0
-offset_bottom = 11.5
+offset_left = -291.0
+offset_top = -195.0
+offset_right = 291.0
+offset_bottom = 195.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 66
-text = "Audio Settings"
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_f2yme")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Main/Pages/Audio"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 95.0
+offset_top = 63.0
+offset_right = -95.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Main/Pages/Audio/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="master" type="Label" parent="Main/Pages/Audio/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Window Mode:"
+vertical_alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Main/Pages/Audio/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="sfx" type="Label" parent="Main/Pages/Audio/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Window Mode:"
+vertical_alignment = 1
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Main/Pages/Audio/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="volume" type="Label" parent="Main/Pages/Audio/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Window Mode:"
+vertical_alignment = 1
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Main/Pages/Audio/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
 
 [node name="Controls" type="Panel" parent="Main/Pages"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 2.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_f2yme")
-
-[node name="Label" type="Label" parent="Main/Pages/Controls"]
-z_index = 1
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -11.5
-offset_right = 20.0
-offset_bottom = 11.5
+offset_left = -291.0
+offset_top = -195.0
+offset_right = 291.0
+offset_bottom = 195.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 66
-text = "Control Settings"
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_f2yme")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Main/Pages/Controls"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 108
+alignment = 1
 
 [node name="Extras" type="Panel" parent="Main/Pages"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 2.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_f2yme")
-
-[node name="Label" type="Label" parent="Main/Pages/Extras"]
-z_index = 1
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -11.5
-offset_right = 20.0
-offset_bottom = 11.5
+offset_left = -291.0
+offset_top = -195.0
+offset_right = 291.0
+offset_bottom = 195.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 66
-text = "Extra Settings"
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_f2yme")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Main/Pages/Extras"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 108
+alignment = 1
 
 [node name="Exit" parent="Main" instance=ExtResource("1_1pygr")]
 layout_mode = 1
@@ -269,15 +442,15 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -139.0
-offset_top = -82.0
-offset_right = 139.0
-offset_bottom = -19.0
+offset_left = -530.0
+offset_top = -102.0
+offset_right = -373.0
+offset_bottom = -39.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/font_hover_pressed_color = Color(1, 0.196078, 0.188235, 1)
 theme_override_colors/font_pressed_color = Color(1, 0.196078, 0.188235, 1)
-theme_override_font_sizes/font_size = 40
+theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = SubResource("StyleBoxFlat_810tk")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_810tk")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_810tk")
@@ -286,3 +459,24 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_810tk")
 theme_override_styles/normal = SubResource("StyleBoxFlat_810tk")
 text = "Return to title"
 line_width_ratio = 1.0
+
+[node name="BlurTop" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_ycvno")
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 56.0
+grow_horizontal = 2
+mouse_filter = 2
+
+[node name="BlurBotom" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_ikm24")
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -5.0
+offset_top = -94.0
+offset_right = 5.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2

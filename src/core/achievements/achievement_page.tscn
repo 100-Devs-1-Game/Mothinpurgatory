@@ -17,7 +17,7 @@ shader_parameter/fade_start = 0.0
 shader_parameter/fade_end = 1.0
 shader_parameter/falloff = 1.0
 
-[sub_resource type="Shader" id="Shader_lo5jw"]
+[sub_resource type="Shader" id="Shader_eypsl"]
 code = "shader_type canvas_item;
 
 uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
@@ -54,7 +54,7 @@ void fragment() {
 "
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_tqewt"]
-shader = SubResource("Shader_lo5jw")
+shader = SubResource("Shader_eypsl")
 shader_parameter/blur_amount = 5.23
 shader_parameter/mix_amount = 1.0
 shader_parameter/color_over = Color(0, 0, 0, 0.458824)
@@ -180,7 +180,6 @@ grow_vertical = 0
 mouse_filter = 2
 
 [node name="Confirm" type="Control" parent="."]
-visible = false
 z_index = 1
 layout_mode = 3
 anchors_preset = 15

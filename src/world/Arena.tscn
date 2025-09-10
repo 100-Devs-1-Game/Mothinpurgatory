@@ -106,82 +106,6 @@ corner_radius_top_right = 25
 corner_radius_bottom_right = 25
 corner_radius_bottom_left = 25
 
-[sub_resource type="Animation" id="Animation_skj6l"]
-resource_name = "fade"
-length = 2.0
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("ColorRect:color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(0.0196078, 0.0196078, 0.0196078, 0), Color(0.0196078, 0.0196078, 0.0196078, 1)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("VBoxContainer/Button:visible")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 1.29),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [false, true]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("VBoxContainer/Button2:visible")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 1.29),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [false, true]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Label:modulate")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0, 1.02, 1.76667),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Panel2:modulate")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0, 1.4, 1.96667),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("Panel:theme_override_styles/panel:bg_color")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(1.02006, 1.29102),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0.741176)]
-}
-
 [sub_resource type="Animation" id="Animation_altv3"]
 length = 0.001
 tracks/0/type = "value"
@@ -281,6 +205,82 @@ tracks/7/keys = {
 "values": [Color(1, 1, 1, 0.741176)]
 }
 
+[sub_resource type="Animation" id="Animation_skj6l"]
+resource_name = "fade"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.0196078, 0.0196078, 0.0196078, 0), Color(0.0196078, 0.0196078, 0.0196078, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("VBoxContainer/Button:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1.29),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("VBoxContainer/Button2:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1.29),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Label:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1.02, 1.76667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Panel2:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 1.4, 1.96667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Panel:theme_override_styles/panel:bg_color")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(1.02006, 1.29102),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0.741176)]
+}
+
 [sub_resource type="Animation" id="Animation_w6arf"]
 resource_name = "loop"
 length = 5.0
@@ -376,6 +376,7 @@ collision_mask = 0
 shape = SubResource("RectangleShape2D_iibmw")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+visible = false
 position = Vector2(-1488, -517)
 shape = SubResource("RectangleShape2D_kgg8h")
 
@@ -384,11 +385,39 @@ position = Vector2(1383, -517)
 shape = SubResource("RectangleShape2D_kgg8h")
 
 [node name="ColorRect" type="ColorRect" parent="StaticBody2D"]
-offset_left = -1264.0
-offset_top = 35.0
-offset_right = 1156.0
-offset_bottom = 757.0
+offset_left = -2653.0
+offset_top = 31.0
+offset_right = 2481.0
+offset_bottom = 712.0
 color = Color(0.701961, 0.529412, 0.376471, 1)
+
+[node name="ColorRect4" type="ColorRect" parent="StaticBody2D"]
+offset_left = 1157.0
+offset_top = -9.0
+offset_right = 2481.0
+offset_bottom = 677.0
+color = Color(0.701961, 0.529412, 0.376471, 1)
+
+[node name="ColorRect5" type="ColorRect" parent="StaticBody2D"]
+offset_left = -2653.0
+offset_top = -7.0
+offset_right = -1222.0
+offset_bottom = 674.0
+color = Color(0.701961, 0.529412, 0.376471, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="StaticBody2D"]
+offset_left = -6394.0
+offset_top = -1038.0
+offset_right = -1260.0
+offset_bottom = -4.0
+color = Color(0.639216, 0.639216, 0.643137, 1)
+
+[node name="ColorRect3" type="ColorRect" parent="StaticBody2D"]
+offset_left = 1157.0
+offset_top = -1038.0
+offset_right = 6288.0
+offset_bottom = -9.0
+color = Color(0.639216, 0.639216, 0.643137, 1)
 
 [node name="Background" type="AnimatedSprite2D" parent="."]
 z_index = -4
@@ -629,6 +658,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_kgg8h")
 text = "Exit to title"
 
 [node name="NewOver" type="CanvasLayer" parent="."]
+visible = false
 
 [node name="ColorRect" type="ColorRect" parent="NewOver"]
 anchors_preset = 15
