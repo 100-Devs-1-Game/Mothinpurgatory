@@ -528,7 +528,7 @@ frame_progress = 1.0
 
 [node name="Health" type="Node" parent="."]
 script = ExtResource("2_qjkh3")
-max_health = 1
+max_health = 731
 tint_on_damage = true
 is_players = true
 

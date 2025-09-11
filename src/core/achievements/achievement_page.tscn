@@ -180,6 +180,7 @@ grow_vertical = 0
 mouse_filter = 2
 
 [node name="Confirm" type="Control" parent="."]
+visible = false
 z_index = 1
 layout_mode = 3
 anchors_preset = 15

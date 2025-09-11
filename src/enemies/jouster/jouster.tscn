@@ -1,20 +1,179 @@
-[gd_scene load_steps=12 format=3 uid="uid://buhku7c6mmsmu"]
+[gd_scene load_steps=35 format=3 uid="uid://buhku7c6mmsmu"]
 
 [ext_resource type="Script" uid="uid://b6lrtskoericv" path="res://enemies/jouster/jouster.gd" id="1_mtnxs"]
 [ext_resource type="Resource" uid="uid://bmo3gj50pme8" path="res://enemies/jouster/jouster_data.tres" id="2_bgvty"]
 [ext_resource type="Script" uid="uid://dwvivyga6h4rd" path="res://components/combat/health/health.gd" id="2_xl3xl"]
 [ext_resource type="PackedScene" uid="uid://bq1v87o3hxrb1" path="res://components/combat/health/hurtbox.tscn" id="3_40isp"]
 [ext_resource type="PackedScene" uid="uid://dt8t2rr81r7oa" path="res://components/combat/attack/hitbox.tscn" id="4_40isp"]
+[ext_resource type="Texture2D" uid="uid://cdshvv48vfddl" path="res://textures/sprites/enemies/jouster/charge/003.png" id="4_versq"]
+[ext_resource type="Texture2D" uid="uid://c352kdjupuvvw" path="res://textures/sprites/enemies/jouster/charge/004.png" id="5_06tca"]
 [ext_resource type="Script" uid="uid://cqkedinwlljjx" path="res://components/combat/attack/attack.gd" id="5_7qqu8"]
+[ext_resource type="Texture2D" uid="uid://v688eh0v6bs7" path="res://textures/sprites/enemies/jouster/charge/005.png" id="6_f4t72"]
+[ext_resource type="Texture2D" uid="uid://csn8h8du7ogof" path="res://textures/sprites/enemies/jouster/charge/006.png" id="7_0lax1"]
+[ext_resource type="Texture2D" uid="uid://dqbb0767fu328" path="res://textures/sprites/enemies/jouster/charge/007.png" id="8_lh7ot"]
+[ext_resource type="Texture2D" uid="uid://c4cn21xou1omc" path="res://textures/sprites/enemies/jouster/charge/008.png" id="9_b1qmr"]
+[ext_resource type="Texture2D" uid="uid://j2mhelfxtecq" path="res://textures/sprites/enemies/jouster/charge/009.png" id="10_wxrvo"]
+[ext_resource type="Texture2D" uid="uid://l4yvnops48j4" path="res://textures/sprites/enemies/jouster/charge/010.png" id="11_nqqjn"]
+[ext_resource type="Texture2D" uid="uid://gtxcg4rqpy8k" path="res://textures/sprites/enemies/jouster/land&get up/000.png" id="12_b0rra"]
+[ext_resource type="Texture2D" uid="uid://b0uuat16yj0b2" path="res://textures/sprites/enemies/jouster/land&get up/001.png" id="13_4bugy"]
+[ext_resource type="Texture2D" uid="uid://c1hjthvrtjono" path="res://textures/sprites/enemies/jouster/land&get up/002.png" id="14_h0voo"]
+[ext_resource type="Texture2D" uid="uid://ctd00k0i1nxs7" path="res://textures/sprites/enemies/jouster/land&get up/003.png" id="15_pco3w"]
+[ext_resource type="Texture2D" uid="uid://btu3ugnfijngm" path="res://textures/sprites/enemies/jouster/land&get up/004.png" id="16_loln7"]
+[ext_resource type="Texture2D" uid="uid://ijk0j13pl2st" path="res://textures/sprites/enemies/jouster/land&get up/005.png" id="17_w4ms6"]
+[ext_resource type="Texture2D" uid="uid://hb77527w0pps" path="res://textures/sprites/enemies/jouster/land&get up/006.png" id="18_i2u4k"]
+[ext_resource type="Texture2D" uid="uid://cyrybvf12s3qr" path="res://textures/sprites/enemies/jouster/land&get up/007.png" id="19_y1ega"]
+[ext_resource type="Texture2D" uid="uid://crkcryxqyfrub" path="res://textures/sprites/enemies/jouster/land&get up/008.png" id="20_p1ulm"]
+[ext_resource type="Texture2D" uid="uid://doslvyv5e0cde" path="res://textures/sprites/enemies/jouster/joust/012.png" id="21_2382w"]
+[ext_resource type="Texture2D" uid="uid://c68q0q0ns6t8b" path="res://textures/sprites/enemies/jouster/joust/013.png" id="22_q6knb"]
+[ext_resource type="Texture2D" uid="uid://csf7tcnxeh6sd" path="res://textures/sprites/enemies/jouster/joust/014.png" id="23_y3gub"]
+[ext_resource type="Texture2D" uid="uid://ucxlk46dyjgn" path="res://textures/sprites/enemies/jouster/walk/000.png" id="24_e0xp3"]
+[ext_resource type="Texture2D" uid="uid://dbf0ao5w67hkh" path="res://textures/sprites/enemies/jouster/walk/001.png" id="25_7fb3m"]
+[ext_resource type="Texture2D" uid="uid://kne3v3r708jd" path="res://textures/sprites/enemies/jouster/walk/002.png" id="26_5iggi"]
 
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_mtnxs"]
-size = Vector2(107, 1)
+[sub_resource type="SpriteFrames" id="SpriteFrames_xhkx7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_versq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_06tca")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_f4t72")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_0lax1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_lh7ot")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_b1qmr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_wxrvo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_nqqjn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_nqqjn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_nqqjn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_nqqjn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_nqqjn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_nqqjn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_nqqjn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_nqqjn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_nqqjn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_nqqjn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_nqqjn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_nqqjn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_nqqjn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_nqqjn")
+}],
+"loop": false,
+"name": &"charge",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("12_b0rra")
+}],
+"loop": true,
+"name": &"fallen",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("13_4bugy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_loln7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_h0voo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_pco3w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_loln7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_w4ms6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_i2u4k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_y1ega")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_p1ulm")
+}],
+"loop": false,
+"name": &"get_up",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("21_2382w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_q6knb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_y3gub")
+}],
+"loop": true,
+"name": &"joust",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("24_e0xp3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_7fb3m")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_5iggi")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 12.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rfbmd"]
 size = Vector2(108, 103)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_7qqu8"]
-radius = 51.3517
+radius = 47.0425
 
 [sub_resource type="Resource" id="Resource_bgvty"]
 script = ExtResource("5_7qqu8")
@@ -28,22 +187,29 @@ is_crit = true
 metadata/_custom_type_script = "uid://cqkedinwlljjx"
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_bgvty"]
-radius = 482.001
+radius = 436.115
 
-[node name="Jouster" type="CharacterBody2D" node_paths=PackedStringArray("charge_area")]
+[node name="Jouster" type="CharacterBody2D" node_paths=PackedStringArray("charge_area", "hit_col")]
 collision_mask = 4
 script = ExtResource("1_mtnxs")
 enemy_data = ExtResource("2_bgvty")
+windup_time = 1.0
 charge_area = NodePath("Chargerange")
+hit_col = NodePath("Hitbox/CollisionShape2D")
+bounce_damping = 0.65
+bounce_pause = 0.02
+carry_duration = 0.65
+carry_initial_factor = 0.45
+standup_duration = 0.7
 
 [node name="Health" type="Node" parent="."]
 script = ExtResource("2_xl3xl")
 overwrite_data = ExtResource("2_bgvty")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -51.5)
-scale = Vector2(1, 103)
-texture = SubResource("PlaceholderTexture2D_mtnxs")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -83)
+sprite_frames = SubResource("SpriteFrames_xhkx7")
+animation = &"walk"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
@@ -63,6 +229,7 @@ position = Vector2(0, -51)
 attack_data = SubResource("Resource_bgvty")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(0, 5)
 shape = SubResource("CircleShape2D_7qqu8")
 debug_color = Color(0.990688, 0, 0.275205, 0.42)
 
