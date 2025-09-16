@@ -7,8 +7,8 @@ extends Node2D
 var dir := Vector2.ZERO
 var owner_ref: Node
 
-func setup(owner: Node, origin: Vector2, direction: Vector2, proj_speed: float, _faction_unused := 0) -> void:
-	owner_ref = owner
+func setup(_owner: Node, origin: Vector2, direction: Vector2, proj_speed: float, _faction_unused := 0) -> void:
+	owner_ref = _owner
 	global_position = origin
 	dir = direction.normalized()
 	speed = proj_speed

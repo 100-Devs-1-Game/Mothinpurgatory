@@ -12,6 +12,11 @@ extends Control
 var settings_manager: Node
 
 func _ready() -> void:
+	if OS.has_feature("web"):
+		$Pages/Video/VBoxContainer/HBoxContainer/WindowMode.visible = false
+		$Pages/Video/VBoxContainer/HBoxContainer/window.visible = false
+		$Pages/Video/VBoxContainer/HBoxContainer2/vsync.visible = false
+		$Pages/Video/VBoxContainer/HBoxContainer2/CheckBox.visible = false
 	settings_manager = get_node_or_null("/root/settings_manager")
 	if settings_manager == null:
 		settings_manager = get_node_or_null("/root/SettingsManager")

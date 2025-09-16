@@ -109,8 +109,8 @@ func _process(delta: float) -> void:
 			hitless_last_minute = hl_minute
 			EventBus.no_hit_minute_passed.emit(gained)
 
-func show_ui(show: bool) -> void:
-	$GameUI.visible = show
+func show_ui(_show: bool) -> void:
+	$GameUI.visible = _show
 
 func _whole_minutes(t: float) -> int:
 	@warning_ignore("integer_division")
@@ -340,7 +340,7 @@ func _spawn_gnat_burst() -> void:
 			break
 		_spawn_one_gnat()
 
-func _input(event: InputEvent) -> void:
+func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("toggle_post"):
 		post_process_enabled = not post_process_enabled
 		$Enviroment.visible = post_process_enabled
@@ -351,7 +351,7 @@ func end_game():
 	SceneLoader.goto_title()
 
 func retry():
-	EventBus.score_final
+	EventBus.score_final.emit(score)
 	SceneLoader.goto_game()
 
 func _exit_tree() -> void:
