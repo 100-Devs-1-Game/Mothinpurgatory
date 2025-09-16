@@ -12,6 +12,9 @@ const AMR_CLICK_01 = preload("res://audio/ui/amr_click_01.ogg")
 var ui_buttons := {}
 
 func _ready() -> void:
+	if OS.has_feature("web"):
+		$Main/VBoxContainer/quit.disabled = true
+		$Main/VBoxContainer/quit.visible = false
 	EventBus.connect("ui_closed", show_title_buttons.bind(true))
 	ui_buttons = {
 		play_button: "Play",
@@ -48,3 +51,7 @@ func _on_button_pressed(action: String) -> void:
 			show_title_buttons(false)
 		"Quit":
 			get_tree().quit()
+
+
+func _on_music_finished() -> void:
+	$Music.play()
