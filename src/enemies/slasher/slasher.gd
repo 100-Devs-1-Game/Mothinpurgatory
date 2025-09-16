@@ -9,6 +9,8 @@ extends CharacterBody2D
 @export var attack_cooldown: float = 0.60
 @export var lunge_speed: float = 360.0
 
+@export var death_sound: AudioStream
+
 @onready var sprite: AnimatedSprite2D = get_node_or_null("AnimatedSprite2D")
 @onready var status_label: Label = get_node_or_null("status")
 @onready var attack_hitbox: Area2D = get_node_or_null("attack_hitbox")
@@ -19,6 +21,8 @@ extends CharacterBody2D
 @onready var hurt_shape: CollisionShape2D = null
 @onready var range_shape: CollisionShape2D = null
 
+
+var world: Node2D
 var player: Node2D = null
 var default_speed: float = 0.0
 var speed: float = 0.0
@@ -51,6 +55,7 @@ func _ready() -> void:
 		sprite.play("walk")
 
 	player = get_tree().get_first_node_in_group("Player")
+	world = get_tree().get_first_node_in_group("World")
 
 	if attack_area != null:
 		attack_area.body_entered.connect(_on_attack_area_entered)
@@ -178,8 +183,20 @@ func attack() -> void:
 	can_attack = true
 
 func _death(source: Node):
+	$AudioStreamPlayer2D.play()
+	create_death_sound(death_sound)
 	get_tree().call_group("game", "on_enemy_killed", enemy_data.score_on_death)
+	await get_tree().create_timer(0.7).timeout
 	queue_free()
+
+func create_death_sound(audio: AudioStream) -> void:
+	if audio == null: return
+	var ap = AudioStreamPlayer2D.new()
+	ap.pitch_scale = randf_range(0.85, 1.15)
+	world.add_child(ap)
+	ap.global_position = self.global_position
+	ap.set_stream(audio)
+	ap.play()
 
 func _update_status(text: String) -> void:
 	if status_label != null:

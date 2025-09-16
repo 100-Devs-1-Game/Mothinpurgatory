@@ -6,10 +6,12 @@ extends Control
 @export var achievements_button: Button
 @export var quit_button: Button
 
+const AMR_CLICK_02 = preload("res://audio/ui/amr_click_02.ogg")
+const AMR_CLICK_01 = preload("res://audio/ui/amr_click_01.ogg")
+
 var ui_buttons := {}
 
 func _ready() -> void:
-	print("ready")
 	EventBus.connect("ui_closed", show_title_buttons.bind(true))
 	ui_buttons = {
 		play_button: "Play",
@@ -26,10 +28,10 @@ func connect_buttons() -> void:
 		if not button.is_connected("pressed", _on_button_pressed):
 			button.pressed.connect(_on_button_pressed.bind(ui_buttons[button]))
 
-func show_title_buttons(show: bool):
-	$Main/VBoxContainer.visible = show
-	$Main/GameTitle.visible = show
-	$Main/DiscordButton.visible = show
+func show_title_buttons(display: bool):
+	$Main/VBoxContainer.visible = display
+	$Main/GameTitle.visible = display
+	$Main/DiscordButton.visible = display
 
 func _on_button_pressed(action: String) -> void:
 	match action:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://cta27xmsuq5g1"]
+[gd_scene load_steps=21 format=3 uid="uid://cta27xmsuq5g1"]
 
 [ext_resource type="Script" uid="uid://dm7drrhq5f7tp" path="res://enemies/gnat/gnat.gd" id="1_ypnvi"]
 [ext_resource type="PackedScene" uid="uid://bq1v87o3hxrb1" path="res://components/combat/health/hurtbox.tscn" id="2_2uyli"]
@@ -6,14 +6,15 @@
 [ext_resource type="PackedScene" uid="uid://b0cppji50u6kf" path="res://components/effects/death/death_effect.tscn" id="3_f2i0a"]
 [ext_resource type="Script" uid="uid://dwvivyga6h4rd" path="res://components/combat/health/health.gd" id="3_g8lvq"]
 [ext_resource type="PackedScene" uid="uid://dt8t2rr81r7oa" path="res://components/combat/attack/hitbox.tscn" id="4_2uyli"]
-[ext_resource type="Texture2D" uid="uid://dfrc2n5cjvh68" path="res://textures/sprites/enemies/little fly/000.png" id="4_gnx6r"]
-[ext_resource type="Texture2D" uid="uid://cvlgy08emckdf" path="res://textures/sprites/enemies/little fly/001.png" id="5_f2i0a"]
+[ext_resource type="AudioStream" uid="uid://dwoo5otvwuuy7" path="res://audio/gameplay/squish_01.wav" id="4_bdl68"]
+[ext_resource type="Texture2D" uid="uid://dfrc2n5cjvh68" path="res://textures/assets/sprites/enemies/little fly/000.png" id="4_gnx6r"]
+[ext_resource type="Texture2D" uid="uid://cvlgy08emckdf" path="res://textures/assets/sprites/enemies/little fly/001.png" id="5_f2i0a"]
 [ext_resource type="Script" uid="uid://cqkedinwlljjx" path="res://components/combat/attack/attack.gd" id="6_1lfmo"]
-[ext_resource type="Texture2D" uid="uid://o2e6d5vorfts" path="res://textures/sprites/enemies/little fly/002.png" id="6_bdl68"]
-[ext_resource type="Texture2D" uid="uid://d1c7y62ss1m1y" path="res://textures/sprites/enemies/little fly/003.png" id="7_dsd8k"]
-[ext_resource type="Texture2D" uid="uid://bqqvbc8wuudlk" path="res://textures/sprites/enemies/little fly/004.png" id="8_gapu8"]
-[ext_resource type="Texture2D" uid="uid://bdt3rlqcpfx5d" path="res://textures/sprites/enemies/little fly/005.png" id="9_5kenn"]
-[ext_resource type="Texture2D" uid="uid://dexkgmoi7f0oy" path="res://textures/sprites/enemies/little fly/006.png" id="10_i2lwg"]
+[ext_resource type="Texture2D" uid="uid://o2e6d5vorfts" path="res://textures/assets/sprites/enemies/little fly/002.png" id="6_bdl68"]
+[ext_resource type="Texture2D" uid="uid://d1c7y62ss1m1y" path="res://textures/assets/sprites/enemies/little fly/003.png" id="7_dsd8k"]
+[ext_resource type="Texture2D" uid="uid://bqqvbc8wuudlk" path="res://textures/assets/sprites/enemies/little fly/004.png" id="8_gapu8"]
+[ext_resource type="Texture2D" uid="uid://bdt3rlqcpfx5d" path="res://textures/assets/sprites/enemies/little fly/005.png" id="9_5kenn"]
+[ext_resource type="Texture2D" uid="uid://dexkgmoi7f0oy" path="res://textures/assets/sprites/enemies/little fly/006.png" id="10_i2lwg"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_k1frv"]
 animations = [{
@@ -69,6 +70,7 @@ collision_mask = 4
 script = ExtResource("1_ypnvi")
 enemy_data = ExtResource("2_g8lvq")
 death_effect = ExtResource("3_f2i0a")
+death_sound = ExtResource("4_bdl68")
 
 [node name="Health" type="Node" parent="."]
 script = ExtResource("3_g8lvq")

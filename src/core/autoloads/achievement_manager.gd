@@ -1,8 +1,9 @@
 extends Node
 
-signal achievement_unlocked(data: AchievementData)
+signal achievement_unlocked(id: StringName, data: AchievementData)
 signal achievement_progress(data: AchievementData, current: int, required: int)
 
+const FORCE_PACK := preload("res://resources/achievements/force_pack.gd")
 const ACHIEVEMENTS_DIR := "res://resources/achievements/"
 const SAVE_PATH := "user://achievements.cfg"
 const SAVE_SECTION := "achievements"
@@ -61,8 +62,8 @@ func unlock(id: String) -> void:
 	emit_signal("achievement_unlocked", data.id, data)
 
 func _on_achievement_unlocked(id: StringName, data: AchievementData) -> void:
-	var title := data.title
-	var desc := data.description
+	var title = data.title
+	var desc = data.description
 	var icon: Texture2D = data.icon if data.icon else null
 	AchievementDisplayQueue.queue_unlock(id, title, desc, icon)
 
@@ -80,10 +81,12 @@ func try_unlock_on_threshold(id: String, current_value: int, required: int) -> v
 
 func _load_definitions() -> void:
 	_achievements_by_id.clear()
+
 	var dir = DirAccess.open(ACHIEVEMENTS_DIR)
 	if dir == null:
-		push_warning("Achievements directory not found at %s" % ACHIEVEMENTS_DIR)
+		push_warning("Achievements directory not found at " + ACHIEVEMENTS_DIR)
 		return
+
 	dir.list_dir_begin()
 	while true:
 		var file = dir.get_next()
@@ -91,23 +94,45 @@ func _load_definitions() -> void:
 			break
 		if dir.current_is_dir():
 			continue
-		if file.ends_with(".tres") or file.ends_with(".res"):
-			var path = "%s/%s" % [ACHIEVEMENTS_DIR, file]
-			var res = ResourceLoader.load(path)
-			if res == null:
-				push_warning("Failed to load achievement resource: %s" % path)
-				continue
-			if not res is AchievementData:
-				push_warning("Resource at %s is not AchievementData." % path)
-				continue
-			var id = res.id
-			if id == "":
-				push_warning("Achievement missing id at %s" % path)
-				continue
-			if _achievements_by_id.has(id):
-				push_warning("Duplicate achievement id '%s' at %s" %  [id, path])
-				continue
-			_achievements_by_id[id] = res
+
+		var should_consider = false
+		if file.ends_with(".tres"):
+			should_consider = true
+		elif file.ends_with(".res"):
+			should_consider = true
+		elif file.ends_with(".tres.remap"):
+			should_consider = true
+		elif file.ends_with(".res.remap"):
+			should_consider = true
+
+		if not should_consider:
+			continue
+
+		var load_name = file
+		if file.ends_with(".remap"):
+			load_name = file.substr(0, file.length() - 6)
+
+		var path = ACHIEVEMENTS_DIR + load_name
+		var res = ResourceLoader.load(path)
+
+		if res == null:
+			push_warning("Failed to load achievement resource: " + path)
+			continue
+		if not (res is AchievementData):
+			push_warning("Resource at " + path + " is not AchievementData.")
+			continue
+
+		var id = res.id
+		if id == "":
+			push_warning("Achievement missing id at " + path)
+			continue
+		if _achievements_by_id.has(id):
+			push_warning("Duplicate achievement id '" + id + "' at " + path)
+			continue
+
+		_achievements_by_id[id] = res
+
+	dir.list_dir_end()
 
 func _load_progress() -> void:
 	_unlocked_ids.clear()
@@ -241,6 +266,7 @@ func _on_player_damaged() -> void:
 
 func _on_bug_killed() -> void:
 	add_progress("no_bugs", 1)
+	add_progress("no_bugs_II", 1)
 
 func _first_boss_killed() -> void:
 	try_unlock_on_predicate("first_boss", func() -> bool: return true)
@@ -278,8 +304,8 @@ func _on_score_final(final_score: int) -> void:
 	_commit_run_best()
 
 func _commit_run_best() -> void:
-	var BEST_ID := "high_score"
+	var BEST_ID = "high_score"
 	if _achievements_by_id.has(BEST_ID):
-		var best := get_progress(BEST_ID)
+		var best = get_progress(BEST_ID)
 		if _run_score > best:
 			set_progress(BEST_ID, _run_score)

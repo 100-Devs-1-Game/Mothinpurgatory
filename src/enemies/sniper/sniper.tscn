@@ -1,6 +1,32 @@
-[gd_scene load_steps=2 format=3 uid="uid://bxfdbeel31ulj"]
+[gd_scene load_steps=6 format=3 uid="uid://bxfdbeel31ulj"]
 
 [ext_resource type="Script" uid="uid://yfqqk1xt2af5" path="res://enemies/sniper/sniper.gd" id="1_1hp8h"]
+[ext_resource type="Script" uid="uid://dwvivyga6h4rd" path="res://components/combat/health/health.gd" id="5_53syj"]
+[ext_resource type="PackedScene" uid="uid://bq1v87o3hxrb1" path="res://components/combat/health/hurtbox.tscn" id="6_m1imr"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_a3c1t"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dkxdv"]
+radius = 30.1496
 
 [node name="Sniper" type="CharacterBody2D"]
 script = ExtResource("1_1hp8h")
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("5_53syj")
+metadata/_custom_type_script = "uid://dwvivyga6h4rd"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-7.62939e-06, 0)
+scale = Vector2(78, 70)
+texture = SubResource("PlaceholderTexture2D_a3c1t")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_dkxdv")
+
+[node name="Hurtbox" parent="." instance=ExtResource("6_m1imr")]
+health_node_path = NodePath("../Health")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+shape = SubResource("CircleShape2D_dkxdv")
+debug_color = Color(0.992157, 0, 0, 0.560784)

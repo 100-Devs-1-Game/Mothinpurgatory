@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://1vcje6g6xlb4"]
 
 [ext_resource type="Script" uid="uid://30k2bnb131ut" path="res://core/achievements/achievement_card.gd" id="1_wtljg"]
-[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/icons/moth_icon.png" id="2_bf1y1"]
+[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/assets/icons/moth_icon.png" id="2_bf1y1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wtljg"]
 bg_color = Color(0.0846899, 0.0846899, 0.0846899, 1)

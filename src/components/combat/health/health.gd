@@ -10,6 +10,12 @@ class_name Health
 @export var only_knockback_if_alive: bool = true
 
 @export var is_players: bool = false
+@export var health_regen_enabled: bool = false
+@export var health_regen_amount: int = 1
+@export var health_regen_time: int = 3 #per 3 seconds or somethin
+
+var world: Node2D
+var regen_timer: Timer
 
 var current_health: int
 var declared_dead: bool = false
@@ -17,10 +23,28 @@ var declared_dead: bool = false
 signal health_changed(new_value: int, max_value: int)
 signal damaged(damage_data, source)
 
+const HITSOUND = preload("res://audio/gameplay/thwack_01.wav.wav")
+
 func _ready() -> void:
 	if overwrite_data and "max_health" in overwrite_data:
 		max_health = overwrite_data.max_health
 	current_health = max_health
+
+	world = get_tree().get_first_node_in_group("World")
+
+	if health_regen_enabled:
+		if regen_timer == null:
+			regen_timer = Timer.new()
+			regen_timer.wait_time = health_regen_time
+			regen_timer.timeout.connect(heal_damage.bind(health_regen_amount))
+			regen_timer.one_shot = false
+			add_child(regen_timer)
+			regen_timer.start()
+
+func heal_damage(amount: int) -> void:
+	if current_health < max_health:
+		current_health += amount
+		print("healed for blah blah")
 
 func take_damage(damage_data: Resource, source: Node) -> void:
 	if damage_data == null:
@@ -39,6 +63,15 @@ func take_damage(damage_data: Resource, source: Node) -> void:
 	current_health = clamp(current_health - dmg, 0, max_health)
 	health_changed.emit(current_health, max_health)
 	damaged.emit(damage_data, source)
+
+	if !is_players:
+		var s = AudioStreamPlayer2D.new()
+		world.add_child(s)
+		s.set_stream(HITSOUND)
+		s.volume_db = -11.0
+		s.finished.connect(_terminate.bind(s))
+		s.global_position = get_parent().global_position
+		s.play()
 
 	if is_players:
 		if target and target.has_method("_notify_damage"):
@@ -75,6 +108,10 @@ func take_damage(damage_data: Resource, source: Node) -> void:
 
 	if current_health == 0 and source:
 		_notify_death(source)
+
+func _terminate(what: Node) -> void:
+	if what:
+		what.queue_free()
 
 func _extract_knockback(damage_data: Resource) -> Vector2:
 	var horiz = 0.0

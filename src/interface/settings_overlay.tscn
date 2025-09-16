@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bi5sun5qmlrtm"]
+[gd_scene load_steps=23 format=3 uid="uid://bi5sun5qmlrtm"]
 
 [ext_resource type="PackedScene" uid="uid://3fs8sj37ylm5" path="res://sandbox/underline_anim_button.tscn" id="1_1pygr"]
 [ext_resource type="Script" uid="uid://4sjlxui0msnd" path="res://sandbox/tab_handler.gd" id="1_ax23m"]
@@ -12,6 +12,12 @@ bg_color = Color(0, 0, 0, 0.639216)
 border_width_top = 2
 border_width_bottom = 2
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ycvno"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Theme" id="Theme_ikm24"]
+OptionButton/styles/normal = SubResource("StyleBoxFlat_ycvno")
+
 [sub_resource type="Gradient" id="Gradient_ycvno"]
 offsets = PackedFloat32Array(0.808824, 0.819853, 1)
 colors = PackedColorArray(0, 0, 0, 0.372549, 0.533037, 0.533037, 0.533037, 0.372549, 0.533037, 0.533037, 0.533037, 0.372549)
@@ -21,6 +27,34 @@ gradient = SubResource("Gradient_ycvno")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_i77tp"]
 texture = SubResource("GradientTexture1D_ikm24")
+
+[sub_resource type="Theme" id="Theme_i77tp"]
+CheckBox/styles/normal = null
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vt8n2"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lwcqx"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jmjmn"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 26
+border_width_top = 26
+border_width_right = 26
+border_width_bottom = 26
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Theme" id="Theme_ukmdk"]
+default_font_size = 0
+HSlider/styles/grabber_area = SubResource("StyleBoxFlat_vt8n2")
+HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_lwcqx")
+HSlider/styles/slider = SubResource("StyleBoxFlat_jmjmn")
+
+[sub_resource type="ImageTexture" id="ImageTexture_810tk"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_f2yme"]
+thickness = 17
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_810tk"]
 bg_color = Color(0.0980392, 0.0980392, 0.14902, 1)
@@ -110,7 +144,7 @@ text = "Settings"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Main" type="Control" parent="." node_paths=PackedStringArray("window_mode", "checkbox_vsync", "checkbox_postfx", "spinbox_framecap")]
+[node name="Main" type="Control" parent="." node_paths=PackedStringArray("window_mode", "checkbox_vsync", "checkbox_postfx", "spinbox_framecap", "master_slider", "sfx_slider", "music_slider")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -122,6 +156,9 @@ window_mode = NodePath("Pages/Video/VBoxContainer/HBoxContainer/WindowMode")
 checkbox_vsync = NodePath("Pages/Video/VBoxContainer/HBoxContainer2/CheckBox")
 checkbox_postfx = NodePath("Pages/Video/VBoxContainer/HBoxContainer3/CheckBox")
 spinbox_framecap = NodePath("Pages/Video/VBoxContainer/HBoxContainer4/SpinBox")
+master_slider = NodePath("Pages/Audio/VBoxContainer/MasterSlider")
+sfx_slider = NodePath("Pages/Audio/VBoxContainer/SFXSlider")
+music_slider = NodePath("Pages/Audio/VBoxContainer/MusicSlider")
 
 [node name="Tabs" type="HBoxContainer" parent="Main"]
 z_index = 5
@@ -174,11 +211,12 @@ theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_f2yme")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_f2yme")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_f2yme")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_f2yme")
-text = "Controls"
+text = "View Controls"
 flat = true
 line_width_ratio = 1.0
 
 [node name="Extras" parent="Main/Tabs" instance=ExtResource("1_1pygr")]
+visible = false
 custom_minimum_size = Vector2(147.012, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 31
@@ -246,6 +284,7 @@ vertical_alignment = 1
 
 [node name="WindowMode" type="OptionButton" parent="Main/Pages/Video/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+theme = SubResource("Theme_ikm24")
 theme_override_styles/focus = SubResource("StyleBoxTexture_i77tp")
 theme_override_styles/disabled = SubResource("StyleBoxTexture_i77tp")
 theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_i77tp")
@@ -253,6 +292,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_i77tp")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_i77tp")
 theme_override_styles/normal = SubResource("StyleBoxTexture_i77tp")
 alignment = 1
+selected = 0
 item_count = 3
 popup/item_0/text = "Windowed"
 popup/item_0/id = 0
@@ -274,6 +314,7 @@ vertical_alignment = 1
 
 [node name="CheckBox" type="CheckBox" parent="Main/Pages/Video/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
+theme = SubResource("Theme_i77tp")
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="Main/Pages/Video/VBoxContainer"]
 layout_mode = 2
@@ -288,6 +329,7 @@ vertical_alignment = 1
 
 [node name="CheckBox" type="CheckBox" parent="Main/Pages/Video/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
+theme = SubResource("Theme_i77tp")
 button_pressed = true
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="Main/Pages/Video/VBoxContainer"]
@@ -308,7 +350,6 @@ suffix = "FPS"
 custom_arrow_step = 1.0
 
 [node name="Audio" type="Panel" parent="Main/Pages"]
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -330,13 +371,13 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 95.0
+offset_left = 174.0
 offset_top = 63.0
-offset_right = -95.0
+offset_right = -174.0
 offset_bottom = -32.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 15
+theme_override_constants/separation = 8
 alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Main/Pages/Audio/VBoxContainer"]
@@ -347,8 +388,18 @@ alignment = 1
 [node name="master" type="Label" parent="Main/Pages/Audio/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
-text = "Window Mode:"
+text = "Master Volume:"
 vertical_alignment = 1
+
+[node name="MasterSlider" type="HSlider" parent="Main/Pages/Audio/VBoxContainer"]
+custom_minimum_size = Vector2(0, 21.77)
+layout_mode = 2
+theme = SubResource("Theme_ukmdk")
+theme_override_constants/center_grabber = 1
+theme_override_constants/grabber_offset = 16384
+theme_override_icons/grabber = SubResource("ImageTexture_810tk")
+theme_override_styles/slider = SubResource("StyleBoxLine_f2yme")
+value = 44.0
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Main/Pages/Audio/VBoxContainer"]
 layout_mode = 2
@@ -358,8 +409,18 @@ alignment = 1
 [node name="sfx" type="Label" parent="Main/Pages/Audio/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
-text = "Window Mode:"
+text = "SFX Volume:"
 vertical_alignment = 1
+
+[node name="SFXSlider" type="HSlider" parent="Main/Pages/Audio/VBoxContainer"]
+custom_minimum_size = Vector2(0, 21.77)
+layout_mode = 2
+theme = SubResource("Theme_ukmdk")
+theme_override_constants/center_grabber = 1
+theme_override_constants/grabber_offset = 16384
+theme_override_icons/grabber = SubResource("ImageTexture_810tk")
+theme_override_styles/slider = SubResource("StyleBoxLine_f2yme")
+value = 44.0
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="Main/Pages/Audio/VBoxContainer"]
 layout_mode = 2
@@ -369,8 +430,18 @@ alignment = 1
 [node name="volume" type="Label" parent="Main/Pages/Audio/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
-text = "Window Mode:"
+text = "Music Volume:"
 vertical_alignment = 1
+
+[node name="MusicSlider" type="HSlider" parent="Main/Pages/Audio/VBoxContainer"]
+custom_minimum_size = Vector2(0, 21.77)
+layout_mode = 2
+theme = SubResource("Theme_ukmdk")
+theme_override_constants/center_grabber = 1
+theme_override_constants/grabber_offset = 16384
+theme_override_icons/grabber = SubResource("ImageTexture_810tk")
+theme_override_styles/slider = SubResource("StyleBoxLine_f2yme")
+value = 44.0
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="Main/Pages/Audio/VBoxContainer"]
 layout_mode = 2
@@ -378,7 +449,6 @@ size_flags_horizontal = 4
 alignment = 1
 
 [node name="Controls" type="Panel" parent="Main/Pages"]
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -394,20 +464,85 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_f2yme")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Main/Pages/Controls"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Main/Pages/Controls"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
+offset_left = -188.0
+offset_top = -109.0
+offset_right = 188.0
+offset_bottom = 109.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 108
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Main/Pages/Controls/VBoxContainer"]
+layout_mode = 2
 alignment = 1
 
+[node name="button" type="Label" parent="Main/Pages/Controls/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "[SPACE] or [W] - JUMP"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Main/Pages/Controls/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="button" type="Label" parent="Main/Pages/Controls/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "[A] or [D] - Move Left or Right"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Main/Pages/Controls/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="button" type="Label" parent="Main/Pages/Controls/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "[LMB] - Attack"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Main/Pages/Controls/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="button" type="Label" parent="Main/Pages/Controls/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "[ESC] - Pause/Unpause"
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Main/Pages/Controls/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="button" type="Label" parent="Main/Pages/Controls/VBoxContainer/HBoxContainer5"]
+layout_mode = 2
+text = "[SHIFT] - Dash"
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="Main/Pages/Controls/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="button" type="Label" parent="Main/Pages/Controls/VBoxContainer/HBoxContainer6"]
+layout_mode = 2
+text = "Dash + Jump + Attack = Upslash"
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="Main/Pages/Controls/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="button" type="Label" parent="Main/Pages/Controls/VBoxContainer/HBoxContainer7"]
+layout_mode = 2
+text = "[S] + [LMB] in air = Attack down"
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="Main/Pages/Controls/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="button" type="Label" parent="Main/Pages/Controls/VBoxContainer/HBoxContainer8"]
+layout_mode = 2
+text = "Jump + Attack = Attack up"
+
 [node name="Extras" type="Panel" parent="Main/Pages"]
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

@@ -1,48 +1,43 @@
-[gd_scene load_steps=8 format=3 uid="uid://daa85nlpjmrmn"]
+[gd_scene load_steps=9 format=3 uid="uid://daa85nlpjmrmn"]
 
-[ext_resource type="Texture2D" uid="uid://b30w6r60vqkhe" path="res://textures/atlas/full_atlas.png" id="1_un5sw"]
+[ext_resource type="Texture2D" uid="uid://netngtefug7n" path="res://textures/assets/sprites/enemies/enemy taking dmg/000.png" id="1_svkhm"]
+[ext_resource type="Texture2D" uid="uid://cf0bh4tx2mqk5" path="res://textures/assets/sprites/enemies/enemy taking dmg/001.png" id="2_lnn6u"]
 [ext_resource type="Script" uid="uid://blhx1v10gos70" path="res://components/effects/hit/attack_effect.gd" id="2_o7uy5"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_a7dei"]
-atlas = ExtResource("1_un5sw")
-region = Rect2(1864, 653, 247, 264)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_gsff1"]
-atlas = ExtResource("1_un5sw")
-region = Rect2(992, 2209, 193, 235)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_svkhm"]
-atlas = ExtResource("1_un5sw")
-region = Rect2(1594, 636, 278, 288)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_lnn6u"]
-atlas = ExtResource("1_un5sw")
-region = Rect2(667, 1560, 288, 315)
+[ext_resource type="Texture2D" uid="uid://dq6gritvgg0jy" path="res://textures/assets/sprites/enemies/enemy taking dmg/002.png" id="3_ni1sp"]
+[ext_resource type="Texture2D" uid="uid://cbjdux0h1epx" path="res://textures/assets/sprites/enemies/enemy taking dmg/003.png" id="4_v37f0"]
+[ext_resource type="Texture2D" uid="uid://5qeo0s1k27t" path="res://textures/assets/sprites/enemies/enemy taking dmg/004.png" id="5_1w8fo"]
+[ext_resource type="Texture2D" uid="uid://dyge3ixpl0mfi" path="res://textures/assets/sprites/enemies/enemy taking dmg/005.png" id="6_yk1uo"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ni1sp"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_a7dei")
+"texture": ExtResource("1_svkhm")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_gsff1")
+"texture": ExtResource("2_lnn6u")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_svkhm")
+"texture": ExtResource("3_ni1sp")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_lnn6u")
+"texture": ExtResource("4_v37f0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_1w8fo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_yk1uo")
 }],
 "loop": false,
 "name": &"hit land",
-"speed": 12.0
+"speed": 30.0
 }]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_ni1sp")
 animation = &"hit land"
-frame = 3
+frame = 5
 frame_progress = 1.0
 script = ExtResource("2_o7uy5")
 

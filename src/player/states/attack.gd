@@ -21,10 +21,16 @@ var timer = 0.0
 enum Dir { NEUTRAL, DOWN, UP }
 var dir = Dir.NEUTRAL
 
-const hitbox = preload("res://components/combat/attack/Hitbox.tscn")
+const hitbox = preload("res://components/combat/attack/hitbox.tscn")
 var normal_attack_resource = preload("res://resources/combat/normal_attack.tres")
 
 var slash_effect
+
+const SLASH_01 = preload("res://audio/gameplay/slash_01.wav")
+const SLASH_02 = preload("res://audio/gameplay/slash_02.wav")
+const SLASH_03 = preload("res://audio/gameplay/slash_03.wav")
+
+var slash_sfx: Array[AudioStream] = [SLASH_01, SLASH_02, SLASH_03]
 
 func init(p_sm, p_player):
 	sm = p_sm
@@ -32,6 +38,7 @@ func init(p_sm, p_player):
 	slash_effect = player.slash_effect
 
 func enter() -> void:
+	player.play_sfx(slash_sfx.pick_random())
 	air_stall_timer = 0.0
 	if not player.is_on_floor() and not player.air_stall_used and stall_lock <= 0.0:
 		air_stall_timer = air_stall_time

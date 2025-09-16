@@ -3,20 +3,22 @@
 [ext_resource type="Script" uid="uid://b8bson1hycvvy" path="res://world/arena.gd" id="1_kgg8h"]
 [ext_resource type="PackedScene" uid="uid://du3uuiaokiexx" path="res://player/player.tscn" id="2_iibmw"]
 [ext_resource type="PackedScene" uid="uid://buhku7c6mmsmu" path="res://enemies/jouster/jouster.tscn" id="2_kgg8h"]
-[ext_resource type="Texture2D" uid="uid://b4gqih662pkvs" path="res://textures/animated backgrounds/colosseum/000.png" id="2_l1yh3"]
-[ext_resource type="Texture2D" uid="uid://bnn6jk3undniw" path="res://textures/animated backgrounds/colosseum/001.png" id="3_kgg8h"]
-[ext_resource type="Texture2D" uid="uid://4g5xyx6mt4xp" path="res://textures/animated backgrounds/colosseum/002.png" id="4_cag1q"]
-[ext_resource type="Texture2D" uid="uid://bqedi8apfiouw" path="res://textures/animated backgrounds/colosseum/003.png" id="5_qvbsh"]
-[ext_resource type="Texture2D" uid="uid://upxwtp6igyet" path="res://textures/animated backgrounds/colosseum/004.png" id="6_1auv6"]
-[ext_resource type="Texture2D" uid="uid://crl10mhhvgntg" path="res://textures/animated backgrounds/colosseum/005.png" id="7_prmyl"]
+[ext_resource type="Texture2D" uid="uid://b4gqih662pkvs" path="res://textures/assets/animated backgrounds/colosseum/000.png" id="2_l1yh3"]
+[ext_resource type="Texture2D" uid="uid://bnn6jk3undniw" path="res://textures/assets/animated backgrounds/colosseum/001.png" id="3_kgg8h"]
+[ext_resource type="Texture2D" uid="uid://4g5xyx6mt4xp" path="res://textures/assets/animated backgrounds/colosseum/002.png" id="4_cag1q"]
+[ext_resource type="Texture2D" uid="uid://bqedi8apfiouw" path="res://textures/assets/animated backgrounds/colosseum/003.png" id="5_qvbsh"]
+[ext_resource type="Texture2D" uid="uid://upxwtp6igyet" path="res://textures/assets/animated backgrounds/colosseum/004.png" id="6_1auv6"]
+[ext_resource type="Texture2D" uid="uid://crl10mhhvgntg" path="res://textures/assets/animated backgrounds/colosseum/005.png" id="7_prmyl"]
 [ext_resource type="PackedScene" uid="uid://2c2r0mjftm3i" path="res://enemies/spitter/spitter.tscn" id="10_kgg8h"]
-[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/icons/moth_icon.png" id="11_cag1q"]
+[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/assets/icons/moth_icon.png" id="11_cag1q"]
 [ext_resource type="PackedScene" uid="uid://cta27xmsuq5g1" path="res://enemies/gnat/gnat.tscn" id="12_qvbsh"]
 [ext_resource type="Texture2D" uid="uid://b30w6r60vqkhe" path="res://textures/atlas/full_atlas.png" id="13_1auv6"]
 [ext_resource type="Shader" uid="uid://ctc6vhwrdums4" path="res://shaders/rays.gdshader" id="14_prmyl"]
 [ext_resource type="Shader" uid="uid://bxp85agnodslv" path="res://shaders/post_process.gdshader" id="15_p3ig4"]
+[ext_resource type="Script" uid="uid://buvy6tlxuer1o" path="res://world/enviroment.gd" id="16_a8byp"]
 [ext_resource type="PackedScene" uid="uid://beebo36cgpnor" path="res://enemies/slasher/slasher.tscn" id="16_tr54y"]
 [ext_resource type="PackedScene" uid="uid://cepy44g514e4w" path="res://enemies/shooter/shooter.tscn" id="17_skj6l"]
+[ext_resource type="AudioStream" uid="uid://hwh6hnurki8a" path="res://audio/music/a_moths_reprise_theme_song.wav" id="18_altv3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_iibmw"]
 size = Vector2(3506, 20)
@@ -56,13 +58,6 @@ colors = PackedColorArray(0.678431, 0.482353, 0.32549, 0, 0.964706, 0.913725, 0.
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_l1yh3"]
 gradient = SubResource("Gradient_hksqf")
-
-[sub_resource type="Gradient" id="Gradient_l1yh3"]
-offsets = PackedFloat32Array(0, 0.293333, 0.873333, 1)
-colors = PackedColorArray(0, 0, 0, 0, 0.568627, 0, 0, 0.290196, 0.568627, 0, 0, 0.290196, 0, 0, 0, 0)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_kgg8h"]
-gradient = SubResource("Gradient_l1yh3")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l1yh3"]
 bg_color = Color(0, 0, 0, 0.388235)
@@ -356,7 +351,7 @@ shader_parameter/protect_hue_width2 = 0.255
 shader_parameter/protect_min_sat2 = 0.328
 shader_parameter/protect_min_val2 = 0.027
 
-[node name="Arena" type="Node2D" node_paths=PackedStringArray("time_label", "score_label", "player", "retry_button", "quit_button")]
+[node name="Arena" type="Node2D" node_paths=PackedStringArray("time_label", "score_label", "player", "retry_button", "quit_button") groups=["World"]]
 script = ExtResource("1_kgg8h")
 time_label = NodePath("GameUI/TextureRect2/VBoxContainer/timelbl")
 score_label = NodePath("GameUI/TextureRect2/VBoxContainer2/scorelbl")
@@ -376,7 +371,6 @@ collision_mask = 0
 shape = SubResource("RectangleShape2D_iibmw")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
-visible = false
 position = Vector2(-1488, -517)
 shape = SubResource("RectangleShape2D_kgg8h")
 
@@ -429,7 +423,6 @@ frame_progress = 0.0937507
 position = Vector2(515, 632)
 
 [node name="GameUI" type="CanvasLayer" parent="."]
-visible = false
 
 [node name="TextureRect2" type="TextureRect" parent="GameUI"]
 anchors_preset = 5
@@ -487,36 +480,6 @@ text = "Score: 000000"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TextureRect3" type="TextureRect" parent="GameUI"]
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -65.0
-offset_right = 359.0
-offset_bottom = -34.0
-grow_vertical = 0
-texture = SubResource("GradientTexture2D_kgg8h")
-expand_mode = 1
-
-[node name="VBoxContainer" type="VBoxContainer" parent="GameUI/TextureRect3"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 19.0
-offset_bottom = -18.0
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
-
-[node name="Label2" type="Label" parent="GameUI/TextureRect3/VBoxContainer"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 19
-text = "HEALTH: 10/10"
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="TextureRect" type="TextureRect" parent="GameUI"]
 anchors_preset = 5
 anchor_left = 0.5
@@ -529,7 +492,6 @@ texture = ExtResource("11_cag1q")
 expand_mode = 1
 
 [node name="surv" type="Label" parent="GameUI"]
-visible = false
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -810,6 +772,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Enviroment" type="Node2D" parent="."]
+script = ExtResource("16_a8byp")
 
 [node name="Rays" type="ColorRect" parent="Enviroment"]
 z_index = 5
@@ -865,3 +828,11 @@ offset_bottom = -31.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.905882, 0.984314, 1, 1)
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("18_altv3")
+volume_db = -23.016
+autoplay = true
+bus = &"Music"
+
+[connection signal="finished" from="Music" to="." method="_on_music_finished"]

@@ -31,7 +31,9 @@ extends CharacterBody2D
 @export var altitude_max_correction_speed: float = 160.0
 
 @export var death_effect: PackedScene
+@export var death_sound: AudioStream
 
+var world: Node2D
 var player: Node2D
 var can_fire := true
 var is_winding_up := false
@@ -44,6 +46,7 @@ var desired_vel: Vector2 = Vector2.ZERO
 func _ready() -> void:
 	await get_tree().process_frame
 	player = get_tree().get_first_node_in_group("Player")
+	world = get_tree().get_first_node_in_group("World")
 	if find_child("AnimatedSprite2D"):
 		$AnimatedSprite2D.play("flying")
 	if has_node("Status"):
@@ -206,7 +209,17 @@ func create_effect() -> void:
 	else:
 		push_warning("There is no set death effect, add one in the export.")
 
+func create_death_sound(audio: AudioStream) -> void:
+	if audio == null: return
+	var ap = AudioStreamPlayer2D.new()
+	ap.pitch_scale = randf_range(0.85, 1.15)
+	world.add_child(ap)
+	ap.global_position = self.global_position
+	ap.set_stream(audio)
+	ap.play()
+
 func _death(_source: Node) -> void:
 	create_effect()
+	create_death_sound(death_sound)
 	get_tree().call_group("game", "on_enemy_killed", enemy_data.score_on_death)
 	queue_free()
