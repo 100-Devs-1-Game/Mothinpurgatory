@@ -7,6 +7,8 @@ extends CanvasLayer
 var tabs: Array = []
 var pages: Array = []
 var page_names: Dictionary = {}
+ 
+#handles tabbing because the actual tab containers suck >:(
 
 func _ready() -> void:
 	for child in tabs_hbox.get_children():
@@ -30,12 +32,12 @@ func _ready() -> void:
 func _on_tab_pressed(button: BaseButton) -> void:
 	_select_tab_by_name(button.name)
 
-func _select_tab_by_name(name: String) -> void:
+func _select_tab_by_name(_name: String) -> void:
 	for button in tabs:
-		button.button_pressed = (button.name == name)
+		button.button_pressed = (button.name == _name)
 
 	for page in pages:
-		page.visible = (page.name == name)
+		page.visible = (page.name == _name)
 
 func _return_to_title() -> void:
 	EventBus.ui_closed.emit()

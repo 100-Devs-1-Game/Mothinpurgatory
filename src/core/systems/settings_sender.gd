@@ -5,6 +5,10 @@ extends Control
 @export var checkbox_postfx: CheckBox
 @export var spinbox_framecap: SpinBox
 
+@export var master_slider: Slider
+@export var sfx_slider: Slider
+@export var music_slider: Slider
+
 var settings_manager: Node
 
 func _ready() -> void:
@@ -17,6 +21,7 @@ func _ready() -> void:
 	else:
 		_setup_window_mode_items()
 		_load_from_settings_manager()
+		_load_audio_sliders()
 		_connect_signals()
 
 func _connect_signals() -> void:
@@ -24,12 +29,21 @@ func _connect_signals() -> void:
 	checkbox_vsync.toggled.connect(_on_vsync_toggled)
 	checkbox_postfx.toggled.connect(_on_postfx_toggled)
 	spinbox_framecap.value_changed.connect(_on_framecap_changed)
+	master_slider.value_changed.connect(_on_master_slider_changed)
+	sfx_slider.value_changed.connect(_on_sfx_slider_changed)
+	music_slider.value_changed.connect(_on_music_slider_changed)
 
 func _setup_window_mode_items() -> void:
 	window_mode.clear()
 	window_mode.add_item("Windowed", 0)
 	window_mode.add_item("Borderless", 1)
 	window_mode.add_item("Fullscreen", 2)
+
+func _load_audio_sliders() -> void:
+	var audio_sliders = settings_manager.get_all_volumes()
+	master_slider.value = audio_sliders["Master"] * 100.0
+	sfx_slider.value = audio_sliders["SFX"] * 100.0
+	music_slider.value = audio_sliders["Music"] * 100.0
 
 func _load_from_settings_manager() -> void:
 	if settings_manager.has_method("get_settings"):
@@ -93,3 +107,21 @@ func _on_framecap_changed(new_value: float) -> void:
 		if framecap_value < 0:
 			framecap_value = 0
 		settings_manager.set_framecap(framecap_value)
+
+func _on_master_slider_changed(value: float) -> void:
+	var new_value = value / 100
+	if settings_manager != null:
+		if settings_manager.has_method("set_bus_volume"):
+			settings_manager.set_bus_volume("Master", new_value)
+
+func _on_sfx_slider_changed(value: float) -> void:
+	var new_value = value / 100
+	if settings_manager != null:
+		if settings_manager.has_method("set_bus_volume"):
+			settings_manager.set_bus_volume("SFX", new_value)
+
+func _on_music_slider_changed(value: float) -> void:
+	var new_value = value / 100
+	if settings_manager != null:
+		if settings_manager.has_method("set_bus_volume"):
+			settings_manager.set_bus_volume("Music", new_value)

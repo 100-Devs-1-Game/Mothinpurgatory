@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="AchievementData" load_steps=3 format=3 uid="uid://xvymrgqf7bgx"]
 
-[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/icons/moth_icon.png" id="1_7lnsh"]
+[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/assets/icons/moth_icon.png" id="1_7lnsh"]
 [ext_resource type="Script" uid="uid://qm1fbqpewbxm" path="res://core/achievements/achievement_data.gd" id="1_se2w2"]
 
 [resource]

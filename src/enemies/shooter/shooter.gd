@@ -20,10 +20,12 @@ extends CharacterBody2D
 @export var min_pop_window: float = 0.06
 @export var max_kb_speed_x: float = 900.0
 
+@export var death_sound: AudioStream
 
 @onready var sprite: AnimatedSprite2D = get_node_or_null("AnimatedSprite2D")
 @onready var status_label: Label = get_node_or_null("status")
 
+var world: Node2D
 var player: Node2D = null
 var default_speed: float = 0.0
 var speed: float = 0.0
@@ -42,6 +44,7 @@ func _ready() -> void:
 		sprite.play("walk")
 
 	player = get_tree().get_first_node_in_group("Player")
+	world = get_tree().get_first_node_in_group("World")
 
 	if move_speed_override > 0.0:
 		default_speed = move_speed_override
@@ -150,8 +153,8 @@ func attack() -> void:
 	_face_dir(dir_x)
 	_update_status("State: Windup")
 	if sprite != null:
-		if sprite.has_animation("shoot"):
-			sprite.play("shoot")
+		if sprite:
+			sprite.play("spit")
 		else:
 			sprite.play("attack")
 
@@ -178,6 +181,7 @@ func attack() -> void:
 	can_attack = true
 
 func _spawn_spit() -> void:
+	sprite.play("spit")
 	if projectile_scene == null:
 		return
 
@@ -204,8 +208,17 @@ func _spawn_spit() -> void:
 
 	get_tree().current_scene.add_child(p)
 
+func create_death_sound(audio: AudioStream) -> void:
+	if audio == null: return
+	var ap = AudioStreamPlayer2D.new()
+	ap.pitch_scale = randf_range(0.85, 1.15)
+	world.add_child(ap)
+	ap.global_position = self.global_position
+	ap.set_stream(audio)
+	ap.play()
 
 func _death(source: Node) -> void:
+	create_death_sound(death_sound)
 	get_tree().call_group("game", "on_enemy_killed", enemy_data.score_on_death)
 	queue_free()
 

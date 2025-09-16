@@ -7,7 +7,6 @@ offset_right = 8.0
 offset_bottom = 8.0
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 script = ExtResource("1_01762")
-line_height = 4
 
 [node name="Underline" type="ColorRect" parent="."]
 layout_mode = 0
@@ -18,3 +17,8 @@ color = Color(0, 0, 0, 1)
 layout_mode = 0
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+volume_db = -13.639
+max_polyphony = 246
+bus = &"SFX"

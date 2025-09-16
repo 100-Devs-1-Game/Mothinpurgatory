@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://b33toqsp56jhv"
+path="res://.godot/imported/A Moth's Reprise Song Thing.wav-d8575fb936e3b430281fd552fdf91845.sample"
+
+[deps]
+
+source_file="res://audio/music/A Moth's Reprise Song Thing.wav"
+dest_files=["res://.godot/imported/A Moth's Reprise Song Thing.wav-d8575fb936e3b430281fd552fdf91845.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

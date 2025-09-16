@@ -7,6 +7,12 @@ extends ParallaxBackground
 var target: Vector2 = Vector2.ZERO
 
 func _process(delta):
+	var ps = SettingsManager.get_game_window_mode()
+	if ps == 2:
+		scale = Vector2(1.52,1.80)
+	else:
+		scale = Vector2(1.0,1.0)
+
 	var vp = get_viewport()
 	var size = vp.get_visible_rect().size
 	var mouse = vp.get_mouse_position()

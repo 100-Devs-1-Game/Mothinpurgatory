@@ -55,6 +55,7 @@ var hitless_running := false
 var game_over := false
 
 func _ready() -> void:
+	$Music.play()
 	SceneLoader.current_scene = self
 	EventBus.first_game.emit()
 	add_to_group("game")
@@ -81,7 +82,8 @@ func _begin_game():
 	await get_tree().create_timer(2.0).timeout
 	$GameUI/surv.visible = true
 	await get_tree().create_timer(2.0).timeout
-	$GameUI/surv.queue_free()
+	if $GameUI/surv:
+		$GameUI/surv.queue_free()
 
 func _process(delta: float) -> void:
 	if not running:
@@ -354,3 +356,6 @@ func retry():
 
 func _exit_tree() -> void:
 	EventBus.score_final.emit(score)
+
+func _on_music_finished() -> void:
+	$Music.play()

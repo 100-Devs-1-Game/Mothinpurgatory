@@ -18,33 +18,16 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.0980392, 0.0980392, 0.14902, 0.54902)
 
-[node name="Label" type="Label" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -319.0
-offset_top = -113.0
-offset_right = 319.0
-offset_bottom = 113.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 23
-text = "Very credit yes :)"
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="Exit Credits" parent="." instance=ExtResource("1_8lxjy")]
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -64.5
-offset_top = -148.0
-offset_right = 64.5
-offset_bottom = -103.0
+offset_left = -91.0
+offset_top = -103.0
+offset_right = 91.0
+offset_bottom = -58.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_font_sizes/font_size = 27
@@ -56,3 +39,101 @@ theme_override_styles/pressed = SubResource("StyleBoxEmpty_mcnky")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_mcnky")
 text = "Return to title"
 line_width_ratio = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -371.0
+offset_top = -279.0
+offset_right = 371.0
+offset_bottom = 173.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 14
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.646643, 0.762715, 0.997278, 1)
+theme_override_font_sizes/font_size = 43
+text = "Game Lead"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Title3" type="Label" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.372549, 0.564706, 0.403922, 1)
+theme_override_font_sizes/font_size = 27
+text = "Skin"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.646643, 0.762715, 0.997278, 1)
+theme_override_font_sizes/font_size = 43
+text = "Art and Concepts"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Title3" type="Label" parent="VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.372549, 0.564706, 0.403922, 1)
+theme_override_font_sizes/font_size = 27
+text = "Skin"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Title4" type="Label" parent="VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.839216, 0.0980392, 0.133333, 1)
+theme_override_font_sizes/font_size = 27
+text = "Amatrine"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="VBoxContainer/VBoxContainer4"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.646643, 0.762715, 0.997278, 1)
+theme_override_font_sizes/font_size = 43
+text = "SFX & Music"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Title4" type="Label" parent="VBoxContainer/VBoxContainer4"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.823529, 0.176471, 0.701961, 1)
+theme_override_font_sizes/font_size = 27
+text = "KILPINITY"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="VBoxContainer/VBoxContainer3"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.646643, 0.762715, 0.997278, 1)
+theme_override_font_sizes/font_size = 43
+text = "Programming"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Title4" type="Label" parent="VBoxContainer/VBoxContainer3"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.862745, 0.345098, 0.607843, 1)
+theme_override_font_sizes/font_size = 27
+text = "Plant"
+horizontal_alignment = 1
+vertical_alignment = 1

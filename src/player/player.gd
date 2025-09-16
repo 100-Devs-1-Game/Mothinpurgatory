@@ -19,10 +19,21 @@ signal player_died
 @onready var animator: AnimatedSprite2D = get_node(animator_path)
 @onready var sm: Node = $StateMachine
 
+@export var footstep_sounds: Array[AudioStream] = []
+@export var step_player: AudioStreamPlayer2D
+@export var sfx_player: AudioStreamPlayer2D
+
+const FOOTSTEP_01 = preload("res://audio/gameplay/footstep_01.wav")
+const FOOTSTEP_02 = preload("res://audio/gameplay/footstep_02.wav")
+const FOOTSTEP_03 = preload("res://audio/gameplay/footstep_03.wav")
+const FOOTSTEP_04 = preload("res://audio/gameplay/footstep_04.wav")
+const FOOTSTEP_05 = preload("res://audio/gameplay/footstep_05.wav")
+
 var _knockback: Vector2 = Vector2.ZERO
 var _knockback_time_left: float = 0.0
 var _knockback_decay: float = 14.0
 
+var last_step := -1
 var interactable_faction = 0
 var _facing := 1
 var _invincible := 0.0
@@ -51,6 +62,22 @@ func _ready() -> void:
 	sm.init(self)
 	if animator:
 		animator.play("idle")
+
+func play_step_sfx() -> void:
+	if footstep_sounds.is_empty():
+		return
+	var index = randi() % footstep_sounds.size()
+	if footstep_sounds.size() > 1 and index == last_step:
+		index = (index + 1) % footstep_sounds.size()
+	last_step = index
+
+	step_player.set_stream(footstep_sounds[index])
+	step_player.pitch_scale = randf_range(0.93, 1.05)
+	step_player.play()
+
+func play_sfx(audio: AudioStream) -> void:
+	sfx_player.set_stream(audio)
+	sfx_player.play()
 
 func adjust_camera(delta) -> void:
 	if adjust_cam and getting_up:

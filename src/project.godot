@@ -28,6 +28,7 @@ AchievementDisplayQueue="*res://core/autoloads/achievement_display_queue.gd"
 [display]
 
 window/size/resizable=false
+window/stretch/mode="canvas_items"
 
 [file_customization]
 

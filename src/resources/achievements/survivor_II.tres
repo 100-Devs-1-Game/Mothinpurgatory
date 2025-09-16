@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="AchievementData" load_steps=3 format=3 uid="uid://dla733d487ij5"]
 
 [ext_resource type="Script" uid="uid://qm1fbqpewbxm" path="res://core/achievements/achievement_data.gd" id="1_aeld4"]
-[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/icons/moth_icon.png" id="1_skwl2"]
+[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/assets/icons/moth_icon.png" id="1_skwl2"]
 
 [resource]
 script = ExtResource("1_aeld4")

@@ -29,6 +29,9 @@ extends CharacterBody2D
 @export var recover_lock_duration: float = 0.4
 @export var standup_duration: float = 0.3
 
+@export var death_sound: AudioStream
+
+var world: Node2D
 var player: Node2D
 var player_in_range := false
 
@@ -57,6 +60,7 @@ func _ready() -> void:
 	default_speed = enemy_data.speed
 	speed = default_speed
 	player = get_tree().get_first_node_in_group("Player")
+	world = get_tree().get_first_node_in_group("World")
 	_connect_regions()
 	await get_tree().create_timer(2.0).timeout
 	can_charge = true
@@ -230,7 +234,17 @@ func charge() -> void:
 func get_faction() -> int:
 	return enemy_data.interactable_faction
 
+func create_death_sound(audio: AudioStream) -> void:
+	if audio == null: return
+	var ap = AudioStreamPlayer2D.new()
+	ap.pitch_scale = randf_range(0.85, 1.15)
+	world.add_child(ap)
+	ap.global_position = self.global_position
+	ap.set_stream(audio)
+	ap.play()
+
 func _death(_source: Node) -> void:
+	create_death_sound(death_sound)
 	get_tree().call_group("game", "on_enemy_killed", enemy_data.score_on_death)
 	queue_free()
 

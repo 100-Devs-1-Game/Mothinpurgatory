@@ -30,6 +30,7 @@ func _on_enter() -> void:
 		tween.kill()
 
 	sb.shadow_color = Color(1, 0, 0, 0.6)
+	@warning_ignore("narrowing_conversion")
 	sb.shadow_size = 18.0
 
 	tween = create_tween().set_loops()

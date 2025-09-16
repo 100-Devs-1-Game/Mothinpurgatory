@@ -1,14 +1,15 @@
-[gd_scene load_steps=14 format=3 uid="uid://bi8u8vl7ara8y"]
+[gd_scene load_steps=15 format=3 uid="uid://bi8u8vl7ara8y"]
 
 [ext_resource type="PackedScene" uid="uid://3fs8sj37ylm5" path="res://sandbox/underline_anim_button.tscn" id="1_a2kbo"]
 [ext_resource type="Script" uid="uid://cbfu46wsviagn" path="res://sandbox/title.gd" id="1_etir8"]
 [ext_resource type="PackedScene" uid="uid://c3cx280f4i76s" path="res://components/discord_link/discord_button.tscn" id="3_etir8"]
 [ext_resource type="Script" uid="uid://dttbqysy2hasj" path="res://sandbox/title_parallax.gd" id="4_nadrw"]
-[ext_resource type="Texture2D" uid="uid://bcspekjdbhpoc" path="res://textures/parallax backgrounds/adjusted parallax/000.png" id="5_nadrw"]
-[ext_resource type="Texture2D" uid="uid://csy7dr0tud0x7" path="res://textures/parallax backgrounds/adjusted parallax/001.png" id="6_m1t0n"]
-[ext_resource type="Texture2D" uid="uid://c62y3dh8knntf" path="res://textures/parallax backgrounds/adjusted parallax/002.png" id="7_qhmwt"]
+[ext_resource type="Texture2D" uid="uid://bcspekjdbhpoc" path="res://textures/assets/parallax backgrounds/adjusted parallax/000.png" id="5_nadrw"]
+[ext_resource type="Texture2D" uid="uid://csy7dr0tud0x7" path="res://textures/assets/parallax backgrounds/adjusted parallax/001.png" id="6_m1t0n"]
+[ext_resource type="Texture2D" uid="uid://c62y3dh8knntf" path="res://textures/assets/parallax backgrounds/adjusted parallax/002.png" id="7_qhmwt"]
 [ext_resource type="Shader" uid="uid://ctc6vhwrdums4" path="res://shaders/rays.gdshader" id="8_qhmwt"]
 [ext_resource type="Shader" uid="uid://bxp85agnodslv" path="res://shaders/post_process.gdshader" id="9_x30a1"]
+[ext_resource type="AudioStream" uid="uid://b33toqsp56jhv" path="res://audio/music/A Moth's Reprise Song Thing.wav" id="10_x30a1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_etir8"]
 bg_color = Color(0.129412, 0, 0, 1)
@@ -78,6 +79,7 @@ achievements_button = NodePath("Main/VBoxContainer/achievements")
 quit_button = NodePath("Main/VBoxContainer/quit")
 
 [node name="Main" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
 
 [node name="DiscordButton" type="Panel" parent="Main"]
 z_index = 1
@@ -280,3 +282,9 @@ offset_right = 1496.0
 offset_bottom = 610.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_x30a1")
+volume_db = -17.058
+autoplay = true
+bus = &"Music"

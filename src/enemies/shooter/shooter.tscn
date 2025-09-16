@@ -1,18 +1,86 @@
-[gd_scene load_steps=9 format=3 uid="uid://cepy44g514e4w"]
+[gd_scene load_steps=24 format=3 uid="uid://cepy44g514e4w"]
 
 [ext_resource type="Script" uid="uid://2rjj0u1m0nxd" path="res://enemies/shooter/shooter.gd" id="1_kkjre"]
 [ext_resource type="Resource" uid="uid://0xxklcwp7vjm" path="res://enemies/shooter/shooter_data.tres" id="2_o2iqe"]
 [ext_resource type="PackedScene" uid="uid://bq1v87o3hxrb1" path="res://components/combat/health/hurtbox.tscn" id="2_rlg6k"]
 [ext_resource type="PackedScene" uid="uid://lje6qhcr17el" path="res://enemies/spitter/spit_projectile.tscn" id="3_vqkn0"]
+[ext_resource type="AudioStream" uid="uid://dwoo5otvwuuy7" path="res://audio/gameplay/squish_01.wav" id="4_my0b0"]
 [ext_resource type="Script" uid="uid://dwvivyga6h4rd" path="res://components/combat/health/health.gd" id="4_vqwp7"]
+[ext_resource type="Texture2D" uid="uid://drtmlpex1u82w" path="res://textures/assets/sprites/enemies/ground spitter/spit/005.png" id="5_b5h1a"]
+[ext_resource type="Texture2D" uid="uid://oq4xbdoorfkt" path="res://textures/assets/sprites/enemies/ground spitter/spit/006.png" id="6_my0b0"]
+[ext_resource type="Texture2D" uid="uid://8t46mob7065h" path="res://textures/assets/sprites/enemies/ground spitter/spit/007.png" id="7_3hrdj"]
+[ext_resource type="Texture2D" uid="uid://biy8noyl2udlo" path="res://textures/assets/sprites/enemies/ground spitter/spit/008.png" id="8_vde7i"]
+[ext_resource type="Texture2D" uid="uid://bmdpwcq1altxx" path="res://textures/assets/sprites/enemies/ground spitter/spit/009.png" id="9_gu32w"]
+[ext_resource type="Texture2D" uid="uid://cypman3lii8gc" path="res://textures/assets/sprites/enemies/ground spitter/spit/010.png" id="10_l8n2t"]
+[ext_resource type="Texture2D" uid="uid://bxskq0765x2wt" path="res://textures/assets/sprites/enemies/ground spitter/spit/011.png" id="11_m6o1r"]
+[ext_resource type="Texture2D" uid="uid://b375d4up1tpsj" path="res://textures/assets/sprites/enemies/ground spitter/spit/012.png" id="12_uwf8w"]
+[ext_resource type="Texture2D" uid="uid://b0a76pqajytr7" path="res://textures/assets/sprites/enemies/ground spitter/spit/013.png" id="13_d2kvl"]
+[ext_resource type="Texture2D" uid="uid://d4kuft3j1kgkd" path="res://textures/assets/sprites/enemies/ground spitter/walk/000.png" id="14_ftuqx"]
+[ext_resource type="Texture2D" uid="uid://dj6xdev4wj2a3" path="res://textures/assets/sprites/enemies/ground spitter/walk/001.png" id="15_t157p"]
+[ext_resource type="Texture2D" uid="uid://dtnwrdd77hyke" path="res://textures/assets/sprites/enemies/ground spitter/walk/002.png" id="16_evx3f"]
+[ext_resource type="Texture2D" uid="uid://16let2sempl3" path="res://textures/assets/sprites/enemies/ground spitter/walk/003.png" id="17_td4pg"]
+[ext_resource type="Texture2D" uid="uid://bfp7vh3nc7c0d" path="res://textures/assets/sprites/enemies/ground spitter/walk/004.png" id="18_vh2jy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rlg6k"]
-size = Vector2(48, 71)
+size = Vector2(69, 87)
 
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_ysdx8"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_ki1gl"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_b5h1a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_my0b0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_3hrdj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_vde7i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_gu32w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_l8n2t")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_m6o1r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_uwf8w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_d2kvl")
+}],
+"loop": false,
+"name": &"spit",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("14_ftuqx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_t157p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_evx3f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_td4pg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_vh2jy")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 12.0
+}]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_o2iqe"]
-radius = 28.0
+radius = 42.0119
 
 [node name="Shooter" type="CharacterBody2D"]
 collision_mask = 4
@@ -21,6 +89,7 @@ enemy_data = ExtResource("2_o2iqe")
 shoot_range = 720.0
 shoot_offset_y = -48.0
 projectile_scene = ExtResource("3_vqkn0")
+death_sound = ExtResource("4_my0b0")
 
 [node name="Health" type="Node" parent="."]
 script = ExtResource("4_vqwp7")
@@ -28,13 +97,16 @@ max_health = 3
 metadata/_custom_type_script = "uid://dwvivyga6h4rd"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -35.5)
+position = Vector2(4.5, -43.5)
 shape = SubResource("RectangleShape2D_rlg6k")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -35.5)
-scale = Vector2(48, 71)
-texture = SubResource("PlaceholderTexture2D_ysdx8")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(1, -56)
+scale = Vector2(0.642057, 0.949709)
+sprite_frames = SubResource("SpriteFrames_ki1gl")
+animation = &"spit"
+frame = 8
+frame_progress = 1.0
 
 [node name="Marker2D" type="Marker2D" parent="."]
 position = Vector2(-37, -54)
@@ -43,7 +115,7 @@ position = Vector2(-37, -54)
 health_node_path = NodePath("../Health")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
-position = Vector2(0, -37)
+position = Vector2(5, -37)
 shape = SubResource("CircleShape2D_o2iqe")
 
 [node name="status" type="Label" parent="."]
