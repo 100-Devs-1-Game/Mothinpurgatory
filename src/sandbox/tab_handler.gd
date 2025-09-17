@@ -7,7 +7,7 @@ extends CanvasLayer
 var tabs: Array = []
 var pages: Array = []
 var page_names: Dictionary = {}
- 
+
 #handles tabbing because the actual tab containers suck >:(
 
 func _ready() -> void:
@@ -15,7 +15,7 @@ func _ready() -> void:
 		if child is BaseButton:
 			tabs.append(child)
 
-	exit_buttton.pressed.connect(_return_to_title)
+	exit_buttton.pressed.connect(_previous_menu)
 
 	for child in pages_root.get_children():
 		if child is Control:
@@ -39,6 +39,6 @@ func _select_tab_by_name(_name: String) -> void:
 	for page in pages:
 		page.visible = (page.name == _name)
 
-func _return_to_title() -> void:
+func _previous_menu() -> void:
 	EventBus.ui_closed.emit()
 	queue_free()

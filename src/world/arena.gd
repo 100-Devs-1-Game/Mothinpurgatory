@@ -1,12 +1,11 @@
 extends Node2D
+signal wave_started(wave: int)
 
 var elapsed := 0.0
 var running := false
-
 var score := 0
 var time_score_bonus := 200
 var last_minute_checked := 0
-
 var kill_score := 100
 var total_kills := 0
 
@@ -17,35 +16,31 @@ const FLASH_DOWN_TIME := 0.15
 const FLASH_COLOR := Color(1, 1, 0)
 const NORMAL_COLOR := Color(1, 1, 1)
 
-
 @export var time_label: Label
 @export var score_label: Label
+@export var wave_label: Label
 @export var player: CharacterBody2D
-@export var enemy_scene: PackedScene
-
-@export var gnat_scene: PackedScene
-@export var gnat_base_spawn_interval: float = 3.0
-@export var gnat_min_spawn_interval: float = 0.4
-@export var gnat_ramp_per_minute: float = 0.9
-@export var gnat_max_alive: int = 12
-@export var gnat_burst_min: int = 1
-@export var gnat_burst_max: int = 3
-
-@export var retry_button: Button
-@export var quit_button: Button
-
-@export var base_spawn_interval: float = 12.0
-@export var min_spawn_interval: float = 0.8
-@export var ramp_per_minute: float = 1.7
 
 @export var enemy_scenes: Array[PackedScene] = []
 @export var use_weighted_spawn: bool = false
 @export var spawn_weights: PackedFloat32Array = PackedFloat32Array()
-@export var debug_testing := false
+
+@export var retry_button: Button
+@export var quit_button: Button
+
+@export var wave_intermission_time: float = 8.0
+@export var wave_size_start: int = 8
+@export var wave_size_growth: float = 1.3
+@export var wave_concurrent_cap_base: int = 6
+@export var wave_concurrent_cap_growth: int = 1
+@export var wave_spawn_interval_start: float = 1.5
+@export var wave_spawn_interval_decay: float = 0.93
+@export var wave_min_spawn_interval: float = 0.25
 
 @onready var left_spawn: Marker2D  = $LeftSpawn
 @onready var right_spawn: Marker2D = $RightSpawn
 @onready var enemy_container: Node = $Enemies
+@export var enemy_unlock_wave: PackedInt32Array = PackedInt32Array()
 
 var post_process_enabled := true
 var _hitstop_depth := 0
@@ -53,6 +48,13 @@ var hitless_elapsed := 0.0
 var hitless_last_minute := 0
 var hitless_running := false
 var game_over := false
+
+var current_wave: int = 0
+var wave_running: bool = false
+var wave_enemies_to_spawn: int = 0
+var wave_enemies_spawned: int = 0
+var wave_spawn_interval: float = 1.0
+var wave_concurrent_cap: int = 0
 
 func _ready() -> void:
 	$Music.play()
@@ -62,16 +64,13 @@ func _ready() -> void:
 	$Background.play("default")
 	retry_button.pressed.connect(retry)
 	quit_button.pressed.connect(end_game)
-	
 	if not player:
 		player = get_tree().get_first_node_in_group("Player")
 	await get_tree().process_frame
 	if player:
 		player.connect("player_died", _game_over)
-
 	if EventBus.has_signal("player_woke"):
 		EventBus.player_woke.connect(_begin_game)
-
 	if EventBus.has_signal("player_damaged"):
 		EventBus.player_damaged.connect(_on_player_damaged)
 
@@ -80,19 +79,16 @@ func _begin_game():
 	reset_time()
 	start_time()
 	await get_tree().create_timer(2.0).timeout
-	$GameUI/surv.visible = true
+	$GameUI/waves.visible = true
 	await get_tree().create_timer(2.0).timeout
-	if $GameUI/surv:
-		$GameUI/surv.queue_free()
+	_start_waves()
 
 func _process(delta: float) -> void:
 	if not running:
 		return
-
 	elapsed += delta
 	if time_label:
 		time_label.text = _format_time(elapsed)
-
 	var current_minute = _whole_minutes(elapsed)
 	if current_minute > last_minute_checked:
 		var minutes_gained = current_minute - last_minute_checked
@@ -100,7 +96,6 @@ func _process(delta: float) -> void:
 		score += minutes_gained * time_score_bonus
 		last_minute_checked = current_minute
 		_update_score_label()
-
 	if hitless_running:
 		hitless_elapsed += delta
 		var hl_minute = _whole_minutes(hitless_elapsed)
@@ -109,8 +104,14 @@ func _process(delta: float) -> void:
 			hitless_last_minute = hl_minute
 			EventBus.no_hit_minute_passed.emit(gained)
 
-func show_ui(show: bool) -> void:
-	$GameUI.visible = show
+	update_enemy_count()
+
+func update_enemy_count() -> void:
+	if $GameUI/enemycount:
+		$GameUI/enemycount.text = "Enemies:" + str(_alive_enemies())
+
+func show_ui(display: bool) -> void:
+	$GameUI.visible = display
 
 func _whole_minutes(t: float) -> int:
 	@warning_ignore("integer_division")
@@ -126,9 +127,6 @@ func _format_time(t: float) -> String:
 func start_time() -> void:
 	running = true
 	hitless_running = true
-	if not debug_testing:
-		_spawn_loop()
-		_gnat_spawn_loop()
 
 func stop_time() -> void:
 	running = false
@@ -157,25 +155,17 @@ func _update_score_label() -> void:
 func _flash_score() -> void:
 	if not score_label:
 		return
-
 	if _score_tween and _score_tween.is_running():
 		_score_tween.kill()
-
 	score_label.scale = Vector2.ONE
 	score_label.modulate = NORMAL_COLOR
-
 	_score_tween = create_tween()
 	_score_tween.set_parallel(true)
-	_score_tween.tween_property(score_label, "scale", FLASH_SCALE, FLASH_UP_TIME)\
-		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	_score_tween.tween_property(score_label, "modulate", FLASH_COLOR, FLASH_UP_TIME)\
-		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-
+	_score_tween.tween_property(score_label, "scale", FLASH_SCALE, FLASH_UP_TIME).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_score_tween.tween_property(score_label, "modulate", FLASH_COLOR, FLASH_UP_TIME).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	_score_tween.set_parallel(false)
-	_score_tween.tween_property(score_label, "scale", Vector2.ONE, FLASH_DOWN_TIME)\
-		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
-	_score_tween.tween_property(score_label, "modulate", NORMAL_COLOR, FLASH_DOWN_TIME)\
-		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	_score_tween.tween_property(score_label, "scale", Vector2.ONE, FLASH_DOWN_TIME).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	_score_tween.tween_property(score_label, "modulate", NORMAL_COLOR, FLASH_DOWN_TIME).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
 
 func on_enemy_killed(points: int = kill_score) -> void:
 	total_kills += 1
@@ -193,10 +183,14 @@ func apply_hitstop(duration: float = 0.06, timescale: float = 0.0) -> void:
 func _game_over():
 	game_over = true
 	stop_time()
-	print("Player died, game over.")
 	hitless_running = false
 	await get_tree().create_timer(5.0).timeout
-	$NewOver/Panel2/VBoxContainer/Panel/timelbl.text = "You survived for: " + (time_label.text if time_label else _format_time(elapsed))
+	var ttxt = ""
+	if time_label:
+		ttxt = time_label.text
+	else:
+		ttxt = _format_time(elapsed)
+	$NewOver/Panel2/VBoxContainer/Panel/timelbl.text = "You survived for: " + ttxt
 	$NewOver/Panel2/VBoxContainer/Panel2/scorelbl.text = "Score: " + "%06d" % score
 	$NewOver/Panel2/VBoxContainer/Panel3/killslbl.text = "Total Kills: " + "%06d" % total_kills
 	$GameUI.visible = false
@@ -204,65 +198,93 @@ func _game_over():
 	$NewOver/GameoverAnim.play("fade")
 	await $NewOver/GameoverAnim.animation_finished
 	$NewOver/GameoverAnim.play("loop")
-
 	var enemies = $Enemies
 	if enemies:
 		for i in range(enemies.get_child_count()):
 			var child = enemies.get_child(i)
 			if is_instance_valid(child):
 				child.queue_free()
-
-
 	EventBus.score_final.emit(score)
 
-func _spawn_loop() -> void:
-	while is_instance_valid(self) and !game_over:
-		if running:
+func _start_waves() -> void:
+	current_wave = 0
+	_next_wave()
+
+func _next_wave() -> void:
+	$Wavehorn.play()
+	EventBus.wave_survived.emit()
+	current_wave += 1
+	wave_enemies_to_spawn = int(round(wave_size_start * pow(wave_size_growth, max(0, current_wave - 1))))
+	wave_enemies_spawned = 0
+	wave_concurrent_cap = wave_concurrent_cap_base + (max(0, current_wave - 1) * wave_concurrent_cap_growth)
+	wave_spawn_interval = max(wave_min_spawn_interval, wave_spawn_interval_start * pow(wave_spawn_interval_decay, max(0, current_wave - 1)))
+	wave_running = true
+	emit_signal("wave_started", current_wave) #incase I add something else
+	if wave_label:
+		if wave_label.visible == false:
+			wave_label.visible = true
+		if wave_label.modulate.a > 0.01:
+			var tw = create_tween()
+			tw.tween_property(wave_label, "modulate:a", 0.0, 0.2)
+			await tw.finished
+		wave_label.text = "Wave " + str(current_wave)
+		var tw2 = create_tween()
+		tw2.tween_property(wave_label, "modulate:a", 1.0, 0.35)
+		await tw2.finished
+	_wave_loop()
+
+func _current_enemy_pool() -> Array[int]:
+	var res: Array[int] = []
+	var n = enemy_scenes.size()
+	var ulen = enemy_unlock_wave.size()
+	for i in range(n):
+		var unlock_at = 1
+		if i < ulen:
+			unlock_at = enemy_unlock_wave[i]
+		if current_wave >= unlock_at:
+			res.append(i)
+	return res
+
+
+func _alive_enemies() -> int:
+	if is_instance_valid(enemy_container):
+		var count = 0
+		for c in enemy_container.get_children():
+			if is_instance_valid(c):
+				count += 1
+		return count
+	return 0
+
+func _can_spawn_more() -> bool:
+	if wave_enemies_spawned >= wave_enemies_to_spawn:
+		return false
+	return _alive_enemies() < wave_concurrent_cap
+
+func _wave_loop() -> void:
+	await get_tree().process_frame
+	while is_instance_valid(self) and running and !game_over:
+		if !wave_running:
+			return
+		if _can_spawn_more():
 			_spawn_one()
-			var wait_time = _ramped_interval(base_spawn_interval, ramp_per_minute, min_spawn_interval)
-			await get_tree().create_timer(wait_time, false).timeout
+			wave_enemies_spawned += 1
+			await get_tree().create_timer(wave_spawn_interval, false).timeout
 		else:
-			await get_tree().process_frame
+			var tree = get_tree()
+			if tree == null or !is_instance_valid(self) or !is_inside_tree(): #overkill but this was driving me nuts
+				return
+			await tree.process_frame
+			if !is_instance_valid(self) or !is_inside_tree():
+				return
+		if wave_enemies_spawned >= wave_enemies_to_spawn and _alive_enemies() == 0:
+			_end_wave_and_queue_next()
+			return
 
-func _gnat_spawn_loop() -> void:
-	while is_instance_valid(self) and !game_over:
-		if running:
-			_spawn_gnat_burst()
-			var wait_time = _ramped_interval(gnat_base_spawn_interval, gnat_ramp_per_minute, gnat_min_spawn_interval)
-			await get_tree().create_timer(wait_time, false).timeout
-		else:
-			await get_tree().process_frame
-
-func _ramped_interval(base_time: float, ramp: float, min_time: float) -> float:
-	var minutes_alive = _whole_minutes(elapsed)
-	var interval = base_time * pow(ramp, minutes_alive)
-	if interval < min_time:
-		interval = min_time
-	return interval
-
-func _pick_enemy_scene() -> PackedScene:
-	if enemy_scenes.size() > 0:
-		if use_weighted_spawn and spawn_weights.size() == enemy_scenes.size():
-			var idx = _weighted_pick(spawn_weights)
-			return enemy_scenes[idx]
-		else:
-			return enemy_scenes[randi() % enemy_scenes.size()]
-	return enemy_scene
-
-func _weighted_pick(weights: PackedFloat32Array) -> int:
-	var total = 0.0
-	for w in weights:
-		total += max(0.0, w)
-	if total <= 0.0:
-		return randi() % max(1, weights.size())
-
-	var roll = randf() * total
-	var acc = 0.0
-	for i in range(weights.size()):
-		acc += max(0.0, weights[i])
-		if roll <= acc:
-			return i
-	return weights.size() - 1
+func _end_wave_and_queue_next() -> void:
+	wave_running = false
+	await get_tree().create_timer(wave_intermission_time, false).timeout
+	if running and !game_over:
+		_next_wave()
 
 func _choose_spawn_point() -> Marker2D:
 	var which_side = randi() % 2
@@ -284,63 +306,44 @@ func _spawn_into_container(node: Node) -> void:
 	else:
 		add_child(node)
 
+func _pick_enemy_scene() -> PackedScene:
+	var unlocked = _current_enemy_pool()
+	if unlocked.size() == 0:
+		return null
+	if use_weighted_spawn and spawn_weights.size() == enemy_scenes.size():
+		var total = 0.0
+		for i in unlocked:
+			var w = spawn_weights[i]
+			if w > 0.0:
+				total += w
+		if total > 0.0:
+			var roll = randf() * total
+			var acc = 0.0
+			for i in unlocked:
+				var w = spawn_weights[i]
+				if w < 0.0:
+					w = 0.0
+				acc += w
+				if roll <= acc:
+					return enemy_scenes[i]
+	var idx = unlocked[randi() % unlocked.size()]
+	return enemy_scenes[idx]
+
+
 func _spawn_one() -> void:
 	var scene_to_spawn = _pick_enemy_scene()
 	if scene_to_spawn == null:
 		return
-
 	var spawn_point = _choose_spawn_point()
 	var flip = false
 	if spawn_point == right_spawn:
 		flip = true
-
 	var enemy = scene_to_spawn.instantiate()
 	enemy.global_position = spawn_point.global_position
 	_flip_any_sprite(enemy, flip)
 	_spawn_into_container(enemy)
 
-func _gnat_current_alive() -> int:
-	var total = 0
-	if is_instance_valid(enemy_container):
-		for child in enemy_container.get_children():
-			if child.is_in_group("Gnat"):
-				total += 1
-	else:
-		for n in get_tree().get_nodes_in_group("Gnat"):
-			if is_instance_valid(n):
-				total += 1
-	return total
-
-func _spawn_one_gnat() -> void:
-	if gnat_scene == null:
-		return
-
-	var spawn_point = _choose_spawn_point()
-	var flip = false
-	if spawn_point == right_spawn:
-		flip = true
-
-	var gnat = gnat_scene.instantiate()
-	gnat.global_position = spawn_point.global_position
-	_flip_any_sprite(gnat, flip)
-	_spawn_into_container(gnat)
-
-func _spawn_gnat_burst() -> void:
-	if gnat_scene == null:
-		return
-
-	if gnat_max_alive > 0:
-		var alive = _gnat_current_alive()
-		if alive >= gnat_max_alive:
-			return
-
-	var count = randi_range(gnat_burst_min, gnat_burst_max)
-	for i in count:
-		if gnat_max_alive > 0 and _gnat_current_alive() >= gnat_max_alive:
-			break
-		_spawn_one_gnat()
-
-func _input(event: InputEvent) -> void:
+func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("toggle_post"):
 		post_process_enabled = not post_process_enabled
 		$Enviroment.visible = post_process_enabled
@@ -351,11 +354,16 @@ func end_game():
 	SceneLoader.goto_title()
 
 func retry():
-	EventBus.score_final
+	EventBus.score_final.emit(score)
 	SceneLoader.goto_game()
 
 func _exit_tree() -> void:
+	running = false
+	wave_running = false
 	EventBus.score_final.emit(score)
 
 func _on_music_finished() -> void:
 	$Music.play()
+
+func _on_audio_stream_player_finished() -> void:
+	$Cheers.play()

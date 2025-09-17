@@ -56,8 +56,7 @@ HSlider/styles/slider = SubResource("StyleBoxFlat_jmjmn")
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_f2yme"]
 thickness = 17
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_810tk"]
-bg_color = Color(0.0980392, 0.0980392, 0.14902, 1)
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_810tk"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ycvno"]
 shader = ExtResource("3_uhfal")
@@ -116,6 +115,7 @@ shader_parameter/fade_end = 1.0
 shader_parameter/falloff = 0.915
 
 [node name="Settings" type="CanvasLayer" node_paths=PackedStringArray("tabs_hbox", "pages_root", "exit_buttton")]
+layer = 2
 script = ExtResource("1_ax23m")
 tabs_hbox = NodePath("Main/Tabs")
 pages_root = NodePath("Main/Pages")
@@ -176,6 +176,7 @@ alignment = 1
 [node name="Video" parent="Main/Tabs" instance=ExtResource("1_1pygr")]
 custom_minimum_size = Vector2(147.012, 0)
 layout_mode = 2
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 31
 theme_override_styles/focus = SubResource("StyleBoxEmpty_f2yme")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_f2yme")
@@ -190,6 +191,7 @@ line_width_ratio = 1.0
 [node name="Audio" parent="Main/Tabs" instance=ExtResource("1_1pygr")]
 custom_minimum_size = Vector2(147.012, 0)
 layout_mode = 2
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 31
 theme_override_styles/focus = SubResource("StyleBoxEmpty_f2yme")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_f2yme")
@@ -204,6 +206,7 @@ line_width_ratio = 1.0
 [node name="Controls" parent="Main/Tabs" instance=ExtResource("1_1pygr")]
 custom_minimum_size = Vector2(147.012, 0)
 layout_mode = 2
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 31
 theme_override_styles/focus = SubResource("StyleBoxEmpty_f2yme")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_f2yme")
@@ -219,6 +222,7 @@ line_width_ratio = 1.0
 visible = false
 custom_minimum_size = Vector2(147.012, 0)
 layout_mode = 2
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 31
 theme_override_styles/focus = SubResource("StyleBoxEmpty_f2yme")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_f2yme")
@@ -583,16 +587,15 @@ offset_right = -373.0
 offset_bottom = -39.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_colors/font_hover_pressed_color = Color(1, 0.196078, 0.188235, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.196078, 0.188235, 1)
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = SubResource("StyleBoxFlat_810tk")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_810tk")
-theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_810tk")
-theme_override_styles/hover = SubResource("StyleBoxFlat_810tk")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_810tk")
-theme_override_styles/normal = SubResource("StyleBoxFlat_810tk")
-text = "Return to title"
+theme_override_styles/focus = SubResource("StyleBoxEmpty_810tk")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_810tk")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_810tk")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_810tk")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_810tk")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_810tk")
+text = "Back"
 line_width_ratio = 1.0
 
 [node name="BlurTop" type="ColorRect" parent="."]

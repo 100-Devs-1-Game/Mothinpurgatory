@@ -9,11 +9,14 @@ const EARLY_CANCEL_COOLDOWN_MULTIPLIER := 1.5
 var _cancel_left := 0.0
 var _dash_dir := 1
 
+const DASH = preload("res://audio/ambience/dash.wav")
+
 func init(p_sm, p_player):
 	sm = p_sm
 	player = p_player
 
 func enter() -> void:
+	player.play_sfx(DASH)
 	player.set_hurtbox(true)
 	timer = player.stats.dash_time
 	sm.set_cooldown("Dash", player.stats.dash_cooldown)

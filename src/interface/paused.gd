@@ -10,15 +10,21 @@ func _ready() -> void:
 	settings_button.pressed.connect(_open_settings)
 	achievement_button.pressed.connect(_open_achievements)
 	exit_button.pressed.connect(_exit_game)
+	EventBus.ui_closed.connect(_show_ui)
 
 func _resume() -> void:
 	SceneLoader.pause(false)
 	SceneLoader.current_scene.show_ui(true)
 
+func _show_ui() -> void:
+	visible = true
+
 func _open_settings() -> void:
+	visible = false
 	SceneLoader.open_overlay(SceneLoader.SETTINGS, self, 1)
 
 func _open_achievements() -> void:
+	visible = false
 	SceneLoader.open_overlay(SceneLoader.ACHIEVEMENTS, self, 1)
 
 func _exit_game() -> void:

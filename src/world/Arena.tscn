@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://die4xmtx2ypd8"]
+[gd_scene load_steps=39 format=3 uid="uid://die4xmtx2ypd8"]
 
 [ext_resource type="Script" uid="uid://b8bson1hycvvy" path="res://world/arena.gd" id="1_kgg8h"]
 [ext_resource type="PackedScene" uid="uid://du3uuiaokiexx" path="res://player/player.tscn" id="2_iibmw"]
@@ -19,6 +19,8 @@
 [ext_resource type="PackedScene" uid="uid://beebo36cgpnor" path="res://enemies/slasher/slasher.tscn" id="16_tr54y"]
 [ext_resource type="PackedScene" uid="uid://cepy44g514e4w" path="res://enemies/shooter/shooter.tscn" id="17_skj6l"]
 [ext_resource type="AudioStream" uid="uid://hwh6hnurki8a" path="res://audio/music/a_moths_reprise_theme_song.wav" id="18_altv3"]
+[ext_resource type="AudioStream" uid="uid://bgvx8pski2fqd" path="res://audio/ambience/colloseum cheers.wav" id="20_a8byp"]
+[ext_resource type="AudioStream" uid="uid://cm022xypjvl7n" path="res://audio/ambience/wave horn.wav" id="21_fi0kg"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_iibmw"]
 size = Vector2(3506, 20)
@@ -351,16 +353,18 @@ shader_parameter/protect_hue_width2 = 0.255
 shader_parameter/protect_min_sat2 = 0.328
 shader_parameter/protect_min_val2 = 0.027
 
-[node name="Arena" type="Node2D" node_paths=PackedStringArray("time_label", "score_label", "player", "retry_button", "quit_button") groups=["World"]]
+[node name="Arena" type="Node2D" node_paths=PackedStringArray("time_label", "score_label", "wave_label", "player", "retry_button", "quit_button") groups=["World"]]
 script = ExtResource("1_kgg8h")
 time_label = NodePath("GameUI/TextureRect2/VBoxContainer/timelbl")
 score_label = NodePath("GameUI/TextureRect2/VBoxContainer2/scorelbl")
+wave_label = NodePath("GameUI/waves")
 player = NodePath("Player")
-enemy_scene = ExtResource("2_kgg8h")
-gnat_scene = ExtResource("12_qvbsh")
+enemy_scenes = Array[PackedScene]([ExtResource("12_qvbsh"), ExtResource("2_kgg8h"), ExtResource("17_skj6l"), ExtResource("16_tr54y"), ExtResource("10_kgg8h")])
+spawn_weights = PackedFloat32Array()
 retry_button = NodePath("NewOver/VBoxContainer/Button")
 quit_button = NodePath("NewOver/VBoxContainer/Button2")
-enemy_scenes = Array[PackedScene]([ExtResource("2_kgg8h"), ExtResource("10_kgg8h"), ExtResource("16_tr54y"), ExtResource("17_skj6l")])
+wave_size_growth = 1.1
+enemy_unlock_wave = PackedInt32Array(1, 5, 10, 15, 20)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(563, 641)
@@ -423,6 +427,7 @@ frame_progress = 0.0937507
 position = Vector2(515, 632)
 
 [node name="GameUI" type="CanvasLayer" parent="."]
+visible = false
 
 [node name="TextureRect2" type="TextureRect" parent="GameUI"]
 anchors_preset = 5
@@ -453,6 +458,7 @@ alignment = 1
 [node name="timelbl" type="Label" parent="GameUI/TextureRect2/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 7
 theme_override_font_sizes/font_size = 36
 text = "Time: 00:00.0"
 horizontal_alignment = 1
@@ -463,18 +469,18 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 413.0
+offset_left = 433.0
 offset_top = 2.0
-offset_right = -96.0
+offset_right = -68.0
 offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = -4
 alignment = 1
 
 [node name="scorelbl" type="Label" parent="GameUI/TextureRect2/VBoxContainer2"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 7
 theme_override_font_sizes/font_size = 36
 text = "Score: 000000"
 horizontal_alignment = 1
@@ -491,20 +497,36 @@ grow_horizontal = 2
 texture = ExtResource("11_cag1q")
 expand_mode = 1
 
-[node name="surv" type="Label" parent="GameUI"]
+[node name="waves" type="Label" parent="GameUI"]
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -187.0
-offset_top = 144.0
-offset_right = 187.0
-offset_bottom = 201.0
+offset_left = -45.0
+offset_top = 104.0
+offset_right = 46.0
+offset_bottom = 140.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.666667, 0, 0, 1)
-theme_override_font_sizes/font_size = 45
-text = "Objective: SURVIVE"
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 26
 horizontal_alignment = 1
-vertical_alignment = 1
+
+[node name="enemycount" type="Label" parent="GameUI"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -160.0
+offset_top = -63.0
+offset_right = -25.0
+offset_bottom = -27.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 26
+text = "Enemies: 0"
+horizontal_alignment = 1
 
 [node name="LeftSpawn" type="Marker2D" parent="."]
 position = Vector2(-542, 516)
@@ -831,8 +853,23 @@ color = Color(0.905882, 0.984314, 1, 1)
 
 [node name="Music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("18_altv3")
-volume_db = -23.016
+volume_db = -17.058
 autoplay = true
+max_polyphony = 2
 bus = &"Music"
 
+[node name="Cheers" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(508, 10)
+stream = ExtResource("20_a8byp")
+volume_db = -12.204
+autoplay = true
+bus = &"SFX"
+
+[node name="Wavehorn" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(511, 18)
+stream = ExtResource("21_fi0kg")
+volume_db = 2.122
+bus = &"SFX"
+
 [connection signal="finished" from="Music" to="." method="_on_music_finished"]
+[connection signal="finished" from="Cheers" to="." method="_on_audio_stream_player_finished"]

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="AchievementData" load_steps=3 format=3 uid="uid://dpoqpqe4rhwyp"]
+
+[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/assets/icons/moth_icon.png" id="1_0jowd"]
+[ext_resource type="Script" uid="uid://qm1fbqpewbxm" path="res://core/achievements/achievement_data.gd" id="1_maubt"]
+
+[resource]
+script = ExtResource("1_maubt")
+id = "waves_five"
+title = "Lasting Presence"
+description = "Survive for 5 waves."
+unlocked = false
+icon = ExtResource("1_0jowd")
+progressive = true
+required_amount = 5
+metadata/_custom_type_script = "uid://qm1fbqpewbxm"

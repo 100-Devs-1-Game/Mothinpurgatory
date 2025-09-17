@@ -182,7 +182,7 @@ func attack() -> void:
 	in_cooldown = false
 	can_attack = true
 
-func _death(source: Node):
+func _death(_source: Node):
 	$AudioStreamPlayer2D.play()
 	create_death_sound(death_sound)
 	get_tree().call_group("game", "on_enemy_killed", enemy_data.score_on_death)

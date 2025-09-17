@@ -79,7 +79,7 @@ func play_sfx(audio: AudioStream) -> void:
 	sfx_player.set_stream(audio)
 	sfx_player.play()
 
-func adjust_camera(delta) -> void:
+func adjust_camera(_delta) -> void:
 	if adjust_cam and getting_up:
 		camera.position = lerp(camera.position, Vector2.ZERO, 0.04)
 	elif is_dead:
@@ -206,6 +206,7 @@ func _wake_player():
 		await get_tree().create_timer(2.0).timeout
 		EventBus.player_woke.emit()
 		getting_up = false
+		$PlayerUI.visible = true
 
 func _notify_damage() -> void: #Temporary, I'll improve it later
 	EventBus.player_damaged.emit()
@@ -214,7 +215,7 @@ func _notify_damage() -> void: #Temporary, I'll improve it later
 func has_knockback_control() -> bool:
 	return _knockback_time_left > 0.0
 
-func apply_knockback(source: Node, kb: Vector2) -> void:
+func apply_knockback(_source: Node, kb: Vector2) -> void:
 	_knockback = kb
 	_knockback_time_left = 0.2
 	if animator:

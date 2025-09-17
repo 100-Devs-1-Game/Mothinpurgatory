@@ -46,10 +46,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -371.0
-offset_top = -279.0
-offset_right = 371.0
-offset_bottom = 173.0
+offset_left = -490.0
+offset_top = -294.0
+offset_right = -133.0
+offset_bottom = 189.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 14
@@ -59,16 +59,17 @@ layout_mode = 2
 
 [node name="Title" type="Label" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.646643, 0.762715, 0.997278, 1)
-theme_override_font_sizes/font_size = 43
+theme_override_colors/font_color = Color(0.854902, 0.760784, 0.145098, 1)
+theme_override_font_sizes/font_size = 34
 text = "Game Lead"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Title3" type="Label" parent="VBoxContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.372549, 0.564706, 0.403922, 1)
-theme_override_font_sizes/font_size = 27
+theme_override_colors/font_color = Color(0, 0.598125, 0.477316, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 26
 text = "Skin"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -78,24 +79,26 @@ layout_mode = 2
 
 [node name="Title" type="Label" parent="VBoxContainer/VBoxContainer2"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.646643, 0.762715, 0.997278, 1)
-theme_override_font_sizes/font_size = 43
-text = "Art and Concepts"
+theme_override_colors/font_color = Color(0.854902, 0.760784, 0.145098, 1)
+theme_override_font_sizes/font_size = 34
+text = "Art & Concepts"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Title3" type="Label" parent="VBoxContainer/VBoxContainer2"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.372549, 0.564706, 0.403922, 1)
-theme_override_font_sizes/font_size = 27
+theme_override_colors/font_color = Color(0, 0.598125, 0.477316, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 26
 text = "Skin"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Title4" type="Label" parent="VBoxContainer/VBoxContainer2"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.839216, 0.0980392, 0.133333, 1)
-theme_override_font_sizes/font_size = 27
+theme_override_colors/font_color = Color(0, 0.598125, 0.477316, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 26
 text = "Amatrine"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -105,16 +108,17 @@ layout_mode = 2
 
 [node name="Title" type="Label" parent="VBoxContainer/VBoxContainer4"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.646643, 0.762715, 0.997278, 1)
-theme_override_font_sizes/font_size = 43
+theme_override_colors/font_color = Color(0.854902, 0.760784, 0.145098, 1)
+theme_override_font_sizes/font_size = 34
 text = "SFX & Music"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Title4" type="Label" parent="VBoxContainer/VBoxContainer4"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.823529, 0.176471, 0.701961, 1)
-theme_override_font_sizes/font_size = 27
+theme_override_colors/font_color = Color(0, 0.598125, 0.477316, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 26
 text = "KILPINITY"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -124,16 +128,109 @@ layout_mode = 2
 
 [node name="Title" type="Label" parent="VBoxContainer/VBoxContainer3"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.646643, 0.762715, 0.997278, 1)
-theme_override_font_sizes/font_size = 43
+theme_override_colors/font_color = Color(0.854902, 0.760784, 0.145098, 1)
+theme_override_font_sizes/font_size = 34
 text = "Programming"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Title4" type="Label" parent="VBoxContainer/VBoxContainer3"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.862745, 0.345098, 0.607843, 1)
-theme_override_font_sizes/font_size = 27
+theme_override_colors/font_color = Color(0, 0.598125, 0.477316, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 26
 text = "Plant"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 58.0
+offset_top = -294.0
+offset_right = 415.0
+offset_bottom = 189.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 14
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer2"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="VBoxContainer2/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.854902, 0.760784, 0.145098, 1)
+theme_override_font_sizes/font_size = 34
+text = "Special Thanks"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="VBoxContainer2"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="VBoxContainer2/VBoxContainer4"]
+layout_mode = 2
+theme_override_colors/font_color = Color(6.44952e-06, 0.899193, 0.616931, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 26
+text = "Storegraphic"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Title4" type="Label" parent="VBoxContainer2/VBoxContainer4"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.70655, 0.436375, 0.132911, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 26
+text = "For the 'Crowd cheering' sound effect"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer2"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="VBoxContainer2/VBoxContainer3"]
+layout_mode = 2
+theme_override_colors/font_color = Color(6.44952e-06, 0.899193, 0.616931, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 26
+text = "DRAGON-STUDIO"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Title4" type="Label" parent="VBoxContainer2/VBoxContainer3"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.70655, 0.436375, 0.132911, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 26
+text = "For the 'Mega Horn' sound effect"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="VBoxContainer5" type="VBoxContainer" parent="VBoxContainer2"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="VBoxContainer2/VBoxContainer5"]
+layout_mode = 2
+theme_override_colors/font_color = Color(6.44952e-06, 0.899193, 0.616931, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 26
+text = "Soundreality"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Title4" type="Label" parent="VBoxContainer2/VBoxContainer5"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.70655, 0.436375, 0.132911, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 26
+text = "For the 'Dashing'
+ sound effect"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3

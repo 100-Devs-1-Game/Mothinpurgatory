@@ -15,7 +15,7 @@ func _ready() -> void:
 	if enemy_data:
 		speed = enemy_data.speed
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if not player:
 		return
 	
@@ -45,7 +45,7 @@ func create_death_sound(audio: AudioStream) -> void:
 	ap.set_stream(audio)
 	ap.play()
 
-func _death(source: Node) -> void:
+func _death(_source: Node) -> void:
 	create_effect()
 	create_death_sound(death_sound)
 	get_tree().call_group("game", "on_enemy_killed", enemy_data.score_on_death)

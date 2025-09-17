@@ -14,6 +14,8 @@ signal bug_killed
 signal minute_passed
 @warning_ignore("unused_signal")
 signal no_hit_minute_passed
+@warning_ignore("unused_signal")
+signal wave_survived
 
 @warning_ignore("unused_signal")
 signal ui_closed

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="AchievementData" load_steps=3 format=3 uid="uid://b28a5vsc7wamj"]
+
+[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/assets/icons/moth_icon.png" id="1_e2g0j"]
+[ext_resource type="Script" uid="uid://qm1fbqpewbxm" path="res://core/achievements/achievement_data.gd" id="1_x2yb1"]
+
+[resource]
+script = ExtResource("1_x2yb1")
+id = "waves_ten"
+title = "Seasoned Fighter"
+description = "Survive for 10 waves."
+unlocked = false
+icon = ExtResource("1_e2g0j")
+progressive = true
+required_amount = 10
+metadata/_custom_type_script = "uid://qm1fbqpewbxm"

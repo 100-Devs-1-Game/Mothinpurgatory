@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="AchievementData" load_steps=3 format=3 uid="uid://bsn3hww8txds5"]
+
+[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/assets/icons/moth_icon.png" id="1_jj6d4"]
+[ext_resource type="Script" uid="uid://qm1fbqpewbxm" path="res://core/achievements/achievement_data.gd" id="1_vmcgq"]
+
+[resource]
+script = ExtResource("1_vmcgq")
+id = "waves_twenty"
+title = "Relentless Endurance"
+description = "Survive for 20 waves."
+unlocked = false
+icon = ExtResource("1_jj6d4")
+progressive = true
+required_amount = 20
+metadata/_custom_type_script = "uid://qm1fbqpewbxm"

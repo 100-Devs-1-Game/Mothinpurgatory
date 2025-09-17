@@ -1,4 +1,4 @@
-[gd_scene load_steps=103 format=3 uid="uid://du3uuiaokiexx"]
+[gd_scene load_steps=104 format=3 uid="uid://du3uuiaokiexx"]
 
 [ext_resource type="Script" uid="uid://ba6w8urqn6r4c" path="res://player/player.gd" id="1_yw30f"]
 [ext_resource type="Texture2D" uid="uid://bg54nqqrgtwab" path="res://textures/assets/sprites/player/airborne/000.png" id="2_1s1yo"]
@@ -534,6 +534,14 @@ colors = PackedColorArray(1, 0.721569, 0.454902, 1)
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_lufic"]
 gradient = SubResource("Gradient_bd26m")
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bd26m"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hurtbox_collision", "camera", "step_player", "sfx_player") groups=["Player"]]
 collision_mask = 4
 script = ExtResource("1_yw30f")
@@ -555,11 +563,14 @@ animation = &"dead"
 frame = 11
 frame_progress = 1.0
 
-[node name="Health" type="Node" parent="."]
+[node name="Health" type="Node" parent="." node_paths=PackedStringArray("flicker_sprite")]
 script = ExtResource("2_qjkh3")
+max_health = 25
 tint_on_damage = true
 is_players = true
 health_regen_enabled = true
+iframe_duration = 0.8
+flicker_sprite = NodePath("../Animator")
 
 [node name="StateMachine" type="Node" parent="."]
 script = ExtResource("3_g6k8r")
@@ -596,10 +607,12 @@ max_polyphony = 71
 bus = &"SFX"
 
 [node name="SFXSound" type="AudioStreamPlayer2D" parent="."]
+pitch_scale = 1.38
 max_polyphony = 256
 bus = &"SFX"
 
 [node name="PlayerUI" type="CanvasLayer" parent="." node_paths=PackedStringArray("health_component", "health_bar", "degrader")]
+visible = false
 script = ExtResource("82_bd26m")
 health_component = NodePath("../Health")
 health_bar = NodePath("Health")
@@ -643,3 +656,17 @@ value = 83.88
 nine_patch_stretch = true
 texture_under = SubResource("GradientTexture1D_bd26m")
 texture_progress = SubResource("GradientTexture1D_lufic")
+
+[node name="Panel" type="Panel" parent="PlayerUI/Health"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_top = -1.0
+offset_right = 1.0
+offset_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bd26m")

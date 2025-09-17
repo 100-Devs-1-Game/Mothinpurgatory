@@ -135,22 +135,22 @@ func _spawn_slash():
 
 		if dir == Dir.DOWN:
 			slash.position = Vector2(0.0, 90.0)
-			slash.scale = Vector2(0.85, 0.85)
+			slash.scale = Vector2(1.0, 1.0)
 			slash.flip_h = false
 			slash.z_index = 10
 			slash.play("slash_down")
 
 		elif dir == Dir.UP:
 			slash.position = Vector2(0.0, -180.0)
-			slash.scale = Vector2(0.85, 0.85)
+			slash.scale = Vector2(1.0, 1.0)
 			slash.flip_h = false
 			slash.z_index = 10
 			slash.play("slash_up")
 
 		else:
-			var offset = Vector2(120.0 * float(-player._facing), -26.0)
+			var offset = Vector2(120.0 * float(-player._facing), -64.0)
 			slash.position = offset
-			slash.scale = Vector2(0.85, 0.85)
+			slash.scale = Vector2(1.3, 1.3)
 			slash.flip_h = (player._facing < 0)
 			slash.z_index = 10
 			slash.play("slash_b")

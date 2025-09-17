@@ -26,6 +26,7 @@ border_color = Color(1, 1, 1, 1)
 
 [node name="Paused" type="CanvasLayer"]
 process_mode = 3
+layer = 2
 script = ExtResource("1_grcgb")
 
 [node name="controlpnl" type="Panel" parent="."]

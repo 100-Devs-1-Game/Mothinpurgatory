@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="AchievementData" load_steps=3 format=3 uid="uid://81qoi1icttac"]
+
+[ext_resource type="Script" uid="uid://qm1fbqpewbxm" path="res://core/achievements/achievement_data.gd" id="1_0aw7n"]
+[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/assets/icons/moth_icon.png" id="1_fj7xy"]
+
+[resource]
+script = ExtResource("1_0aw7n")
+id = "waves_thirty"
+title = "Unyielding Presence"
+description = "Survive for 30 waves."
+unlocked = false
+icon = ExtResource("1_fj7xy")
+progressive = true
+required_amount = 30
+metadata/_custom_type_script = "uid://qm1fbqpewbxm"

@@ -26,8 +26,12 @@ const SURVIVAL_IDS := [
 const UNTOUCHABLE_IDS := [
 	"untouched_I", "untouched_II", "untouched_III", "untouched_IV",
 ]
-
 var _no_hit_streak := true
+
+const WAVE_IDS := [
+	"waves_five", "waves_ten", "waves_twenty", "waves_thirty", "waves_fifty", "waves_hundred"
+	]
+var _run_waves := 0
 
 func _ready() -> void:
 	_connect_default_listeners(EventBus)
@@ -189,6 +193,7 @@ func _reset_run_scoped() -> void:
 	_run_hitless_minutes = 0
 	_run_score = 0
 	_no_hit_streak = true
+	_run_waves = 0
 
 func _apply_loaded_progress() -> void:
 	for id in _achievements_by_id.keys():
@@ -223,6 +228,9 @@ func _connect_default_listeners(bus: Object) -> void:
 
 	if bus.has_signal("score_final") and not bus.score_final.is_connected(_on_score_final):
 		bus.score_final.connect(_on_score_final)
+
+	if bus.has_signal("wave_survived") and not bus.wave_survived.is_connected(_wave_survived):
+		bus.wave_survived.connect(_wave_survived)
 
 	_bus_connected = true
 
@@ -302,6 +310,17 @@ func _minute_passed(minutes: int = 1) -> void:
 func _on_score_final(final_score: int) -> void:
 	_run_score = final_score
 	_commit_run_best()
+
+func _wave_survived() -> void:
+	_run_waves += 1
+	for id in WAVE_IDS:
+		if not _achievements_by_id.has(id):
+			continue
+		var req = _achievements_by_id[id].required_amount
+		try_unlock_on_threshold(id, _run_waves, req)
+		var best = get_progress(id)
+		if _run_waves > best:
+			set_progress(id, _run_waves)
 
 func _commit_run_best() -> void:
 	var BEST_ID = "high_score"

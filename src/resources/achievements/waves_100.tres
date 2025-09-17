@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="AchievementData" load_steps=3 format=3 uid="uid://bki7avhtcfinf"]
+
+[ext_resource type="Script" uid="uid://qm1fbqpewbxm" path="res://core/achievements/achievement_data.gd" id="1_cgffs"]
+[ext_resource type="Texture2D" uid="uid://bucwdpkdkkxvt" path="res://textures/assets/icons/moth_icon.png" id="1_ycpau"]
+
+[resource]
+script = ExtResource("1_cgffs")
+id = "waves_hundred"
+title = "Champion of All"
+description = "Survive for 100 waves."
+unlocked = false
+icon = ExtResource("1_ycpau")
+progressive = true
+required_amount = 100
+metadata/_custom_type_script = "uid://qm1fbqpewbxm"
