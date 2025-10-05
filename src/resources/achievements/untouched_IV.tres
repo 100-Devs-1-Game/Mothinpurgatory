@@ -7,9 +7,9 @@
 script = ExtResource("1_g2dag")
 id = "untouched_IV"
 title = "Untouchable IV"
-description = "Go completely unharmed for 10 minutes."
+description = "Go completely unharmed for 8 minutes."
 unlocked = false
 icon = ExtResource("1_n4ltn")
 progressive = true
-required_amount = 10
+required_amount = 8
 metadata/_custom_type_script = "uid://qm1fbqpewbxm"

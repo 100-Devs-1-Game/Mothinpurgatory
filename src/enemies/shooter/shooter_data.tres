@@ -5,9 +5,13 @@
 [resource]
 script = ExtResource("1_86nx8")
 max_health = 3
-score_on_death = 30
+score_on_death = 50
 damage = 2
 speed = 120
 gravity = 2400.0
 interactable_faction = 2
+knockback = Vector2(0, 0)
+knockup = 0.0
+hitstun = 0.0
+hitstop_duration = 0.0
 metadata/_custom_type_script = "uid://dy6n5lakmkxvi"

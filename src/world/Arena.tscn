@@ -360,11 +360,11 @@ score_label = NodePath("GameUI/TextureRect2/VBoxContainer2/scorelbl")
 wave_label = NodePath("GameUI/waves")
 player = NodePath("Player")
 enemy_scenes = Array[PackedScene]([ExtResource("12_qvbsh"), ExtResource("2_kgg8h"), ExtResource("17_skj6l"), ExtResource("16_tr54y"), ExtResource("10_kgg8h")])
-spawn_weights = PackedFloat32Array()
+use_weighted_spawn = true
+spawn_weights = PackedFloat32Array(100, 65, 10, 16, 27)
 retry_button = NodePath("NewOver/VBoxContainer/Button")
 quit_button = NodePath("NewOver/VBoxContainer/Button2")
-wave_size_growth = 1.1
-enemy_unlock_wave = PackedInt32Array(1, 5, 10, 15, 20)
+enemy_unlock_wave = PackedInt32Array(1, 5, 8, 11, 14)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 position = Vector2(563, 641)

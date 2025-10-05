@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_ktpl8")
 max_health = 1
-score_on_death = 10
+score_on_death = 20
 damage = 1
 speed = 220
 gravity = 800.0

@@ -28,12 +28,12 @@ const NORMAL_COLOR := Color(1, 1, 1)
 @export var retry_button: Button
 @export var quit_button: Button
 
-@export var wave_intermission_time: float = 8.0
+@export var wave_intermission_time: float = 5.0
 @export var wave_size_start: int = 8
-@export var wave_size_growth: float = 1.3
+@export var wave_size_growth: float = 1.1
 @export var wave_concurrent_cap_base: int = 6
 @export var wave_concurrent_cap_growth: int = 1
-@export var wave_spawn_interval_start: float = 1.5
+@export var wave_spawn_interval_start: float = 1.2
 @export var wave_spawn_interval_decay: float = 0.93
 @export var wave_min_spawn_interval: float = 0.25
 
