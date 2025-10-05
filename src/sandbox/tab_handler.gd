@@ -29,6 +29,9 @@ func _ready() -> void:
 	if tabs.size() > 0:
 		_select_tab_by_name(tabs[0].name)
 
+	if OS.has_feature("web"):
+		$Main/Pages/Video/VBoxContainer/HBoxContainer.visible = false
+
 func _on_tab_pressed(button: BaseButton) -> void:
 	_select_tab_by_name(button.name)
 

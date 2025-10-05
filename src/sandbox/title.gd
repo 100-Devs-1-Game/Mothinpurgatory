@@ -23,6 +23,9 @@ func _ready() -> void:
 
 	connect_buttons()
 
+	if OS.has_feature("web"):
+		$Main/VBoxContainer/quit.visible = false
+
 func connect_buttons() -> void:
 	for button in ui_buttons.keys():
 		if not button.is_connected("pressed", _on_button_pressed):
